@@ -1,0 +1,10 @@
+seq_file_b.c:179:5:SEQ_FILE_B_UnloadAllBanks	0	static
+seq_file_b.c:134:5:SEQ_FILE_B_Init	8	static
+seq_file_b.c:217:5:SEQ_FILE_B_NumPatterns	0	static
+seq_file_b.c:230:5:SEQ_FILE_B_Create	176	static
+seq_file_b.c:389:5:SEQ_FILE_B_PatternRead	184	static
+seq_file_b.c:593:5:SEQ_FILE_B_PatternWrite	192	static
+seq_file_b.c:194:5:SEQ_FILE_B_SaveAllBanks	24	static
+seq_file_b.c:777:5:SEQ_FILE_B_PatternPeekName	24	static
+seq_file_b.c:314:5:SEQ_FILE_B_Open	176	static
+seq_file_b.c:148:5:SEQ_FILE_B_LoadAllBanks	16	static

@@ -1,0 +1,3 @@
+jsw_rand.c:27:6:jsw_seed	0	static
+jsw_rand.c:41:15:jsw_rand	20	static
+jsw_rand.c:73:10:jsw_time_seed	16	static

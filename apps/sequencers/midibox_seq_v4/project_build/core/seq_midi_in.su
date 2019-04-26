@@ -1,0 +1,14 @@
+seq_midi_in.c:719:12:SEQ_MIDI_IN_Receive_Note	24	static
+seq_midi_in.c:819:12:SEQ_MIDI_IN_Receive_NoteSC	32	static
+seq_midi_in.c:229:13:SEQ_MIDI_IN_ExtCtrlStr	88	static
+seq_midi_in.c:265:13:SEQ_MIDI_IN_ExtCtrlPcModeStr	32	static
+seq_midi_in.c:285:12:SEQ_MIDI_IN_ExtCtrlSend	32	static
+seq_midi_in.c:315:5:SEQ_MIDI_IN_ResetSingleTransArpStacks	32	static
+seq_midi_in.c:354:5:SEQ_MIDI_IN_ResetTransArpStacks	8	static
+seq_midi_in.c:368:5:SEQ_MIDI_IN_ResetChangerStacks	8	static
+seq_midi_in.c:398:5:SEQ_MIDI_IN_ResetAllStacks	8	static
+seq_midi_in.c:168:5:SEQ_MIDI_IN_Init	8	static
+seq_midi_in.c:667:5:SEQ_MIDI_IN_BusReceive	24	static
+seq_midi_in.c:412:5:SEQ_MIDI_IN_Receive	56	static
+seq_midi_in.c:1115:5:SEQ_MIDI_IN_TransposerNoteGet	8	static
+seq_midi_in.c:1136:5:SEQ_MIDI_IN_ArpNoteGet	8	static

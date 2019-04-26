@@ -1,0 +1,9 @@
+seq_morph.c:198:11:SEQ_MORPH_ScaleValue	0	static
+seq_morph.c:43:5:SEQ_MORPH_Init	0	static
+seq_morph.c:54:4:SEQ_MORPH_ValueGet	0	static
+seq_morph.c:62:5:SEQ_MORPH_ValueSet	0	static
+seq_morph.c:78:5:SEQ_MORPH_EventNote	40	static
+seq_morph.c:106:5:SEQ_MORPH_EventCC	16	static
+seq_morph.c:128:5:SEQ_MORPH_EventPitchBend	16	static
+seq_morph.c:152:5:SEQ_MORPH_EventProgramChange	16	static
+seq_morph.c:175:5:SEQ_MORPH_EventAftertouch	16	static

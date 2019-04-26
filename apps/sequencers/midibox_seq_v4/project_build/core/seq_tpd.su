@@ -1,0 +1,9 @@
+seq_tpd.c:340:12:SEQ_TPD_ScrollTextHandler	72	static
+seq_tpd.c:86:5:SEQ_TPD_ModeSet	0	static
+seq_tpd.c:92:16:SEQ_TPD_ModeGet	0	static
+seq_tpd.c:101:5:SEQ_TPD_PrintString	8	static
+seq_tpd.c:72:5:SEQ_TPD_Init	8	static
+seq_tpd.c:118:5:SEQ_TPD_LED_Update	24	static
+seq_tpd.c:189:5:SEQ_TPD_Handler	32	static
+seq_tpd.c:418:5:SEQ_TPD_LogoSet	0	static
+seq_tpd.c:428:5:SEQ_TPD_LogoGet	0	static

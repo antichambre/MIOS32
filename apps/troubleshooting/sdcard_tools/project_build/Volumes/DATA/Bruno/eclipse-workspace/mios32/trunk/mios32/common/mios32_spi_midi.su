@@ -1,0 +1,7 @@
+mios32_spi_midi.c:84:5:MIOS32_SPI_MIDI_Init	0	static
+mios32_spi_midi.c:125:5:MIOS32_SPI_MIDI_Enabled	0	static
+mios32_spi_midi.c:148:5:MIOS32_SPI_MIDI_CheckAvailable	0	static
+mios32_spi_midi.c:168:5:MIOS32_SPI_MIDI_Periodic_mS	0	static
+mios32_spi_midi.c:288:5:MIOS32_SPI_MIDI_PackageSend_NonBlocking	0	static
+mios32_spi_midi.c:328:5:MIOS32_SPI_MIDI_PackageSend	0	static
+mios32_spi_midi.c:368:5:MIOS32_SPI_MIDI_PackageReceive	0	static

@@ -1,0 +1,6 @@
+mios32_timer.c:92:5:MIOS32_TIMER_Init	40	static
+mios32_timer.c:150:5:MIOS32_TIMER_ReInit	24	static
+mios32_timer.c:184:5:MIOS32_TIMER_DeInit	8	static
+mios32_timer.c:202:1:TIM2_IRQHandler	8	static
+mios32_timer.c:212:1:TIM3_IRQHandler	8	static
+mios32_timer.c:222:1:TIM5_IRQHandler	8	static

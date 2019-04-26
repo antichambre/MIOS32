@@ -1,0 +1,2 @@
+mios32_delay.c:50:5:MIOS32_DELAY_Init	24	static
+mios32_delay.c:86:5:MIOS32_DELAY_Wait_uS	0	static

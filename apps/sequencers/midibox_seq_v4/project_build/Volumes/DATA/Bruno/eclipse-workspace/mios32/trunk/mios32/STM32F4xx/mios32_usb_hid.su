@@ -1,0 +1,15 @@
+mios32_usb_hid.c:523:6:MIOS32_USB_HID_Gamepad_Decode	0	static
+mios32_usb_hid.c:509:6:MIOS32_USB_HID_Gamepad_Init	8	static
+mios32_usb_hid.c:415:7:MIOS32_USB_HID_Keyboard_Decode	16	static
+mios32_usb_hid.c:399:7:MIOS32_USB_HID_Keyboard_Init	8	static
+mios32_usb_hid.c:354:6:MIOS32_USB_HID_Mouse_Decode	16	static
+mios32_usb_hid.c:340:6:MIOS32_USB_HID_Mouse_Init	8	static
+mios32_usb_hid.c:1070:20:USBH_Handle	24	static
+mios32_usb_hid.c:976:20:USBH_ClassRequest	24	static
+mios32_usb_hid.c:804:20:USBH_InterfaceInit	40	static
+mios32_usb_hid.c:930:6:USBH_InterfaceDeInit	16	static
+mios32_usb_hid.c:537:5:MIOS32_USB_HID_Init	0	static
+mios32_usb_hid.c:557:5:MIOS32_USB_HID_ChangeConnectionState	0	static
+mios32_usb_hid.c:591:5:MIOS32_USB_HID_CheckAvailable	0	static
+mios32_usb_hid.c:608:5:MIOS32_USB_HID_Process	0	static
+mios32_usb_hid.c:714:13:USBH_Set_Report	16	static

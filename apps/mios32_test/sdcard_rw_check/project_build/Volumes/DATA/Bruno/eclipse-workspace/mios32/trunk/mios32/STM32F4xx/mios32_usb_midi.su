@@ -1,0 +1,15 @@
+mios32_usb_midi.c:532:20:USBH_ClassRequest	0	static
+mios32_usb_midi.c:510:13:USBH_InterfaceDeInit	16	static
+mios32_usb_midi.c:350:13:MIOS32_USB_MIDI_RxBufferHandler	16	static
+mios32_usb_midi.c:307:13:MIOS32_USB_MIDI_TxBufferHandler	8	static
+mios32_usb_midi.c:545:20:USBH_Handle	24	static
+mios32_usb_midi.c:108:5:MIOS32_USB_MIDI_Init	0	static
+mios32_usb_midi.c:124:5:MIOS32_USB_MIDI_ChangeConnectionState	8	static
+mios32_usb_midi.c:155:5:MIOS32_USB_MIDI_CheckAvailable	8	static
+mios32_usb_midi.c:441:20:USBH_InterfaceInit	32	static
+mios32_usb_midi.c:178:5:MIOS32_USB_MIDI_PackageSend_NonBlocking	16	static
+mios32_usb_midi.c:218:5:MIOS32_USB_MIDI_PackageSend	8	static
+mios32_usb_midi.c:251:5:MIOS32_USB_MIDI_PackageReceive	8	static
+mios32_usb_midi.c:282:5:MIOS32_USB_MIDI_Periodic_mS	8	static
+mios32_usb_midi.c:405:6:MIOS32_USB_MIDI_EP1_IN_Callback	0	static
+mios32_usb_midi.c:419:6:MIOS32_USB_MIDI_EP2_OUT_Callback	0	static

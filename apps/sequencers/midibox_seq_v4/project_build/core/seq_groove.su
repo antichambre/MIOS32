@@ -1,0 +1,5 @@
+seq_groove.c:223:5:SEQ_GROOVE_Init	8	static
+seq_groove.c:239:7:SEQ_GROOVE_NameGet	0	static
+seq_groove.c:254:5:SEQ_GROOVE_DelayGet	8	static
+seq_groove.c:287:5:SEQ_GROOVE_Event	16	static
+seq_groove.c:347:5:SEQ_GROOVE_Clear	16	static

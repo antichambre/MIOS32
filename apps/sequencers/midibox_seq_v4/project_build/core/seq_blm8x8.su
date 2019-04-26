@@ -1,0 +1,12 @@
+seq_blm8x8.c:46:5:SEQ_BLM8X8_Init	12	static
+seq_blm8x8.c:81:5:SEQ_BLM8X8_PrepareRow	16	static
+seq_blm8x8.c:112:5:SEQ_BLM8X8_GetRow	32	static
+seq_blm8x8.c:166:5:SEQ_BLM8X8_ButtonHandler	48	static
+seq_blm8x8.c:213:5:SEQ_BLM8X8_ButtonGet	0	static
+seq_blm8x8.c:229:4:SEQ_BLM8X8_ButtonSRGet	0	static
+seq_blm8x8.c:246:5:SEQ_BLM8X8_LEDSet	8	static
+seq_blm8x8.c:268:5:SEQ_BLM8X8_LEDGet	0	static
+seq_blm8x8.c:284:4:SEQ_BLM8X8_LEDSRGet	0	static
+seq_blm8x8.c:301:5:SEQ_BLM8X8_LEDSRSet	0	static
+seq_blm8x8.c:325:5:SEQ_BLM8X8_ConfigSet	16	static
+seq_blm8x8.c:346:21:SEQ_BLM8X8_ConfigGet	8	static

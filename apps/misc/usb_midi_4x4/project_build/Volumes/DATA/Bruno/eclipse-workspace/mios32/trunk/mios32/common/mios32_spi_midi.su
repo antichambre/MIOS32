@@ -1,0 +1,9 @@
+mios32_spi_midi.c:98:5:MIOS32_SPI_MIDI_Init	0	static
+mios32_spi_midi.c:154:5:MIOS32_SPI_MIDI_Enabled	0	static
+mios32_spi_midi.c:177:5:MIOS32_SPI_MIDI_CheckAvailable	0	static
+mios32_spi_midi.c:198:5:MIOS32_SPI_MIDI_RS_OptimisationSet	0	static
+mios32_spi_midi.c:234:5:MIOS32_SPI_MIDI_RS_OptimisationGet	0	static
+mios32_spi_midi.c:260:5:MIOS32_SPI_MIDI_Periodic_mS	0	static
+mios32_spi_midi.c:390:5:MIOS32_SPI_MIDI_PackageSend_NonBlocking	0	static
+mios32_spi_midi.c:430:5:MIOS32_SPI_MIDI_PackageSend	0	static
+mios32_spi_midi.c:470:5:MIOS32_SPI_MIDI_PackageReceive	0	static

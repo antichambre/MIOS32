@@ -1,0 +1,4 @@
+freertos_heap.cpp:20:18:void* malloc(size_t)	0	static
+freertos_heap.cpp:26:18:void* calloc(size_t, size_t)	0	static
+freertos_heap.cpp:42:18:void* realloc(void*, size_t)	0	static
+freertos_heap.cpp:47:17:void free(void*)	0	static

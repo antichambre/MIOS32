@@ -1,0 +1,6 @@
+uip_terminal.c:477:12:UIP_TERMINAL_PrintIPs	32	static
+uip_terminal.c:45:12:get_dec	16	static
+uip_terminal.c:81:12:get_ip	16	static
+uip_terminal.c:107:5:UIP_TERMINAL_Help	8	static
+uip_terminal.c:434:5:UIP_TERMINAL_PrintNetwork	40	static
+uip_terminal.c:134:5:UIP_TERMINAL_ParseLine	40	static

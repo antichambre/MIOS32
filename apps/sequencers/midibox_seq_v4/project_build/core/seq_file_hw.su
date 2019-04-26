@@ -1,0 +1,9 @@
+seq_file_hw.c:198:12:get_sr	24	static
+seq_file_hw.c:178:12:get_dec	16	static
+seq_file_hw.c:91:5:SEQ_FILE_HW_Init	0	static
+seq_file_hw.c:130:5:SEQ_FILE_HW_Unload	0	static
+seq_file_hw.c:143:5:SEQ_FILE_HW_Valid	0	static
+seq_file_hw.c:153:5:SEQ_FILE_HW_ConfigLocked	0	static
+seq_file_hw.c:163:5:SEQ_FILE_HW_LockConfig	0	static
+seq_file_hw.c:255:5:SEQ_FILE_HW_Read	712	static
+seq_file_hw.c:105:5:SEQ_FILE_HW_Load	8	static

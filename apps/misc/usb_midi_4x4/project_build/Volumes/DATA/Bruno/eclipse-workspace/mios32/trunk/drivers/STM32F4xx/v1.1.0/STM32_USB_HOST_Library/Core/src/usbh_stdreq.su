@@ -1,0 +1,9 @@
+usbh_stdreq.c:232:13:USBH_GetDescriptor	12	static
+usbh_stdreq.c:200:13:USBH_Get_StringDesc	24	static
+usbh_stdreq.c:125:13:USBH_Get_DevDesc	24	static
+usbh_stdreq.c:157:13:USBH_Get_CfgDesc	88	static
+usbh_stdreq.c:262:13:USBH_SetAddress	12	static
+usbh_stdreq.c:285:13:USBH_SetCfg	12	static
+usbh_stdreq.c:307:13:USBH_SetInterface	12	static
+usbh_stdreq.c:332:13:USBH_ClrFeature	12	static
+usbh_stdreq.c:580:21:USBH_GetNextDesc	0	static

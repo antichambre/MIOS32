@@ -1,0 +1,7 @@
+seq_lcd_logo.c:59:5:SEQ_LCD_LOGO_Init	8	static
+seq_lcd_logo.c:118:5:SEQ_LCD_LOGO_Print	112	static
+seq_lcd_logo.c:189:5:SEQ_LCD_LOGO_ScreenSaver_Enable	0	static
+seq_lcd_logo.c:169:5:SEQ_LCD_LOGO_ScreenSaver_Period1S	8	static
+seq_lcd_logo.c:202:5:SEQ_LCD_LOGO_ScreenSaver_Disable	0	static
+seq_lcd_logo.c:212:5:SEQ_LCD_LOGO_ScreenSaver_IsActive	0	static
+seq_lcd_logo.c:221:5:SEQ_LCD_LOGO_ScreenSaver_Print	8	static

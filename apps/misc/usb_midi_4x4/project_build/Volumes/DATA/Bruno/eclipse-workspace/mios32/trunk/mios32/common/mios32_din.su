@@ -1,0 +1,5 @@
+mios32_din.c:30:5:MIOS32_DIN_Init	0	static
+mios32_din.c:56:5:MIOS32_DIN_PinGet	8	static
+mios32_din.c:73:5:MIOS32_DIN_SRGet	8	static
+mios32_din.c:112:4:MIOS32_DIN_SRChangedGetAndClear	16	static
+mios32_din.c:139:5:MIOS32_DIN_Handler	32	static

@@ -1,0 +1,16 @@
+mios32_com.c:43:5:MIOS32_COM_Init	0	static
+mios32_com.c:79:5:MIOS32_COM_CheckAvailable	8	static
+mios32_com.c:124:5:MIOS32_COM_SendBuffer_NonBlocking	0	static
+mios32_com.c:170:5:MIOS32_COM_SendBuffer	0	static
+mios32_com.c:215:5:MIOS32_COM_SendChar_NonBlocking	16	static
+mios32_com.c:229:5:MIOS32_COM_SendChar	16	static
+mios32_com.c:244:5:MIOS32_COM_SendString_NonBlocking	16	static
+mios32_com.c:258:5:MIOS32_COM_SendString	16	static
+mios32_com.c:274:5:MIOS32_COM_SendFormattedString_NonBlocking	148	static
+mios32_com.c:294:5:MIOS32_COM_SendFormattedString	148	static
+mios32_com.c:315:5:MIOS32_COM_Receive_Handler	16	static
+mios32_com.c:394:5:MIOS32_COM_ReceiveCallback_Init	0	static
+mios32_com.c:409:5:MIOS32_COM_DefaultPortSet	0	static
+mios32_com.c:423:19:MIOS32_COM_DefaultPortGet	0	static
+mios32_com.c:436:5:MIOS32_COM_DebugPortSet	0	static
+mios32_com.c:450:19:MIOS32_COM_DebugPortGet	0	static

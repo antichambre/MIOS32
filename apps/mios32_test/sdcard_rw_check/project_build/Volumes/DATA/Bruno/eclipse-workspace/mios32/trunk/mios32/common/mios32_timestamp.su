@@ -1,0 +1,4 @@
+mios32_timestamp.c:37:5:MIOS32_TIMESTAMP_Init	0	static
+mios32_timestamp.c:57:5:MIOS32_TIMESTAMP_Inc	0	static
+mios32_timestamp.c:70:5:MIOS32_TIMESTAMP_Get	0	static
+mios32_timestamp.c:91:5:MIOS32_TIMESTAMP_GetDelay	0	static

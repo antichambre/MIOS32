@@ -1,0 +1,3 @@
+freertos_utils.c:107:5:FREERTOS_UTILS_PerfCounterInit	0	static
+freertos_utils.c:127:5:FREERTOS_UTILS_PerfCounterGet	0	static
+freertos_utils.c:138:5:FREERTOS_UTILS_RunTimeStats	0	static

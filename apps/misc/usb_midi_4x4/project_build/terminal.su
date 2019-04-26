@@ -1,0 +1,3 @@
+terminal.c:52:5:TERMINAL_Init	8	static
+terminal.c:97:5:TERMINAL_ParseLine	24	static
+terminal.c:68:5:TERMINAL_Parse	16	static

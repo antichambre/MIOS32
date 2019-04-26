@@ -1,0 +1,4 @@
+usb_otg.c:110:10:STM32_USBO_OTG_ISR_Handler	24	static
+usb_otg.c:342:6:USB_OTG_InitiateSRP	0	static
+usb_otg.c:364:6:USB_OTG_InitiateHNP	16	static
+usb_otg.c:404:10:USB_OTG_GetCurrentState	0	static

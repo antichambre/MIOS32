@@ -1,0 +1,9 @@
+mios32_sdcard.c:125:5:MIOS32_SDCARD_Init	8	static
+mios32_sdcard.c:238:5:MIOS32_SDCARD_PowerOff	0	static
+mios32_sdcard.c:347:5:MIOS32_SDCARD_SendSDCCmd	24	static
+mios32_sdcard.c:148:5:MIOS32_SDCARD_PowerOn	16	static
+mios32_sdcard.c:286:5:MIOS32_SDCARD_CheckAvailable	16	static
+mios32_sdcard.c:439:5:MIOS32_SDCARD_SectorRead	24	static
+mios32_sdcard.c:514:5:MIOS32_SDCARD_SectorWrite	24	static
+mios32_sdcard.c:590:5:MIOS32_SDCARD_CIDRead	40	static
+mios32_sdcard.c:678:5:MIOS32_SDCARD_CSDRead	40	static

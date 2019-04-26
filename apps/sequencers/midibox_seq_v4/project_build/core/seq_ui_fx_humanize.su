@@ -1,0 +1,5 @@
+seq_ui_fx_humanize.c:65:12:Encoder_Handler	16	static
+seq_ui_fx_humanize.c:41:12:LED_Handler	0	static
+seq_ui_fx_humanize.c:183:12:LCD_Handler	16	static
+seq_ui_fx_humanize.c:139:12:Button_Handler	0	static
+seq_ui_fx_humanize.c:258:5:SEQ_UI_FX_HUMANIZE_Init	8	static

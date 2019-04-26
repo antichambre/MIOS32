@@ -1,0 +1,3 @@
+mini_cpp.cpp:29:7:void* operator new(size_t)	0	static
+mini_cpp.cpp:33:6:void operator delete(void*)	0	static
+mini_cpp.cpp:37:16:int __aeabi_atexit(void*, void (*)(void*), void*)	0	static

@@ -1,0 +1,5 @@
+seq_ui_bpm_presets.c:29:12:LED_Handler	0	static
+seq_ui_bpm_presets.c:47:12:Encoder_Handler	0	static
+seq_ui_bpm_presets.c:90:12:LCD_Handler	16	static
+seq_ui_bpm_presets.c:60:12:Button_Handler	8	static
+seq_ui_bpm_presets.c:124:5:SEQ_UI_BPM_PRESETS_Init	8	static

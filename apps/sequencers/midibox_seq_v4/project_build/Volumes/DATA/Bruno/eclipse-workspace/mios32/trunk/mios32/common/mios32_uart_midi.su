@@ -1,0 +1,9 @@
+mios32_uart_midi.c:125:5:MIOS32_UART_MIDI_CheckAvailable	8	static
+mios32_uart_midi.c:146:5:MIOS32_UART_MIDI_RS_OptimisationSet	8	static
+mios32_uart_midi.c:173:5:MIOS32_UART_MIDI_RS_OptimisationGet	0	static
+mios32_uart_midi.c:194:5:MIOS32_UART_MIDI_RS_Reset	16	static
+mios32_uart_midi.c:84:5:MIOS32_UART_MIDI_Init	8	static
+mios32_uart_midi.c:222:5:MIOS32_UART_MIDI_Periodic_mS	8	static
+mios32_uart_midi.c:260:5:MIOS32_UART_MIDI_PackageSend_NonBlocking	40	static
+mios32_uart_midi.c:327:5:MIOS32_UART_MIDI_PackageSend	16	static
+mios32_uart_midi.c:346:5:MIOS32_UART_MIDI_PackageReceive	24	static

@@ -1,0 +1,9 @@
+seq_statistics.c:46:5:SEQ_STATISTICS_Reset	0	static
+seq_statistics.c:37:5:SEQ_STATISTICS_Init	0	static
+seq_statistics.c:58:5:SEQ_STATISTICS_Idle	16	static
+seq_statistics.c:86:4:SEQ_STATISTICS_CurrentCPULoad	0	static
+seq_statistics.c:100:5:SEQ_STATISTICS_StopwatchInit	8	static
+seq_statistics.c:113:5:SEQ_STATISTICS_StopwatchReset	0	static
+seq_statistics.c:122:5:SEQ_STATISTICS_StopwatchCapture	8	static
+seq_statistics.c:137:5:SEQ_STATISTICS_StopwatchGetValue	0	static
+seq_statistics.c:145:12:SEQ_STATISTICS_StopwatchGetValueMax	0	static

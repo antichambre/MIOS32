@@ -1,0 +1,10 @@
+seq_file_gc.c:590:12:SEQ_FILE_GC_Write_Hlp	264	static
+seq_file_gc.c:161:12:get_dec	16	static
+seq_file_gc.c:180:12:get_ip	24	static
+seq_file_gc.c:106:5:SEQ_FILE_GC_Init	0	static
+seq_file_gc.c:137:5:SEQ_FILE_GC_Unload	0	static
+seq_file_gc.c:150:5:SEQ_FILE_GC_Valid	0	static
+seq_file_gc.c:207:5:SEQ_FILE_GC_Read	288	static
+seq_file_gc.c:120:5:SEQ_FILE_GC_Load	0	static
+seq_file_gc.c:866:5:SEQ_FILE_GC_Write	120	static
+seq_file_gc.c:910:5:SEQ_FILE_GC_Debug	0	static

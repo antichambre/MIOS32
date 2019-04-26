@@ -1,0 +1,4 @@
+mios32_irq.c:38:5:MIOS32_IRQ_Disable	0	static
+mios32_irq.c:66:5:MIOS32_IRQ_Enable	0	static
+mios32_irq.c:94:5:MIOS32_IRQ_Install	0	static
+mios32_irq.c:118:5:MIOS32_IRQ_DeInstall	0	static

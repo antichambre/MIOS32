@@ -1,0 +1,8 @@
+usbh_core.c:123:9:USBH_Connected	0	static
+usbh_core.c:136:9:USBH_Disconnected	0	static
+usbh_core.c:149:9:USBH_SOF	0	static
+usbh_core.c:198:13:USBH_DeInit	16	static
+usbh_core.c:161:6:USBH_Init	24	static
+usbh_core.c:376:6:USBH_ErrorHandle	8	static
+usbh_core.c:592:13:USBH_HandleControl	16	static
+usbh_core.c:224:6:USBH_Process	96	static

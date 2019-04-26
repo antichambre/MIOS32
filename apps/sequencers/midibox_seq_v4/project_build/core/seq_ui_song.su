@@ -1,0 +1,13 @@
+seq_ui_song.c:1406:12:EXIT_Handler	8	static
+seq_ui_song.c:913:12:LCD_Handler	64	static
+seq_ui_song.c:101:12:LED_Handler	40	static
+seq_ui_song.c:1453:12:checkChangePattern	24	static
+seq_ui_song.c:1418:5:SEQ_UI_SONG_Init	8	static
+seq_ui_song.c:1591:5:SEQ_UI_SONG_Copy	16	static
+seq_ui_song.c:1618:5:SEQ_UI_SONG_Clear	0	static
+seq_ui_song.c:1604:5:SEQ_UI_SONG_Paste	8	static
+seq_ui_song.c:1627:5:SEQ_UI_SONG_Insert	24	static
+seq_ui_song.c:1643:5:SEQ_UI_SONG_Delete	24	static
+seq_ui_song.c:231:12:Encoder_Handler	112	static
+seq_ui_song.c:645:5:SEQ_UI_SONG_Button_Handler	72	static
+seq_ui_song.c:1660:5:SEQ_UI_SONG_EditPosSet	0	static

@@ -1,0 +1,6 @@
+seq_ui_cv.c:102:12:Encoder_Handler	32	static
+seq_ui_cv.c:65:12:LED_Handler	0	static
+seq_ui_cv.c:517:12:EXIT_Handler	16	static
+seq_ui_cv.c:402:12:LCD_Handler	24	static
+seq_ui_cv.c:354:12:Button_Handler	0	static
+seq_ui_cv.c:541:5:SEQ_UI_CV_Init	8	static

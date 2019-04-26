@@ -1,0 +1,14 @@
+mios32_iic.c:567:13:EV_IRQHandler	8	static
+mios32_iic.c:706:13:ER_IRQHandler	16	static
+mios32_iic.c:206:13:MIOS32_IIC_InitPeripheral	40	static
+mios32_iic.c:146:5:MIOS32_IIC_Init	32	static
+mios32_iic.c:275:5:MIOS32_IIC_TransferBegin	16	static
+mios32_iic.c:304:5:MIOS32_IIC_TransferFinished	0	static
+mios32_iic.c:323:5:MIOS32_IIC_LastErrorGet	0	static
+mios32_iic.c:341:5:MIOS32_IIC_TransferCheck	0	static
+mios32_iic.c:382:5:MIOS32_IIC_TransferWait	40	static
+mios32_iic.c:498:5:MIOS32_IIC_Transfer	32	static
+mios32_iic.c:747:6:I2C2_EV_IRQHandler	0	static
+mios32_iic.c:752:6:I2C2_ER_IRQHandler	0	static
+mios32_iic.c:759:6:I2C1_EV_IRQHandler	0	static
+mios32_iic.c:764:6:I2C1_ER_IRQHandler	0	static

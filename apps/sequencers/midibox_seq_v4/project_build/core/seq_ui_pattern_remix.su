@@ -1,0 +1,5 @@
+seq_ui_pattern_remix.c:77:12:LED_Handler	8	static
+seq_ui_pattern_remix.c:783:12:LCD_Handler	32	static
+seq_ui_pattern_remix.c:143:12:Encoder_Handler	24	static
+seq_ui_pattern_remix.c:278:12:Button_Handler	24	static
+seq_ui_pattern_remix.c:1284:5:SEQ_UI_PATTERN_RMX_Init	8	static

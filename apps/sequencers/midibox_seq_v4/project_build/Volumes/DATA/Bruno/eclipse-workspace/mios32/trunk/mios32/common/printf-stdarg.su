@@ -1,0 +1,9 @@
+printf-stdarg.c:35:13:printchar	0	static
+printf-stdarg.c:51:12:prints	32	static
+printf-stdarg.c:88:12:printi	48	static
+printf-stdarg.c:131:12:print	56	static
+stdio.h:182:5:printf	16	static
+stdio.h:190:5:vprintf	0	static
+stdio.h:226:5:sprintf	20	static
+stdio.h:192:5:vsprintf	16	static
+stdio.h:267:5:snprintf	24	static

@@ -1,0 +1,9 @@
+seq_record.c:98:5:SEQ_RECORD_Reset	16	static
+seq_record.c:119:5:SEQ_RECORD_ResetAllTracks	16	static
+seq_record.c:134:5:SEQ_RECORD_AllNotesOff	0	static
+seq_record.c:69:5:SEQ_RECORD_Init	8	static
+seq_record.c:150:5:SEQ_RECORD_DebugActiveNotes	64	static
+seq_record.c:182:5:SEQ_RECORD_Enable	16	static
+seq_record.c:218:5:SEQ_RECORD_PrintEditScreen	0	static
+seq_record.c:242:5:SEQ_RECORD_Receive	760	static
+seq_record.c:689:5:SEQ_RECORD_NewStep	64	static

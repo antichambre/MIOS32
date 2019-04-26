@@ -1,0 +1,13 @@
+seq_ui_edit.c:1554:12:PassiveEditValid	8	static
+seq_ui_edit.c:1300:12:MIDI_IN_Handler	56	static
+seq_ui_edit.c:1532:12:PassiveEditEnter	8	static
+seq_ui_edit.c:89:5:SEQ_UI_EDIT_LED_Handler	32	static
+seq_ui_edit.c:1363:12:0	8	static
+seq_ui_edit.c:1428:12:1	56	static
+seq_ui_edit.c:1565:12:PassiveEditTakeOver	8	static
+seq_ui_edit.c:170:12:Encoder_Handler	72	static
+seq_ui_edit.c:533:5:SEQ_UI_EDIT_Button_Handler	32	static
+seq_ui_edit.c:1383:12:EXIT_Handler	8	static
+seq_ui_edit.c:750:5:SEQ_UI_EDIT_LCD_Handler	128	static
+seq_ui_edit.c:1291:12:LCD_Handler	0	static
+seq_ui_edit.c:1395:5:SEQ_UI_EDIT_Init	8	static

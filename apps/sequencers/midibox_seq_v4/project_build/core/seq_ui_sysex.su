@@ -1,0 +1,8 @@
+seq_ui_sysex.c:367:12:SEQ_UI_SYSEX_UpdateDirList	48	static
+seq_ui_sysex.c:407:12:SEQ_UI_SYSEX_StoreConfig	256	static
+seq_ui_sysex.c:328:12:EXIT_Handler	8	static
+seq_ui_sysex.c:93:12:Encoder_Handler	32	static
+seq_ui_sysex.c:75:12:LED_Handler	0	static
+seq_ui_sysex.c:258:12:LCD_Handler	40	static
+seq_ui_sysex.c:154:12:Button_Handler	288	static
+seq_ui_sysex.c:343:5:SEQ_UI_SYSEX_Init	8	static

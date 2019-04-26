@@ -1,0 +1,2 @@
+usbh_hid_keybd.c:238:13:KEYBRD_Decode	16	static
+usbh_hid_keybd.c:225:14:KEYBRD_Init	0	static

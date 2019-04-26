@@ -1,0 +1,15 @@
+stm32f4xx_dcmi.c:122:6:DCMI_DeInit	0	static
+stm32f4xx_dcmi.c:139:6:DCMI_Init	8	static
+stm32f4xx_dcmi.c:181:6:DCMI_StructInit	0	static
+stm32f4xx_dcmi.c:201:6:DCMI_CROPConfig	0	static
+stm32f4xx_dcmi.c:219:6:DCMI_CROPCmd	0	static
+stm32f4xx_dcmi.c:242:6:DCMI_SetEmbeddedSynchroCodes	0	static
+stm32f4xx_dcmi.c:257:6:DCMI_JPEGCmd	0	static
+stm32f4xx_dcmi.c:295:6:DCMI_Cmd	0	static
+stm32f4xx_dcmi.c:318:6:DCMI_CaptureCmd	0	static
+stm32f4xx_dcmi.c:340:10:DCMI_ReadData	0	static
+stm32f4xx_dcmi.c:373:6:DCMI_ITConfig	0	static
+stm32f4xx_dcmi.c:410:12:DCMI_GetFlagStatus	0	static
+stm32f4xx_dcmi.c:457:6:DCMI_ClearFlag	0	static
+stm32f4xx_dcmi.c:479:10:DCMI_GetITStatus	0	static
+stm32f4xx_dcmi.c:511:6:DCMI_ClearITPendingBit	0	static

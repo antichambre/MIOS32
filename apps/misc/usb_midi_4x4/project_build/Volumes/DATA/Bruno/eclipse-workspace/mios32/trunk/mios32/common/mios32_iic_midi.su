@@ -1,0 +1,11 @@
+mios32_iic_midi.c:55:5:MIOS32_IIC_MIDI_Init	0	static
+mios32_iic_midi.c:181:5:MIOS32_IIC_MIDI_ScanInterfaces	0	static
+mios32_iic_midi.c:236:5:MIOS32_IIC_MIDI_CheckAvailable	0	static
+mios32_iic_midi.c:257:5:MIOS32_IIC_MIDI_RS_OptimisationSet	0	static
+mios32_iic_midi.c:286:5:MIOS32_IIC_MIDI_RS_OptimisationGet	0	static
+mios32_iic_midi.c:306:5:MIOS32_IIC_MIDI_RS_Reset	0	static
+mios32_iic_midi.c:331:5:MIOS32_IIC_MIDI_Periodic_mS	0	static
+mios32_iic_midi.c:401:5:MIOS32_IIC_MIDI_PackageSend_NonBlocking	0	static
+mios32_iic_midi.c:418:5:MIOS32_IIC_MIDI_PackageSend	0	static
+mios32_iic_midi.c:492:5:MIOS32_IIC_MIDI_PackageReceive_NonBlocking	0	static
+mios32_iic_midi.c:509:5:MIOS32_IIC_MIDI_PackageReceive	0	static

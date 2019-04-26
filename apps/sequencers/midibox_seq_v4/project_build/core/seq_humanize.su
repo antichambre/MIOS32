@@ -1,0 +1,2 @@
+seq_humanize.c:31:5:SEQ_HUMANIZE_Init	0	static
+seq_humanize.c:40:5:SEQ_HUMANIZE_Event	24	static

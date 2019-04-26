@@ -1,0 +1,6 @@
+seq_ui_bookmarks.c:45:12:LED_Handler	0	static
+seq_ui_bookmarks.c:63:12:Encoder_Handler	8	static
+seq_ui_bookmarks.c:133:12:LCD_Handler	8	static
+seq_ui_bookmarks.c:89:5:SEQ_UI_BOOKMARKS_Button_Handler	16	static
+seq_ui_bookmarks.c:185:13:Button_StoreRequest	16	static
+seq_ui_bookmarks.c:168:5:SEQ_UI_BOOKMARKS_Init	8	static

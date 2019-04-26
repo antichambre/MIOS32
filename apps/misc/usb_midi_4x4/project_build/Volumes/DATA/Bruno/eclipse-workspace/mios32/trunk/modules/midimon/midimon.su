@@ -1,0 +1,14 @@
+midimon.c:437:12:get_on_off	8	static
+midimon.c:89:5:MIDIMON_Init	12	static
+midimon.c:115:5:MIDIMON_InitFromPresets	0	static
+midimon.c:128:5:MIDIMON_ActiveSet	0	static
+midimon.c:134:5:MIDIMON_ActiveGet	0	static
+midimon.c:140:5:MIDIMON_FilterActiveSet	0	static
+midimon.c:146:5:MIDIMON_FilterActiveGet	0	static
+midimon.c:152:5:MIDIMON_TempoActiveSet	0	static
+midimon.c:158:5:MIDIMON_TempoActiveGet	0	static
+midimon.c:179:5:MIDIMON_Print	128	static
+midimon.c:167:5:MIDIMON_Receive	24	static
+midimon.c:452:5:MIDIMON_TerminalHelp	8	static
+midimon.c:468:5:MIDIMON_TerminalParseLine	32	static
+midimon.c:548:5:MIDIMON_TerminalPrintConfig	16	static

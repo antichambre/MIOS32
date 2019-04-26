@@ -1,0 +1,10 @@
+tasks.c:155:13:TASK_Period1mS_LowPrio	8	static
+tasks.c:130:13:TASK_Period1mS	16	static
+tasks.c:105:13:TASK_MIDI	16	static
+tasks.c:79:5:TASKS_Init	24	static
+tasks.c:182:6:TASKS_J16SemaphoreTake	8	static
+tasks.c:188:6:TASKS_J16SemaphoreGive	0	static
+tasks.c:199:6:TASKS_MUTEX_MIDIOUT_Take	8	static
+tasks.c:200:6:TASKS_MUTEX_MIDIOUT_Give	0	static
+tasks.c:201:6:TASKS_MUTEX_MIDIIN_Take	8	static
+tasks.c:202:6:TASKS_MUTEX_MIDIIN_Give	0	static

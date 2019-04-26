@@ -1,0 +1,5 @@
+seq_ui_stepsel.c:175:12:LCD_Handler	56	static
+seq_ui_stepsel.c:59:12:Encoder_Handler	24	static
+seq_ui_stepsel.c:33:12:LED_Handler	8	static
+seq_ui_stepsel.c:138:5:SEQ_UI_STEPSEL_Button_Handler	0	static
+seq_ui_stepsel.c:318:5:SEQ_UI_STEPSEL_Init	8	static

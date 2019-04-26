@@ -1,0 +1,5 @@
+seq_ui_fx_lfo.c:101:12:Encoder_Handler	32	static
+seq_ui_fx_lfo.c:60:12:LED_Handler	0	static
+seq_ui_fx_lfo.c:297:12:LCD_Handler	48	static
+seq_ui_fx_lfo.c:253:12:Button_Handler	0	static
+seq_ui_fx_lfo.c:461:5:SEQ_UI_FX_LFO_Init	8	static

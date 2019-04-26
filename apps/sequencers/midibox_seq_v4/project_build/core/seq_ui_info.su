@@ -1,0 +1,7 @@
+seq_ui_info.c:366:12:SEQ_UI_INFO_UpdateList	16	static
+seq_ui_info.c:392:13:Button_ResetRequest	8	static
+seq_ui_info.c:115:12:LED_Handler	0	static
+seq_ui_info.c:271:12:LCD_Handler	32	static
+seq_ui_info.c:133:12:Encoder_Handler	16	static
+seq_ui_info.c:159:12:Button_Handler	8	static
+seq_ui_info.c:349:5:SEQ_UI_INFO_Init	8	static

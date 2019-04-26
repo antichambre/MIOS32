@@ -1,0 +1,5 @@
+seq_led.c:38:5:SEQ_LED_Init	0	static
+seq_led.c:48:5:SEQ_LED_PinSet	16	static
+seq_led.c:86:5:SEQ_LED_SRSet	0	static
+seq_led.c:122:5:SEQ_LED_SRGet	8	static
+seq_led.c:152:5:SEQ_LED_DigitPatternGet	32	static

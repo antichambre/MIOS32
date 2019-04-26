@@ -1,0 +1,4 @@
+usb_dcd_int.c:638:17:DCD_WriteEmptyTxFifo	32	static
+usb_dcd_int.c:116:10:USBD_OTG_EP1OUT_ISR_Handler	16	static
+usb_dcd_int.c:159:10:USBD_OTG_EP1IN_ISR_Handler	16	static
+usb_dcd_int.c:209:10:USBD_OTG_ISR_Handler	56	static

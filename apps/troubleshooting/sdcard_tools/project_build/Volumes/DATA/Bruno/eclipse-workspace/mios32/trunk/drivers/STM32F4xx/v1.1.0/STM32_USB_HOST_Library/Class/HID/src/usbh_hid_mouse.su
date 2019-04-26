@@ -1,0 +1,2 @@
+usbh_hid_mouse.c:131:14:MOUSE_Decode	0	static
+usbh_hid_mouse.c:119:14:MOUSE_Init	0	static

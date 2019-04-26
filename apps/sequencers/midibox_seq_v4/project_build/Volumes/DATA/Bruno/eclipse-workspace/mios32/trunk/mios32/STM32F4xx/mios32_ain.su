@@ -1,0 +1,7 @@
+mios32_ain.c:162:5:MIOS32_AIN_Init	0	static
+mios32_ain.c:335:5:MIOS32_AIN_ServicePrepareCallback_Init	0	static
+mios32_ain.c:348:5:MIOS32_AIN_PinGet	0	static
+mios32_ain.c:367:5:MIOS32_AIN_DeadbandGet	0	static
+mios32_ain.c:381:5:MIOS32_AIN_DeadbandSet	0	static
+mios32_ain.c:401:5:MIOS32_AIN_Handler	0	static
+mios32_ain.c:459:5:MIOS32_AIN_StartConversions	0	static

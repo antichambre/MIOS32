@@ -1,0 +1,9 @@
+seq_ui_menu.c:851:12:SEQ_UI_MENU_UpdatePageList	16	static
+seq_ui_menu.c:608:12:LCD_Handler	24	static
+seq_ui_menu.c:906:12:DoSessionSaveOrNew	80	static
+seq_ui_menu.c:879:12:SEQ_UI_MENU_UpdateSessionList	16	static
+seq_ui_menu.c:100:12:LED_Handler	0	static
+seq_ui_menu.c:1034:12:DoSessionDelete	80	static
+seq_ui_menu.c:138:12:Encoder_Handler	24	static
+seq_ui_menu.c:413:12:Button_Handler	88	static
+seq_ui_menu.c:810:5:SEQ_UI_MENU_Init	16	static

@@ -1,0 +1,9 @@
+osc_client.c:76:5:OSC_CLIENT_Init	0	static
+osc_client.c:92:5:OSC_CLIENT_TransferModeSet	0	static
+osc_client.c:101:4:OSC_CLIENT_TransferModeGet	0	static
+osc_client.c:110:13:OSC_CLIENT_TransferModeFullNameGet	0	static
+osc_client.c:118:13:OSC_CLIENT_TransferModeShortNameGet	0	static
+osc_client.c:128:5:OSC_CLIENT_SendMIDIEvent	200	static
+osc_client.c:412:5:OSC_CLIENT_SendNRPNEvent	192	static
+osc_client.c:494:5:OSC_CLIENT_SendSysEx	168	static
+osc_client.c:536:5:OSC_CLIENT_SendMIDIEventBundled	288	static

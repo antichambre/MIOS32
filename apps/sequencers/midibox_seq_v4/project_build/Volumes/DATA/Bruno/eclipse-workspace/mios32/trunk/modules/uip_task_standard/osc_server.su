@@ -1,0 +1,16 @@
+osc_server.c:464:12:OSC_SERVER_Method_MCMPP	24	static
+osc_server.c:612:12:OSC_SERVER_Method_EventPB	16	static
+osc_server.c:659:12:OSC_SERVER_Method_EventNRPN	32	static
+osc_server.c:555:12:OSC_SERVER_Method_Event	16	static
+osc_server.c:738:12:OSC_SERVER_Method_EventTOSC	16	static
+osc_server.c:402:12:OSC_SERVER_Method_MIDI	16	static
+osc_server.c:69:5:OSC_SERVER_Init	24	static
+osc_server.c:131:5:OSC_SERVER_InitFromPresets	8	static
+osc_server.c:147:5:OSC_SERVER_RemoteIP_Set	0	static
+osc_server.c:160:5:OSC_SERVER_RemoteIP_Get	0	static
+osc_server.c:166:5:OSC_SERVER_RemotePortSet	0	static
+osc_server.c:179:5:OSC_SERVER_RemotePortGet	0	static
+osc_server.c:184:5:OSC_SERVER_LocalPortSet	0	static
+osc_server.c:206:5:OSC_SERVER_LocalPortGet	0	static
+osc_server.c:216:5:OSC_SERVER_AppCall	32	static
+osc_server.c:313:5:OSC_SERVER_SendPacket	24	static

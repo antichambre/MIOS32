@@ -1,0 +1,6 @@
+seq_ui_fx_loop.c:72:12:Encoder_Handler	24	static
+seq_ui_fx_loop.c:49:12:LED_Handler	0	static
+seq_ui_fx_loop.c:268:12:EXIT_Handler	16	static
+seq_ui_fx_loop.c:201:12:LCD_Handler	112	static
+seq_ui_fx_loop.c:156:12:Button_Handler	0	static
+seq_ui_fx_loop.c:289:5:SEQ_UI_FX_LOOP_Init	8	static

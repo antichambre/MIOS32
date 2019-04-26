@@ -1,0 +1,9 @@
+mios32_dout.c:69:5:MIOS32_DOUT_Init	0	static
+mios32_dout.c:100:5:MIOS32_DOUT_PinGet	8	static
+mios32_dout.c:119:5:MIOS32_DOUT_PinSet	16	static
+mios32_dout.c:154:5:MIOS32_DOUT_PagePinGet	8	static
+mios32_dout.c:176:5:MIOS32_DOUT_PagePinSet	16	static
+mios32_dout.c:208:5:MIOS32_DOUT_SRGet	8	static
+mios32_dout.c:226:5:MIOS32_DOUT_SRSet	16	static
+mios32_dout.c:255:5:MIOS32_DOUT_PageSRGet	8	static
+mios32_dout.c:275:5:MIOS32_DOUT_PageSRSet	16	static

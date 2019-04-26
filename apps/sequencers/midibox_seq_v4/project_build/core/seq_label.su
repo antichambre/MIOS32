@@ -1,0 +1,7 @@
+seq_label.c:84:5:SEQ_LABEL_Init	0	static
+seq_label.c:93:5:SEQ_LABEL_NumPresets	0	static
+seq_label.c:102:5:SEQ_LABEL_CopyPreset	0	static
+seq_label.c:118:5:SEQ_LABEL_NumPresetsCategory	0	static
+seq_label.c:127:5:SEQ_LABEL_CopyPresetCategory	0	static
+seq_label.c:142:5:SEQ_LABEL_NumPresetsDrum	0	static
+seq_label.c:151:5:SEQ_LABEL_CopyPresetDrum	0	static

@@ -1,0 +1,9 @@
+mios32_srio.c:327:13:MIOS32_SRIO_DMA_Callback	24	static
+mios32_srio.c:91:5:MIOS32_SRIO_Init	8	static
+mios32_srio.c:160:4:MIOS32_SRIO_ScanNumGet	0	static
+mios32_srio.c:172:5:MIOS32_SRIO_ScanNumSet	0	static
+mios32_srio.c:187:5:MIOS32_SRIO_DoutPageGet	0	static
+mios32_srio.c:201:5:MIOS32_SRIO_DebounceGet	0	static
+mios32_srio.c:234:5:MIOS32_SRIO_DebounceSet	0	static
+mios32_srio.c:253:5:MIOS32_SRIO_DebounceStart	0	static
+mios32_srio.c:267:5:MIOS32_SRIO_ScanStart	24	static

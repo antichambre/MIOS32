@@ -1,0 +1,5 @@
+seq_ui_trgasg.c:73:12:Encoder_Handler	24	static
+seq_ui_trgasg.c:44:12:LED_Handler	0	static
+seq_ui_trgasg.c:208:12:LCD_Handler	16	static
+seq_ui_trgasg.c:164:12:Button_Handler	0	static
+seq_ui_trgasg.c:270:5:SEQ_UI_TRGASG_Init	8	static

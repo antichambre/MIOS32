@@ -1,0 +1,8 @@
+seq_cc.c:39:5:SEQ_CC_Init	16	static
+seq_cc.c:326:5:SEQ_CC_Get	0	static
+seq_cc.c:297:5:SEQ_CC_MIDI_Get	8	static
+seq_cc.c:444:5:SEQ_CC_LinkUpdate	16	static
+seq_cc.c:102:5:SEQ_CC_Set	24	static
+seq_cc.c:256:5:SEQ_CC_MIDI_Set	0	static
+seq_cc.c:503:5:SEQ_CC_TrackHasVelocityParLayer	0	static
+seq_cc.c:514:5:SEQ_CC_TrackHasAccentTrgLayer	0	static

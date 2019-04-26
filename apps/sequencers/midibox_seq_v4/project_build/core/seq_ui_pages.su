@@ -1,0 +1,8 @@
+seq_ui_pages.c:111:5:SEQ_UI_PAGES_CallInit	8	static
+seq_ui_pages.c:122:13:SEQ_UI_PAGES_PageNameGet	0	static
+seq_ui_pages.c:130:13:SEQ_UI_PAGES_CfgNameGet	0	static
+seq_ui_pages.c:138:15:SEQ_UI_PAGES_CfgNameSearch	16	static
+seq_ui_pages.c:151:15:SEQ_UI_PAGES_OldBmIndexSearch	0	static
+seq_ui_pages.c:189:15:SEQ_UI_PAGES_MenuShortcutPageGet	0	static
+seq_ui_pages.c:197:5:SEQ_UI_PAGES_MenuShortcutPageSet	0	static
+seq_ui_pages.c:211:13:SEQ_UI_PAGES_MenuShortcutNameGet	0	static

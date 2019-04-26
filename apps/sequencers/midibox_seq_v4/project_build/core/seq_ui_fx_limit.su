@@ -1,0 +1,5 @@
+seq_ui_fx_limit.c:37:12:LED_Handler	0	static
+seq_ui_fx_limit.c:152:12:LCD_Handler	16	static
+seq_ui_fx_limit.c:59:12:Encoder_Handler	0	static
+seq_ui_fx_limit.c:108:12:Button_Handler	0	static
+seq_ui_fx_limit.c:207:5:SEQ_UI_FX_LIMIT_Init	8	static

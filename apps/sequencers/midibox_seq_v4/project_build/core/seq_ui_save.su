@@ -1,0 +1,5 @@
+seq_ui_save.c:91:12:Encoder_Handler	48	static
+seq_ui_save.c:51:12:LED_Handler	0	static
+seq_ui_save.c:334:12:LCD_Handler	48	static
+seq_ui_save.c:237:12:Button_Handler	8	static
+seq_ui_save.c:477:5:SEQ_UI_SAVE_Init	8	static

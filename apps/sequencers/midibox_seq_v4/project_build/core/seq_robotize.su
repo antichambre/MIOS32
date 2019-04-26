@@ -1,0 +1,3 @@
+seq_robotize.c:31:5:SEQ_ROBOTIZE_Init	0	static
+seq_robotize.c:41:4:SEQ_ROBOTIZE_Check_Probabilities	32	static
+seq_robotize.c:62:22:SEQ_ROBOTIZE_Event	48	static

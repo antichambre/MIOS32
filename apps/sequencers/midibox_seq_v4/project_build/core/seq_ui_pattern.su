@@ -1,0 +1,9 @@
+seq_ui_pattern.c:54:12:LED_Handler	8	static
+seq_ui_pattern.c:280:12:LCD_Handler	32	static
+seq_ui_pattern.c:75:12:2	32	static
+seq_ui_pattern.c:75:12:Encoder_Handler	16	static
+seq_ui_pattern.c:200:12:Button_Handler	24	static
+seq_ui_pattern.c:390:5:SEQ_UI_PATTERN_Init	8	static
+seq_ui_pattern.c:413:5:SEQ_UI_PATTERN_MultiCopy	88	static
+seq_ui_pattern.c:470:5:SEQ_UI_PATTERN_MultiPaste	144	static
+seq_ui_pattern.c:547:5:SEQ_UI_PATTERN_MultiClear	24	static

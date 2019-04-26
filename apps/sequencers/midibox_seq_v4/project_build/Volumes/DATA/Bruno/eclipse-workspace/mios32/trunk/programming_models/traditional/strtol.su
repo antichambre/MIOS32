@@ -1,0 +1,2 @@
+stdlib.h:136:6:_strtol_r	36	static
+stdlib.h:135:6:strtol	12	static

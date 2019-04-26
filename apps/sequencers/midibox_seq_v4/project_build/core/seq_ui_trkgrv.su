@@ -1,0 +1,6 @@
+seq_ui_trkgrv.c:86:12:Encoder_Handler	32	static
+seq_ui_trkgrv.c:57:12:LED_Handler	0	static
+seq_ui_trkgrv.c:476:12:EXIT_Handler	16	static
+seq_ui_trkgrv.c:337:12:LCD_Handler	24	static
+seq_ui_trkgrv.c:283:12:Button_Handler	16	static
+seq_ui_trkgrv.c:497:5:SEQ_UI_TRKGRV_Init	8	static

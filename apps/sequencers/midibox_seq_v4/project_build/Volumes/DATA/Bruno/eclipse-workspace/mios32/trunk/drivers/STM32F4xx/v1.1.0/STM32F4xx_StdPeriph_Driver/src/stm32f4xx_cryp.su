@@ -1,0 +1,17 @@
+stm32f4xx_cryp.c:215:6:CRYP_DeInit	8	static
+stm32f4xx_cryp.c:231:6:CRYP_Init	8	static
+stm32f4xx_cryp.c:270:6:CRYP_StructInit	0	static
+stm32f4xx_cryp.c:292:6:CRYP_KeyInit	0	static
+stm32f4xx_cryp.c:311:6:CRYP_KeyStructInit	0	static
+stm32f4xx_cryp.c:329:6:CRYP_IVInit	0	static
+stm32f4xx_cryp.c:343:6:CRYP_IVStructInit	0	static
+stm32f4xx_cryp.c:358:6:CRYP_FIFOFlush	0	static
+stm32f4xx_cryp.c:370:6:CRYP_Cmd	0	static
+stm32f4xx_cryp.c:413:6:CRYP_DataIn	0	static
+stm32f4xx_cryp.c:423:10:CRYP_DataOut	0	static
+stm32f4xx_cryp.c:466:13:CRYP_SaveContext	24	static
+stm32f4xx_cryp.c:551:6:CRYP_RestoreContext	0	static
+stm32f4xx_cryp.c:612:6:CRYP_DMACmd	0	static
+stm32f4xx_cryp.c:737:6:CRYP_ITConfig	0	static
+stm32f4xx_cryp.c:765:10:CRYP_GetITStatus	0	static
+stm32f4xx_cryp.c:799:12:CRYP_GetFlagStatus	0	static

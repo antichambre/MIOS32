@@ -1,0 +1,35 @@
+project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.o: \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/src/stm32f4xx_spi.c \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_spi.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/CMSIS/ST/STM32F4xx/Include/stm32f4xx.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/CMSIS/Include/core_cm4.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/CMSIS/Include/core_cmInstr.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/CMSIS/Include/core_cmFunc.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/CMSIS/Include/core_cm4_simd.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/CMSIS/ST/STM32F4xx/Include/system_stm32f4xx.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/programming_models/traditional/stm32f4xx_conf.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_adc.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_can.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_crc.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_cryp.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dac.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dbgmcu.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dcmi.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_dma.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_exti.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_flash.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_fsmc.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_hash.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_gpio.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_i2c.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_iwdg.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_pwr.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_rcc.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_rng.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_rtc.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_sdio.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_syscfg.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_tim.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_usart.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/stm32f4xx_wwdg.h \
+ /Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32F4xx_StdPeriph_Driver/inc/misc.h

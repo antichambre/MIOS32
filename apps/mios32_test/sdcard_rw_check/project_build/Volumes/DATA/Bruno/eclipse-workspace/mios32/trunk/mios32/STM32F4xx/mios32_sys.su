@@ -1,0 +1,9 @@
+mios32_sys.c:227:5:MIOS32_SYS_Reset	8	static
+mios32_sys.c:293:5:MIOS32_SYS_ChipIDGet	0	static
+mios32_sys.c:303:5:MIOS32_SYS_FlashSizeGet	0	static
+mios32_sys.c:313:5:MIOS32_SYS_RAMSizeGet	0	static
+mios32_sys.c:331:5:MIOS32_SYS_SerialNumberGet	0	static
+mios32_sys.c:369:5:MIOS32_SYS_TimeSet	32	static
+mios32_sys.c:75:5:MIOS32_SYS_Init	24	static
+mios32_sys.c:428:19:MIOS32_SYS_TimeGet	16	static
+mios32_sys.c:453:5:MIOS32_SYS_DMA_CallbackSet	0	static

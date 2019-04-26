@@ -1,0 +1,7 @@
+seq_ui_eth.c:563:12:SEQ_UI_ETH_UpdateNCfg	24	static
+seq_ui_eth.c:96:12:LED_Handler	0	static
+seq_ui_eth.c:619:12:SEQ_UI_ETH_UpdateOCfg	8	static
+seq_ui_eth.c:127:12:Encoder_Handler	32	static
+seq_ui_eth.c:368:12:LCD_Handler	136	static
+seq_ui_eth.c:330:12:Button_Handler	0	static
+seq_ui_eth.c:542:5:SEQ_UI_ETH_Init	8	static

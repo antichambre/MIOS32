@@ -1,0 +1,11 @@
+seq_ui_trkjam.c:207:12:SetSubpageBasedOnItem	0	static
+seq_ui_trkjam.c:1294:12:SEQ_UI_TRKJAM_Hlp_PrintPattern	16	static
+seq_ui_trkjam.c:1264:12:GetNumNoteLayers	8	static
+seq_ui_trkjam.c:114:12:LED_Handler	8	static
+seq_ui_trkjam.c:244:12:Encoder_Handler	40	static
+seq_ui_trkjam.c:1214:12:EXIT_Handler	8	static
+seq_ui_trkjam.c:830:12:LCD_Handler	48	static
+seq_ui_trkjam.c:784:12:Button_Handler	8	static
+seq_ui_trkjam.c:229:5:SEQ_UI_TRKJAM_RecordModeSet	0	static
+seq_ui_trkjam.c:1241:5:SEQ_UI_TRKJAM_Init	8	static
+seq_ui_trkjam.c:1285:5:SEQ_UI_TRKJAM_PatternRecordSelected	0	static

@@ -1,0 +1,7 @@
+seq_ui_midi.c:197:12:Encoder_Handler	32	static
+seq_ui_midi.c:101:12:LED_Handler	8	static
+seq_ui_midi.c:173:12:SetSubpageBasedOnItem	0	static
+seq_ui_midi.c:1102:12:EXIT_Handler	16	static
+seq_ui_midi.c:711:12:LCD_Handler	32	static
+seq_ui_midi.c:665:12:Button_Handler	8	static
+seq_ui_midi.c:1128:5:SEQ_UI_MIDI_Init	8	static

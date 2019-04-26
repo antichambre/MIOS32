@@ -1,0 +1,9 @@
+app.c:208:13:APP_Periodic_100uS	16	static
+app.c:50:6:APP_Init	16	static
+app.c:81:6:APP_Background	8	static
+app.c:100:6:APP_MIDI_NotifyPackage	16	static
+app.c:164:6:APP_SRIO_ServicePrepare	0	static
+app.c:172:6:APP_SRIO_ServiceFinish	0	static
+app.c:181:6:APP_DIN_NotifyToggle	0	static
+app.c:191:6:APP_ENC_NotifyChange	0	static
+app.c:199:6:APP_AIN_NotifyChange	0	static

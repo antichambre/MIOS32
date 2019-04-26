@@ -1,0 +1,16 @@
+seq_midimp.c:334:12:SEQ_MIDIMP_eof	0	static
+seq_midimp.c:518:12:SEQ_MIDIMP_PlayMeta	0	static
+seq_midimp.c:553:12:SEQ_MIDIMP_PlayMetaAnalyze	0	static
+seq_midimp.c:369:12:SEQ_MIDIMP_PlayEvent	56	static
+seq_midimp.c:347:12:SEQ_MIDIMP_seek	0	static
+seq_midimp.c:537:12:SEQ_MIDIMP_PlayEventAnalyze	0	static
+seq_midimp.c:318:12:SEQ_MIDIMP_read	8	static
+seq_midimp.c:92:5:SEQ_MIDIMP_Init	0	static
+seq_midimp.c:110:19:SEQ_MIDIMP_ModeGet	0	static
+seq_midimp.c:115:5:SEQ_MIDIMP_ModeSet	0	static
+seq_midimp.c:130:5:SEQ_MIDIMP_ResolutionGet	0	static
+seq_midimp.c:135:5:SEQ_MIDIMP_ResolutionSet	0	static
+seq_midimp.c:147:5:SEQ_MIDIMP_NumLayersGet	0	static
+seq_midimp.c:152:5:SEQ_MIDIMP_NumLayersSet	0	static
+seq_midimp.c:165:5:SEQ_MIDIMP_MaxBarsGet	0	static
+seq_midimp.c:180:5:SEQ_MIDIMP_ReadFile	40	static

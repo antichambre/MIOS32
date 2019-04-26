@@ -1,0 +1,5 @@
+seq_ui_parsel.c:30:12:LED_Handler	0	static
+seq_ui_parsel.c:120:12:LCD_Handler	32	static
+seq_ui_parsel.c:48:12:Encoder_Handler	16	static
+seq_ui_parsel.c:83:5:SEQ_UI_PARSEL_Button_Handler	0	static
+seq_ui_parsel.c:181:5:SEQ_UI_PARSEL_Init	8	static

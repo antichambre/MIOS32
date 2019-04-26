@@ -1,0 +1,11 @@
+seq_layer.c:189:5:SEQ_LAYER_ResetLatchedValues	8	static
+seq_layer.c:207:5:SEQ_LAYER_ResetTrackPCBankLatchedValues	0	static
+seq_layer.c:223:5:SEQ_LAYER_SendPCBankValues	32	static
+seq_layer.c:262:13:SEQ_LAYER_GetEvntModeName	0	static
+seq_layer.c:329:5:SEQ_LAYER_GetEventsPlus	128	static
+seq_layer.c:275:5:SEQ_LAYER_GetEvntOfLayer	688	static
+seq_layer.c:903:5:SEQ_LAYER_RecEvent	80	static
+seq_layer.c:1200:5:SEQ_LAYER_DirectSendEvent	16	static
+seq_layer.c:1451:5:SEQ_LAYER_CopyParLayerPreset	40	static
+seq_layer.c:1269:5:SEQ_LAYER_CopyPreset	40	static
+seq_layer.c:146:5:SEQ_LAYER_Init	8	static

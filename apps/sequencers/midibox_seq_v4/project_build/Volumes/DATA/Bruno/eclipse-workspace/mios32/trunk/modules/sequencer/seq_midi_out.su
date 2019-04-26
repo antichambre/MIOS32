@@ -1,0 +1,13 @@
+seq_midi_out.c:817:13:SEQ_MIDI_OUT_SlotFree	0	static
+seq_midi_out.c:183:5:SEQ_MIDI_OUT_Callback_MIDI_SendPackage_Set	0	static
+seq_midi_out.c:211:5:SEQ_MIDI_OUT_Callback_BPM_IsRunning_Set	0	static
+seq_midi_out.c:239:5:SEQ_MIDI_OUT_Callback_BPM_TickGet_Set	0	static
+seq_midi_out.c:270:5:SEQ_MIDI_OUT_Callback_BPM_Set_Set	0	static
+seq_midi_out.c:292:5:SEQ_MIDI_OUT_Send	32	static
+seq_midi_out.c:449:5:SEQ_MIDI_OUT_ReSchedule	72	static
+seq_midi_out.c:547:5:SEQ_MIDI_OUT_FlushQueue	8	static
+seq_midi_out.c:568:5:SEQ_MIDI_OUT_FreeHeap	16	static
+seq_midi_out.c:126:5:SEQ_MIDI_OUT_Init	8	static
+seq_midi_out.c:606:5:SEQ_MIDI_OUT_Handler	48	static
+seq_midi_out.c:863:5:SEQ_MIDI_OUT_DelaySet	0	static
+seq_midi_out.c:875:5:SEQ_MIDI_OUT_DelayGet	0	static

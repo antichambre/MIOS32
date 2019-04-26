@@ -1,0 +1,6 @@
+uip-neighbor.c:123:1:find_entry	16	static
+uip-neighbor.c:63:1:uip_neighbor_init	0	static
+uip-neighbor.c:73:1:uip_neighbor_periodic	0	static
+uip-neighbor.c:85:1:uip_neighbor_add	20	static
+uip-neighbor.c:136:1:uip_neighbor_update	8	static
+uip-neighbor.c:147:1:uip_neighbor_lookup	8	static

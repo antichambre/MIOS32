@@ -1,0 +1,6 @@
+seq_ui_trkdiv.c:47:12:QUICKSEL_SearchItem	16	static
+seq_ui_trkdiv.c:98:12:Encoder_Handler	16	static
+seq_ui_trkdiv.c:63:12:LED_Handler	8	static
+seq_ui_trkdiv.c:221:12:LCD_Handler	16	static
+seq_ui_trkdiv.c:183:12:Button_Handler	0	static
+seq_ui_trkdiv.c:319:5:SEQ_UI_TRKDIV_Init	8	static

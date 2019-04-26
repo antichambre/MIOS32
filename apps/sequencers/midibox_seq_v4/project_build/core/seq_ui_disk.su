@@ -1,0 +1,14 @@
+seq_ui_disk.c:1841:12:DoSessionCopyPatterns	104	static
+seq_ui_disk.c:1960:12:DoSessionCopySongs	88	static
+seq_ui_disk.c:2046:12:DoSessionCopyMixerMaps	88	static
+seq_ui_disk.c:1753:12:DoMfExport	88	static
+seq_ui_disk.c:1697:12:SEQ_UI_DISK_UpdateSessionDirList	16	static
+seq_ui_disk.c:1724:12:SEQ_UI_DISK_UpdateMfDirList	24	static
+seq_ui_disk.c:148:12:LED_Handler	0	static
+seq_ui_disk.c:1172:12:LCD_Handler	32	static
+seq_ui_disk.c:2133:12:2	40	static
+seq_ui_disk.c:2178:12:3	40	static
+seq_ui_disk.c:2230:12:4	40	static
+seq_ui_disk.c:235:12:Encoder_Handler	80	static
+seq_ui_disk.c:919:12:Button_Handler	88	static
+seq_ui_disk.c:1676:5:SEQ_UI_DISK_Init	8	static

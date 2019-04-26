@@ -1,0 +1,12 @@
+mid_parser.c:451:12:MID_PARSER_ReadWord	24	static
+mid_parser.c:470:12:MID_PARSER_ReadVarLen	24	static
+mid_parser.c:83:5:MID_PARSER_Init	0	static
+mid_parser.c:103:5:MID_PARSER_InstallFileCallbacks	0	static
+mid_parser.c:111:5:MID_PARSER_InstallEventCallbacks	0	static
+mid_parser.c:122:5:MID_PARSER_FileIsValid	0	static
+mid_parser.c:130:5:MID_PARSER_Read	32	static
+mid_parser.c:252:5:MIDI_PARSER_FormatGet	0	static
+mid_parser.c:260:5:MIDI_PARSER_PPQN_Get	0	static
+mid_parser.c:269:5:MIDI_PARSER_TrackNumGet	0	static
+mid_parser.c:281:5:MID_PARSER_FetchEvents	72	static
+mid_parser.c:492:5:MID_PARSER_RestartSong	0	static

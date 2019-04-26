@@ -1,0 +1,6 @@
+mios32_iic_bs.c:52:5:MIOS32_IIC_BS_Init	0	static
+mios32_iic_bs.c:87:5:MIOS32_IIC_BS_ScanBankSticks	0	static
+mios32_iic_bs.c:129:5:MIOS32_IIC_BS_CheckAvailable	0	static
+mios32_iic_bs.c:151:5:MIOS32_IIC_BS_Read	0	static
+mios32_iic_bs.c:204:5:MIOS32_IIC_BS_Write	0	static
+mios32_iic_bs.c:252:5:MIOS32_IIC_BS_CheckWriteFinished	0	static

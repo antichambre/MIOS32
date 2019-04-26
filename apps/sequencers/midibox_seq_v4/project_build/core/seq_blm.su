@@ -1,0 +1,7 @@
+seq_blm.c:199:12:SEQ_BLM_LED_UpdateGridMode	96	static
+seq_blm.c:1713:12:SEQ_BLM_FaderCallback	24	static
+seq_blm.c:406:12:SEQ_BLM_BUTTON_GP_GridMode	72	static
+seq_blm.c:1744:11:SEQ_BLM_BUTTON_Hlp_TransposeNote	0	static
+seq_blm.c:1376:12:SEQ_BLM_ButtonCallback	72	static
+seq_blm.c:158:5:SEQ_BLM_Init	8	static
+seq_blm.c:1248:5:SEQ_BLM_LED_Update	32	static

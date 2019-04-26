@@ -1,0 +1,9 @@
+mios32_mf.c:93:5:MIOS32_MF_Init	0	static
+mios32_mf.c:136:5:MIOS32_MF_FaderMove	0	static
+mios32_mf.c:177:5:MIOS32_MF_FaderDirectMove	0	static
+mios32_mf.c:204:5:MIOS32_MF_SuspendSet	0	static
+mios32_mf.c:232:5:MIOS32_MF_SuspendGet	0	static
+mios32_mf.c:252:5:MIOS32_MF_TouchDetectionReset	0	static
+mios32_mf.c:282:5:MIOS32_MF_ConfigSet	0	static
+mios32_mf.c:307:20:MIOS32_MF_ConfigGet	0	static
+mios32_mf.c:335:5:MIOS32_MF_Tick	0	static

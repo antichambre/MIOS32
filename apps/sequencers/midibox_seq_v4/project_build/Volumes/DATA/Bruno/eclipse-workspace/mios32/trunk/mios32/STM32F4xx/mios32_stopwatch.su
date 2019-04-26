@@ -1,0 +1,3 @@
+mios32_stopwatch.c:74:5:MIOS32_STOPWATCH_Init	32	static
+mios32_stopwatch.c:104:5:MIOS32_STOPWATCH_Reset	8	static
+mios32_stopwatch.c:119:5:MIOS32_STOPWATCH_ValueGet	8	static

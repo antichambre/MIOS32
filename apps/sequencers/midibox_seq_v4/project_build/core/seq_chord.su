@@ -1,0 +1,4 @@
+seq_chord.c:232:5:SEQ_CHORD_Init	0	static
+seq_chord.c:243:5:SEQ_CHORD_NumGet	0	static
+seq_chord.c:257:7:SEQ_CHORD_NameGet	0	static
+seq_chord.c:278:5:SEQ_CHORD_NoteGet	8	static

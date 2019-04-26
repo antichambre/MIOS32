@@ -1,0 +1,7 @@
+notestack.c:157:5:NOTESTACK_Pop	20	static
+notestack.c:70:5:NOTESTACK_Push	24	static
+notestack.c:203:5:NOTESTACK_CountActiveNotes	8	static
+notestack.c:221:5:NOTESTACK_RemoveNonActiveNotes	16	static
+notestack.c:244:5:NOTESTACK_Clear	0	static
+notestack.c:51:5:NOTESTACK_Init	8	static
+notestack.c:263:5:NOTESTACK_SendDebugMessage	80	static

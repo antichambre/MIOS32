@@ -1,0 +1,11 @@
+usb_hcd_int.c:228:17:USB_OTG_USBH_handle_sof_ISR	24	static
+usb_hcd_int.c:248:17:USB_OTG_USBH_handle_Disconnect_ISR	24	static
+usb_hcd_int.c:271:17:USB_OTG_USBH_handle_nptxfempty_ISR	40	static
+usb_hcd_int.c:319:17:USB_OTG_USBH_handle_ptxfempty_ISR	32	static
+usb_hcd_int.c:367:17:USB_OTG_USBH_handle_port_ISR	40	static
+usb_hcd_int.c:468:10:USB_OTG_USBH_handle_hc_n_Out_ISR	112	static
+usb_hcd_int.c:603:10:USB_OTG_USBH_handle_hc_n_In_ISR	120	static
+usb_hcd_int.c:190:17:USB_OTG_USBH_handle_hc_ISR	32	static
+usb_hcd_int.c:759:17:USB_OTG_USBH_handle_rx_qlvl_ISR	40	static
+usb_hcd_int.c:827:17:USB_OTG_USBH_handle_IncompletePeriodicXfer_ISR	24	static
+usb_hcd_int.c:122:10:USBH_OTG_ISR_Handler	24	static

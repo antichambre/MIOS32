@@ -1,0 +1,9 @@
+seq_midi_router.c:67:19:SEQ_MIDI_ROUTER_PortMaskGet	0	static
+seq_midi_router.c:43:5:SEQ_MIDI_ROUTER_Init	0	static
+seq_midi_router.c:80:5:SEQ_MIDI_ROUTER_Receive	48	static
+seq_midi_router.c:146:5:SEQ_MIDI_ROUTER_ReceiveSysEx	32	static
+seq_midi_router.c:186:5:SEQ_MIDI_ROUTER_MIDIClockInGet	8	static
+seq_midi_router.c:203:5:SEQ_MIDI_ROUTER_MIDIClockInSet	8	static
+seq_midi_router.c:225:5:SEQ_MIDI_ROUTER_MIDIClockOutGet	8	static
+seq_midi_router.c:238:5:SEQ_MIDI_ROUTER_MIDIClockOutSet	8	static
+seq_midi_router.c:260:5:SEQ_MIDI_ROUTER_SendMIDIClockEvent	40	static

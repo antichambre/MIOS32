@@ -1,0 +1,9 @@
+mios32_spi.c:377:5:MIOS32_SPI_IO_Init	40	static
+mios32_spi.c:763:5:MIOS32_SPI_RC_PinSet	0	static
+mios32_spi.c:819:5:MIOS32_SPI_TransferByte	0	static
+mios32_spi.c:632:5:MIOS32_SPI_TransferModeInit	40	static
+mios32_spi.c:163:5:MIOS32_SPI_Init	96	static
+mios32_spi.c:898:5:MIOS32_SPI_TransferBlock	32	static
+mios32_spi.c:1020:1:DMA2_Stream2_IRQHandler	8	static
+mios32_spi.c:1028:1:DMA1_Stream3_IRQHandler	8	static
+mios32_spi.c:1036:1:DMA1_Stream2_IRQHandler	8	static

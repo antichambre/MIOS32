@@ -1,0 +1,5 @@
+seq_ui_fx_robotize.c:85:12:Encoder_Handler	0	static
+seq_ui_fx_robotize.c:47:12:LED_Handler	16	static
+seq_ui_fx_robotize.c:295:12:LCD_Handler	16	static
+seq_ui_fx_robotize.c:187:12:Button_Handler	16	static
+seq_ui_fx_robotize.c:468:5:SEQ_UI_FX_ROBOTIZE_Init	8	static

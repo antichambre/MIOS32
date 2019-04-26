@@ -1,0 +1,6 @@
+seq_live.c:124:12:SEQ_LIVE_PlayEventInternal	72	static
+seq_live.c:87:5:SEQ_LIVE_Init	0	static
+seq_live.c:206:5:SEQ_LIVE_PlayEvent	64	static
+seq_live.c:353:5:SEQ_LIVE_AllNotesOff	24	static
+seq_live.c:384:5:SEQ_LIVE_NewStep	64	static
+seq_live.c:480:26:SEQ_LIVE_CurrentSlotGet	8	static

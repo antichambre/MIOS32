@@ -1,0 +1,9 @@
+psock.c:145:1:send_data	8	static
+psock.c:160:1:data_acked	0	static
+psock.c:176:1:psock_send	16	static
+psock.c:215:1:psock_generator_send	24	static
+psock.c:247:1:psock_datalen	0	static
+psock.c:253:1:psock_newdata	0	static
+psock.c:272:1:psock_readto	16	static
+psock.c:299:1:psock_readbuf	8	static
+psock.c:328:1:psock_init	0	static

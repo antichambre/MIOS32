@@ -1,0 +1,5 @@
+dhcpc.c:117:1:create_msg	24	static
+dhcpc.c:215:1:parse_msg	16	static
+dhcpc.c:304:1:dhcpc_init	24	static
+dhcpc.c:321:1:dhcpc_appcall	16	static
+dhcpc.c:327:1:dhcpc_request	0	static

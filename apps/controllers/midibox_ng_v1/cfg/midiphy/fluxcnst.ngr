@@ -1,0 +1,81 @@
+#turn on GP B LEDs (left)		
+set	led:1010	127
+set	led:1012	127
+set	led:1014	127
+set	led:1016	127
+set	led:1042	127
+set	led:1044	127
+set	led:1046	127
+set	led:1048	127
+
+#turn on GP B LEDs (right)		
+set	led:2010	127
+set	led:2012	127
+set	led:2014	127
+set	led:2016	127
+set	led:2042	127
+set	led:2044	127
+set	led:2046	127
+set	led:2048	127
+
+#turn on GP A LEDs (left)		
+set	led:1009	127
+set	led:1011	127
+set	led:1013	127
+set	led:1015	127	
+set	led:1041	127
+set	led:1043	127
+set	led:1045	127
+set	led:1047	127
+	
+#turn on GP A LEDs (right)		
+set	led:2009	127
+set	led:2011	127
+set	led:2013	127
+set	led:2015	127
+set	led:2041	127
+set	led:2043	127
+set	led:2045	127
+set	led:2047	127
+
+#turn on Selection  B LEDs (left)		
+set	led:1018	127
+set	led:1020	127
+set	led:1022	127
+set	led:1024	127
+set	led:1050	127
+set	led:1052	127
+set	led:1054	127
+set	led:1056	127
+
+#turn on Selection B LEDs (right)		
+set	led:2018	127
+set	led:2020	127
+set	led:2022	127
+set	led:2024	127
+set	led:2050	127
+set	led:2052	127
+set	led:2054	127	
+set	led:2056	127
+
+#turn on Selection A LEDs (left)		
+set	led:1017	127
+set	led:1019	127
+set	led:1021	127
+set	led:1023	127
+set	led:1049	127
+set	led:1051	127
+set	led:1053	127
+set	led:1055	127
+
+#turn on Selection A LEDs (right)		
+set	led:2017	127
+set	led:2019	127
+set	led:2021	127	
+set	led:2023	127		
+set	led:2049	127
+set	led:2051	127
+set	led:2053	127
+set	led:2055	127
+
+

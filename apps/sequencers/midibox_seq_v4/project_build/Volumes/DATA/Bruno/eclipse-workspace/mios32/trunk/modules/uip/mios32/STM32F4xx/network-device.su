@@ -1,0 +1,6 @@
+network-device.c:36:6:network_device_init	8	static
+network-device.c:49:6:network_device_check	16	static
+network-device.c:61:5:network_device_available	0	static
+network-device.c:66:5:network_device_read	8	static
+network-device.c:93:6:network_device_send	8	static
+network-device.c:114:16:network_device_mac_addr	0	static

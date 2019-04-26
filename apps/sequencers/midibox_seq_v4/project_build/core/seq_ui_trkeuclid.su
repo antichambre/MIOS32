@@ -1,0 +1,8 @@
+seq_ui_trkeuclid.c:706:12:ReGenAccent	40	static
+seq_ui_trkeuclid.c:538:12:EuclidGenerator	88	static
+seq_ui_trkeuclid.c:664:12:AccentGenerator	56	static
+seq_ui_trkeuclid.c:115:12:Encoder_Handler	48	static
+seq_ui_trkeuclid.c:85:12:LED_Handler	0	static
+seq_ui_trkeuclid.c:328:12:LCD_Handler	56	static
+seq_ui_trkeuclid.c:281:12:Button_Handler	0	static
+seq_ui_trkeuclid.c:520:5:SEQ_UI_TRKEUCLID_Init	8	static

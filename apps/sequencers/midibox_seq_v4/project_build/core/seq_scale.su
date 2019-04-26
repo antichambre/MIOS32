@@ -1,0 +1,6 @@
+seq_scale.c:249:5:SEQ_SCALE_Init	0	static
+seq_scale.c:260:5:SEQ_SCALE_NumGet	0	static
+seq_scale.c:270:7:SEQ_SCALE_NameGet	0	static
+seq_scale.c:288:5:SEQ_SCALE_NoteValueGet	16	static
+seq_scale.c:318:5:SEQ_SCALE_NextNoteInScale	20	static
+seq_scale.c:356:5:SEQ_SCALE_Note	8	static

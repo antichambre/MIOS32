@@ -1,0 +1,12 @@
+seq_ui_mixer.c:623:12:0	8	static
+seq_ui_mixer.c:95:12:LED_Handler	8	static
+seq_ui_mixer.c:473:12:LCD_Handler	120	static
+seq_ui_mixer.c:643:12:EXIT_Handler	8	static
+seq_ui_mixer.c:653:5:SEQ_UI_MIXER_Init	8	static
+seq_ui_mixer.c:686:5:SEQ_UI_MIXER_Copy	24	static
+seq_ui_mixer.c:704:5:SEQ_UI_MIXER_Paste	24	static
+seq_ui_mixer.c:723:5:SEQ_UI_MIXER_Clear	0	static
+seq_ui_mixer.c:732:5:SEQ_UI_MIXER_Undo	24	static
+seq_ui_mixer.c:755:5:SEQ_UI_MIXER_UndoUpdate	24	static
+seq_ui_mixer.c:126:12:Encoder_Handler	40	static
+seq_ui_mixer.c:402:12:Button_Handler	16	static

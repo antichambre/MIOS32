@@ -1,0 +1,9 @@
+seq_pattern.c:67:5:SEQ_PATTERN_Init	8	static
+seq_pattern.c:110:7:SEQ_PATTERN_NameGet	0	static
+seq_pattern.c:251:5:SEQ_PATTERN_Load	32	static
+seq_pattern.c:181:5:SEQ_PATTERN_Handler	24	static
+seq_pattern.c:121:5:SEQ_PATTERN_Change	16	static
+seq_pattern.c:301:5:SEQ_PATTERN_Save	24	static
+seq_pattern.c:326:5:SEQ_PATTERN_PeekName	16	static
+seq_pattern.c:343:5:SEQ_PATTERN_Fix	40	static
+seq_pattern.c:390:5:SEQ_PATTERN_FixAll	24	static

@@ -1,0 +1,9 @@
+seq_file_s.c:98:5:SEQ_FILE_S_Init	0	static
+seq_file_s.c:137:5:SEQ_FILE_S_UnloadAllBanks	0	static
+seq_file_s.c:165:5:SEQ_FILE_S_NumSongs	0	static
+seq_file_s.c:175:5:SEQ_FILE_S_Create	160	static
+seq_file_s.c:247:5:SEQ_FILE_S_Open	136	static
+seq_file_s.c:112:5:SEQ_FILE_S_LoadAllBanks	0	static
+seq_file_s.c:323:5:SEQ_FILE_S_SongRead	24	static
+seq_file_s.c:393:5:SEQ_FILE_S_SongWrite	128	static
+seq_file_s.c:149:5:SEQ_FILE_S_SaveAllBanks	8	static

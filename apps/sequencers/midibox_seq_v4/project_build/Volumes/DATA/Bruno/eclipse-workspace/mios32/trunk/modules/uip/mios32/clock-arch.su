@@ -1,0 +1,2 @@
+clock-arch.c:21:14:clock_time_tick	0	static
+clock-arch.c:29:1:clock_time	0	static

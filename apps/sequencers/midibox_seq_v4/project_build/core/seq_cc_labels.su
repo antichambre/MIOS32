@@ -1,0 +1,2 @@
+seq_cc_labels.c:326:5:SEQ_CC_LABELS_Init	0	static
+seq_cc_labels.c:337:13:SEQ_CC_LABELS_Get	0	static

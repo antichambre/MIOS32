@@ -1,0 +1,5 @@
+seq_ui_todo.c:26:12:LED_Handler	0	static
+seq_ui_todo.c:42:12:Encoder_Handler	0	static
+seq_ui_todo.c:55:12:Button_Handler	0	static
+seq_ui_todo.c:65:12:LCD_Handler	8	static
+seq_ui_todo.c:83:5:SEQ_UI_TODO_Init	8	static

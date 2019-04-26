@@ -1,0 +1,10 @@
+seq_file_c.c:901:12:SEQ_FILE_C_Write_Hlp	208	static
+seq_file_c.c:139:12:get_dec	16	static
+seq_file_c.c:157:12:get_dec_range	24	static
+seq_file_c.c:84:5:SEQ_FILE_C_Init	0	static
+seq_file_c.c:115:5:SEQ_FILE_C_Unload	0	static
+seq_file_c.c:128:5:SEQ_FILE_C_Valid	0	static
+seq_file_c.c:174:5:SEQ_FILE_C_Read	312	static
+seq_file_c.c:98:5:SEQ_FILE_C_Load	0	static
+seq_file_c.c:1246:5:SEQ_FILE_C_Write	120	static
+seq_file_c.c:1290:5:SEQ_FILE_C_Debug	0	static

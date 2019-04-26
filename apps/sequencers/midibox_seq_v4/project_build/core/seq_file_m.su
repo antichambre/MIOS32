@@ -1,0 +1,9 @@
+seq_file_m.c:99:5:SEQ_FILE_M_Init	0	static
+seq_file_m.c:138:5:SEQ_FILE_M_UnloadAllBanks	0	static
+seq_file_m.c:166:5:SEQ_FILE_M_NumMaps	0	static
+seq_file_m.c:176:5:SEQ_FILE_M_Create	160	static
+seq_file_m.c:252:5:SEQ_FILE_M_Open	136	static
+seq_file_m.c:113:5:SEQ_FILE_M_LoadAllBanks	0	static
+seq_file_m.c:324:5:SEQ_FILE_M_MapRead	24	static
+seq_file_m.c:399:5:SEQ_FILE_M_MapWrite	128	static
+seq_file_m.c:150:5:SEQ_FILE_M_SaveAllBanks	8	static

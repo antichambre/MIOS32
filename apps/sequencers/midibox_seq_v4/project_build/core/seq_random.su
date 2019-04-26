@@ -1,0 +1,2 @@
+seq_random.c:41:5:SEQ_RANDOM_Gen	8	static
+seq_random.c:67:5:SEQ_RANDOM_Gen_Range	16	static

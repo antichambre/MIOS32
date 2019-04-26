@@ -1,0 +1,5 @@
+seq_ui_fx_echo.c:71:12:Encoder_Handler	24	static
+seq_ui_fx_echo.c:43:12:LED_Handler	0	static
+seq_ui_fx_echo.c:219:12:LCD_Handler	16	static
+seq_ui_fx_echo.c:175:12:Button_Handler	0	static
+seq_ui_fx_echo.c:334:5:SEQ_UI_FX_ECHO_Init	8	static

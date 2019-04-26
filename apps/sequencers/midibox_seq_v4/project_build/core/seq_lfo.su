@@ -1,0 +1,6 @@
+seq_lfo.c:220:12:SEQ_LFO_ValueGet	8	static
+seq_lfo.c:65:5:SEQ_LFO_ResetTrk	0	static
+seq_lfo.c:51:5:SEQ_LFO_Init	8	static
+seq_lfo.c:79:5:SEQ_LFO_HandleTrk	16	static
+seq_lfo.c:117:5:SEQ_LFO_Event	16	static
+seq_lfo.c:174:5:SEQ_LFO_FastCC_Event	16	static

@@ -1,0 +1,13 @@
+seq_midi_sysex.c:492:12:SEQ_MIDI_SYSEX_SendAck	48	static
+seq_midi_sysex.c:160:5:SEQ_MIDI_SYSEX_Init	8	static
+seq_midi_sysex.c:522:5:SEQ_MIDI_SYSEX_TimeOut	0	static
+seq_midi_sysex.c:536:5:SEQ_MIDI_SYSEX_REMOTE_SendMode	40	static
+seq_midi_sysex.c:249:12:SEQ_MIDI_SYSEX_Cmd	24	static
+seq_midi_sysex.c:185:5:SEQ_MIDI_SYSEX_Parser	16	static
+seq_midi_sysex.c:569:5:SEQ_MIDI_SYSEX_REMOTE_SendRefresh	40	static
+seq_midi_sysex.c:599:5:SEQ_MIDI_SYSEX_REMOTE_Client_SendButton	16	static
+seq_midi_sysex.c:619:5:SEQ_MIDI_SYSEX_REMOTE_Client_Send_BLM_Button	16	static
+seq_midi_sysex.c:639:5:SEQ_MIDI_SYSEX_REMOTE_Client_SendEncoder	16	static
+seq_midi_sysex.c:660:5:SEQ_MIDI_SYSEX_REMOTE_Server_SendLCD	144	static
+seq_midi_sysex.c:700:5:SEQ_MIDI_SYSEX_REMOTE_Server_SendCharset	40	static
+seq_midi_sysex.c:732:5:SEQ_MIDI_SYSEX_REMOTE_Server_SendLED	144	static

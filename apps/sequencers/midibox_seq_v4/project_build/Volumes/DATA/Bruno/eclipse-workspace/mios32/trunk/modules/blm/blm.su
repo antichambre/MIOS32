@@ -1,0 +1,12 @@
+blm.c:57:5:BLM_Init	8	static
+blm.c:132:5:BLM_ConfigSet	24	static
+blm.c:146:14:BLM_ConfigGet	0	static
+blm.c:157:5:BLM_PrepareCol	16	static
+blm.c:215:5:BLM_GetRow	24	static
+blm.c:312:5:BLM_ButtonHandler	24	static
+blm.c:352:5:BLM_DIN_PinGet	0	static
+blm.c:366:4:BLM_DIN_SRGet	0	static
+blm.c:383:5:BLM_DOUT_PinSet	16	static
+blm.c:409:5:BLM_DOUT_PinGet	0	static
+blm.c:429:5:BLM_DOUT_SRSet	0	static
+blm.c:450:4:BLM_DOUT_SRGet	0	static
