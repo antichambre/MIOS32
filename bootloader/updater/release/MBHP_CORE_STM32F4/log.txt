@@ -1,0 +1,116 @@
+rm -f project.hex
+Creating object file for app.c
+Creating object file for main.c
+Creating object file for strtol.c
+Creating object file for tasks.c
+Creating object file for list.c
+Creating object file for queue.c
+Creating object file for timers.c
+Creating object file for port.c
+Creating object file for heap_4.c
+Creating object file for startup_stm32f4xx.c
+Creating object file for mios32_srio.c
+Creating object file for mios32_din.c
+Creating object file for mios32_dout.c
+Creating object file for mios32_enc.c
+Creating object file for mios32_lcd.c
+Creating object file for mios32_midi.c
+Creating object file for mios32_osc.c
+Creating object file for mios32_com.c
+Creating object file for mios32_uart_midi.c
+Creating object file for mios32_spi_midi.c
+Creating object file for mios32_iic_midi.c
+Creating object file for mios32_can_midi.c
+Creating object file for mios32_iic_bs.c
+Creating object file for mios32_mf.c
+Creating object file for mios32_sdcard.c
+Creating object file for mios32_enc28j60.c
+Creating object file for mios32_timestamp.c
+Creating object file for mios32_bsl.c
+Creating object file for mios32_sys.c
+Creating object file for mios32_irq.c
+Creating object file for mios32_spi.c
+Creating object file for mios32_i2s.c
+Creating object file for mios32_board.c
+Creating object file for mios32_timer.c
+Creating object file for mios32_stopwatch.c
+Creating object file for mios32_delay.c
+Creating object file for mios32_ain.c
+Creating object file for mios32_usb.c
+Creating object file for mios32_usb_midi.c
+Creating object file for mios32_usb_com.c
+Creating object file for mios32_usb_hid.c
+Creating object file for mios32_uart.c
+Creating object file for mios32_iic.c
+Creating object file for mios32_can.c
+Creating object file for printf-stdarg.c
+Creating object file for misc.c
+Creating object file for stm32f4xx_adc.c
+Creating object file for stm32f4xx_can.c
+Creating object file for stm32f4xx_crc.c
+Creating object file for stm32f4xx_cryp.c
+Creating object file for stm32f4xx_cryp_aes.c
+Creating object file for stm32f4xx_cryp_des.c
+Creating object file for stm32f4xx_cryp_tdes.c
+Creating object file for stm32f4xx_dac.c
+Creating object file for stm32f4xx_dbgmcu.c
+Creating object file for stm32f4xx_dcmi.c
+Creating object file for stm32f4xx_dma.c
+Creating object file for stm32f4xx_exti.c
+Creating object file for stm32f4xx_flash.c
+Creating object file for stm32f4xx_fsmc.c
+Creating object file for stm32f4xx_gpio.c
+Creating object file for stm32f4xx_hash.c
+Creating object file for stm32f4xx_hash_md5.c
+Creating object file for stm32f4xx_hash_sha1.c
+Creating object file for stm32f4xx_i2c.c
+Creating object file for stm32f4xx_iwdg.c
+Creating object file for stm32f4xx_pwr.c
+Creating object file for stm32f4xx_rcc.c
+Creating object file for stm32f4xx_rng.c
+Creating object file for stm32f4xx_rtc.c
+Creating object file for stm32f4xx_sdio.c
+Creating object file for stm32f4xx_spi.c
+Creating object file for stm32f4xx_syscfg.c
+Creating object file for stm32f4xx_tim.c
+Creating object file for stm32f4xx_usart.c
+Creating object file for stm32f4xx_wwdg.c
+Creating object file for usbd_core.c
+Creating object file for usbd_ioreq.c
+Creating object file for usbd_req.c
+Creating object file for usbh_core.c
+Creating object file for usbh_hcs.c
+Creating object file for usbh_ioreq.c
+Creating object file for usbh_stdreq.c
+Creating object file for usb_core.c
+Creating object file for usb_dcd.c
+Creating object file for usb_dcd_int.c
+Creating object file for usb_hcd.c
+Creating object file for usb_hcd_int.c
+Creating object file for usb_otg.c
+Creating object file for app_lcd.c
+Creating object file for glcd_font_normal.c
+Creating object file for glcd_font_normal_inv.c
+Creating object file for glcd_font_big.c
+Creating object file for glcd_font_small.c
+Creating object file for glcd_font_tiny.c
+Creating object file for glcd_font_tiny_wide.c
+Creating object file for glcd_font_tiny_inv.c
+Creating object file for glcd_font_knob_icons.c
+Creating object file for glcd_font_meter_icons_h.c
+Creating object file for glcd_font_meter_icons_v.c
+Creating object file for glcd_font_minitogsel_icons.c
+Creating object file for mini_cpp.cpp
+Creating object file for freertos_heap.cpp
+-------------------------------------------------------------------------------
+Application successfully built for:
+Processor: STM32F407VG
+Family:    STM32F4xx
+Board:     MBHP_CORE_STM32F4
+LCD:       universal
+-------------------------------------------------------------------------------
+arm-none-eabi-size project_build/project.elf
+   text	   data	    bss	    dec	    hex	filename
+  88342	    112	  16984	 105438	  19bde	project_build/project.elf
+20000000 D __ram_start
+200042c8 B __ram_end

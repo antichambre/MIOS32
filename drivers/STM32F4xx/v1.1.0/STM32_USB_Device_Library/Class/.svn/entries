@@ -1,0 +1,43 @@
+10
+
+dir
+2578
+svn://svnmios.midibox.org/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Class
+svn://svnmios.midibox.org/mios32
+
+
+
+2014-07-05T20:12:20.806769Z
+2024
+tk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+64d6c282-3004-4abb-abc2-16bea14f3ebd
+
+audio
+dir
+
+msc
+dir
+
+hid
+dir
+
+cdc
+dir
+
+dfu
+dir
+

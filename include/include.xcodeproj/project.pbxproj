@@ -1,0 +1,138 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		15621EF12273979C001DAA88 /* makefile */ = {isa = PBXFileReference; lastKnownFileType = folder; path = makefile; sourceTree = "<group>"; };
+		15621EF22273979C001DAA88 /* mios32 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mios32; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		15621EEB2273979C001DAA88 = {
+			isa = PBXGroup;
+			children = (
+				15621EF12273979C001DAA88 /* makefile */,
+				15621EF22273979C001DAA88 /* mios32 */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		15621EF02273979C001DAA88 /* include */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 15621EF32273979C001DAA88 /* Build configuration list for PBXLegacyTarget "include" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = /Volumes/DATA/Bruno/Developper/myMIOS32/include;
+			dependencies = (
+			);
+			name = include;
+			passBuildSettingsInEnvironment = 1;
+			productName = include;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		15621EEC2273979C001DAA88 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 15621EEF2273979C001DAA88 /* Build configuration list for PBXProject "include" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 15621EEB2273979C001DAA88;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				15621EF02273979C001DAA88 /* include */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		15621EED2273979C001DAA88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		15621EEE2273979C001DAA88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		15621EF42273979C001DAA88 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = include;
+			};
+			name = Debug;
+		};
+		15621EF52273979C001DAA88 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = include;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		15621EEF2273979C001DAA88 /* Build configuration list for PBXProject "include" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15621EED2273979C001DAA88 /* Debug */,
+				15621EEE2273979C001DAA88 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		15621EF32273979C001DAA88 /* Build configuration list for PBXLegacyTarget "include" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				15621EF42273979C001DAA88 /* Debug */,
+				15621EF52273979C001DAA88 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 15621EEC2273979C001DAA88 /* Project object */;
+}

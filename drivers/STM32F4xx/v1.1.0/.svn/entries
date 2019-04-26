@@ -1,0 +1,43 @@
+10
+
+dir
+2578
+svn://svnmios.midibox.org/mios32/trunk/drivers/STM32F4xx/v1.1.0
+svn://svnmios.midibox.org/mios32
+
+
+
+2014-10-13T20:27:47.904644Z
+2082
+tk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+64d6c282-3004-4abb-abc2-16bea14f3ebd
+
+STM32F4xx_StdPeriph_Driver
+dir
+
+STM32_USB_HOST_Library
+dir
+
+STM32_USB_Device_Library
+dir
+
+STM32_USB_OTG_Driver
+dir
+
+CMSIS
+dir
+

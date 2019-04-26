@@ -1,0 +1,96 @@
+rm -f project.hex
+Creating object file for app.c
+Creating object file for main.c
+Creating object file for strtol.c
+Creating object file for tasks.c
+Creating object file for list.c
+Creating object file for queue.c
+Creating object file for timers.c
+Creating object file for port.c
+Creating object file for heap_4.c
+Creating object file for startup_stm32f10x_hd.c
+Creating object file for mios32_srio.c
+Creating object file for mios32_din.c
+Creating object file for mios32_dout.c
+Creating object file for mios32_enc.c
+Creating object file for mios32_lcd.c
+Creating object file for mios32_midi.c
+Creating object file for mios32_osc.c
+Creating object file for mios32_com.c
+Creating object file for mios32_uart_midi.c
+Creating object file for mios32_spi_midi.c
+Creating object file for mios32_iic_midi.c
+Creating object file for mios32_can_midi.c
+Creating object file for mios32_iic_bs.c
+Creating object file for mios32_mf.c
+Creating object file for mios32_sdcard.c
+Creating object file for mios32_enc28j60.c
+Creating object file for mios32_timestamp.c
+Creating object file for mios32_bsl.c
+Creating object file for mios32_sys.c
+Creating object file for mios32_irq.c
+Creating object file for mios32_spi.c
+Creating object file for mios32_i2s.c
+Creating object file for mios32_board.c
+Creating object file for mios32_timer.c
+Creating object file for mios32_stopwatch.c
+Creating object file for mios32_delay.c
+Creating object file for mios32_ain.c
+Creating object file for mios32_usb.c
+Creating object file for mios32_usb_midi.c
+Creating object file for mios32_usb_com.c
+Creating object file for mios32_usb_hid.c
+Creating object file for mios32_uart.c
+Creating object file for mios32_iic.c
+Creating object file for mios32_can.c
+Creating object file for printf-stdarg.c
+Creating object file for stm32f10x_gpio.c
+Creating object file for stm32f10x_flash.c
+Creating object file for stm32f10x_adc.c
+Creating object file for stm32f10x_dac.c
+Creating object file for stm32f10x_spi.c
+Creating object file for stm32f10x_usart.c
+Creating object file for stm32f10x_i2c.c
+Creating object file for stm32f10x_dma.c
+Creating object file for stm32f10x_tim.c
+Creating object file for stm32f10x_rcc.c
+Creating object file for stm32f10x_rtc.c
+Creating object file for stm32f10x_bkp.c
+Creating object file for stm32f10x_pwr.c
+Creating object file for stm32f10x_exti.c
+Creating object file for misc.c
+Creating object file for core_cm3.c
+Creating object file for usb_core.c
+Creating object file for usb_int.c
+Creating object file for usb_mem.c
+Creating object file for usb_regs.c
+Creating object file for otgd_fs_cal.c
+Creating object file for otgd_fs_dev.c
+Creating object file for otgd_fs_int.c
+Creating object file for otgd_fs_pcd.c
+Creating object file for app_lcd.c
+Creating object file for glcd_font_normal.c
+Creating object file for glcd_font_normal_inv.c
+Creating object file for glcd_font_big.c
+Creating object file for glcd_font_small.c
+Creating object file for glcd_font_tiny.c
+Creating object file for glcd_font_tiny_wide.c
+Creating object file for glcd_font_tiny_inv.c
+Creating object file for glcd_font_knob_icons.c
+Creating object file for glcd_font_meter_icons_h.c
+Creating object file for glcd_font_meter_icons_v.c
+Creating object file for glcd_font_minitogsel_icons.c
+Creating object file for mini_cpp.cpp
+Creating object file for freertos_heap.cpp
+-------------------------------------------------------------------------------
+Application successfully built for:
+Processor: STM32F103RE
+Family:    STM32F10x
+Board:     MBHP_CORE_STM32
+LCD:       universal
+-------------------------------------------------------------------------------
+arm-none-eabi-size project_build/project.elf
+   text	   data	    bss	    dec	    hex	filename
+  74906	     96	  12864	  87866	  1573a	project_build/project.elf
+20000000 D __ram_start
+200032a0 B __ram_end
