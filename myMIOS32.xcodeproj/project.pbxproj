@@ -6,10 +6,45 @@
 	objectVersion = 50;
 	objects = {
 
+/* Begin PBXFileReference section */
+		15621EF62273979D001DAA88 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
+		15621EF72273979D001DAA88 /* drivers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = drivers; sourceTree = "<group>"; };
+		15621EF82273979D001DAA88 /* apps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = apps; sourceTree = "<group>"; };
+		15621EF92273979D001DAA88 /* FreeRTOS */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FreeRTOS; sourceTree = "<group>"; };
+		15621EFA2273979D001DAA88 /* source_me_stm32f1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = source_me_stm32f1; sourceTree = "<group>"; };
+		15621EFB2273979D001DAA88 /* source_me_stm32f4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = source_me_stm32f4; sourceTree = "<group>"; };
+		15621EFC2273979D001DAA88 /* bin */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bin; sourceTree = "<group>"; };
+		15621EFD2273979E001DAA88 /* source_me_lpc17 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = source_me_lpc17; sourceTree = "<group>"; };
+		15621EFE2273979E001DAA88 /* programming_models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = programming_models; sourceTree = "<group>"; };
+		15621EFF2273979E001DAA88 /* tools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tools; sourceTree = "<group>"; };
+		15621F002273979E001DAA88 /* source_me_dipcoref4 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = source_me_dipcoref4; sourceTree = "<group>"; };
+		15621F012273979E001DAA88 /* bootloader */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bootloader; sourceTree = "<group>"; };
+		15621F022273979E001DAA88 /* etc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = etc; sourceTree = "<group>"; };
+		15621F032273979F001DAA88 /* modules */ = {isa = PBXFileReference; lastKnownFileType = folder; path = modules; sourceTree = "<group>"; };
+		15621F042273979F001DAA88 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
+		15621F052273979F001DAA88 /* mios32 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mios32; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
 /* Begin PBXGroup section */
 		1538F4EC2273660100D2B07D = {
 			isa = PBXGroup;
 			children = (
+				15621EF82273979D001DAA88 /* apps */,
+				15621EFC2273979D001DAA88 /* bin */,
+				15621F012273979E001DAA88 /* bootloader */,
+				15621EF62273979D001DAA88 /* doc */,
+				15621EF72273979D001DAA88 /* drivers */,
+				15621F022273979E001DAA88 /* etc */,
+				15621EF92273979D001DAA88 /* FreeRTOS */,
+				15621F042273979F001DAA88 /* include */,
+				15621F052273979F001DAA88 /* mios32 */,
+				15621F032273979F001DAA88 /* modules */,
+				15621EFE2273979E001DAA88 /* programming_models */,
+				15621F002273979E001DAA88 /* source_me_dipcoref4 */,
+				15621EFD2273979E001DAA88 /* source_me_lpc17 */,
+				15621EFA2273979D001DAA88 /* source_me_stm32f1 */,
+				15621EFB2273979D001DAA88 /* source_me_stm32f4 */,
+				15621EFF2273979E001DAA88 /* tools */,
 			);
 			sourceTree = "<group>";
 		};
@@ -18,11 +53,12 @@
 /* Begin PBXLegacyTarget section */
 		1538F4F12273660100D2B07D /* myMIOS32 */ = {
 			isa = PBXLegacyTarget;
-			buildArgumentsString = "$(ACTION)";
+			buildArgumentsString = "-j2  $(ACTION)";
 			buildConfigurationList = 1538F4F42273660100D2B07D /* Build configuration list for PBXLegacyTarget "myMIOS32" */;
 			buildPhases = (
 			);
 			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "";
 			dependencies = (
 			);
 			name = myMIOS32;
