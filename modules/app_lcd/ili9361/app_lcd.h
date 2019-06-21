@@ -29,15 +29,15 @@
 #endif
 
 // don't change these values for this GLCD type
-#define APP_LCD_WIDTH 256
-#define APP_LCD_HEIGHT 64
-#define APP_LCD_COLOUR_DEPTH 4
-// We need 256*64 pixel, for 1bit legacy bitmaps a pixel is 1 bit
+#define APP_LCD_WIDTH 128
+#define APP_LCD_HEIGHT 160
+#define APP_LCD_COLOUR_DEPTH 16
+// We need 128*260 pixel, for 16bit bitmaps a pixel is 2 bytes
 // size of u8 array is 256*64/8 = 2048
 #define APP_LCD_1BITMAP_SIZE ((APP_LCD_NUM_X*APP_LCD_WIDTH * APP_LCD_NUM_Y*APP_LCD_HEIGHT * 1) / 8)
 // We need 256*64 pixel, for SSD1322 a pixel is 4 bits
 // size of u8 array is 256*64/2 = 8192
-#define APP_LCD_4BITMAP_SIZE ((APP_LCD_NUM_X*APP_LCD_WIDTH * APP_LCD_NUM_Y*APP_LCD_HEIGHT * APP_LCD_COLOUR_DEPTH) / 2)
+#define APP_LCD_4BITMAP_SIZE ((APP_LCD_NUM_X*APP_LCD_WIDTH * APP_LCD_NUM_Y*APP_LCD_HEIGHT * APP_LCD_COLOUR_DEPTH) / 8)
 
 /////////////////////////////////////////////////////////////////////////////
 // Global Types
@@ -56,7 +56,7 @@ typedef enum{
 // bitmap color depth
 typedef enum{
   Is1BIT = 1,
-  Is4BIT = APP_LCD_COLOUR_DEPTH
+  IsILI = APP_LCD_COLOUR_DEPTH
 }app_lcd_color_depth_t;
 
 
@@ -83,11 +83,15 @@ extern s32 APP_LCD_BColourSet(u32 rgb);   // used for: rectDraw fill.
 extern s32 APP_LCD_FColourSet(u32 rgb);   // used for: rectDraw border, pixelSet, legacy 2 native PrintChar/Fusion...
 
 extern mios32_lcd_bitmap_t APP_LCD_BitmapInit(u8 *memory, u16 width, u16 height, u16 line_offset, app_lcd_color_depth_t colour_depth);   //new
+
+extern s32 APP_LCD_PixelSet(u16 x, u16 y, u32 colour);
 extern s32 APP_LCD_BitmapPixelSet(mios32_lcd_bitmap_t bitmap, u16 x, u16 y, u32 colour);
+extern s32 APP_LCD_Rectangle(u16 x, u16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color);
+extern s32 APP_LCD_BitmapRectangle(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color);   //new
 extern s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value);
 extern s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, float luma);   // new
 extern s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd_bitmap_t dst_bmp, s16 x, s16 y, app_lcd_fusion_t fusion);   // new
-
+extern s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_width);
 extern s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap);
 
 

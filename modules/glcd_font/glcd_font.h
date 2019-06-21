@@ -22,6 +22,7 @@ extern const u8 GLCD_FONT_TINY_INV[];
 extern const u8 GLCD_FONT_KNOB_ICONS[];
 extern const u8 GLCD_FONT_METER_ICONS_H[];
 extern const u8 GLCD_FONT_METER_ICONS_V[];
+extern const u8 GLCD_FONT_MINIKNOB_ICONS[];
 extern const u8 GLCD_FONT_MINITOGSEL_ICONS[];
 
 #endif /* _GLCD_FONT_H */

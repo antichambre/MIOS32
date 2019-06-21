@@ -50,6 +50,9 @@ include $(MIOS32_PATH)/programming_models/traditional/programming_model.mk
 # application specific LCD driver (selected via makefile variable)
 include $(MIOS32_PATH)/modules/app_lcd/$(LCD)/app_lcd.mk
 
+# force_to_scale module (selected via makefile variable)
+include $(MIOS32_PATH)/modules/force_to_scale/force_to_scale.mk
+
 # common make rules
 # Please keep this include statement at the end of this Makefile. Add new modules above.
 include $(MIOS32_PATH)/include/makefile/common.mk

@@ -48,8 +48,8 @@
 static u32 display_available = 0;
 
 // default color for legacy 1Bit bitmap
-u8 app_lcd_back_grayscale = 0;
-u8 app_lcd_fore_grayscale = 0;
+u16 app_lcd_back_color = 0;
+u16 app_lcd_fore_color = 0;
 
 
 // font bitmap
@@ -65,16 +65,16 @@ s32 APP_LCD_Init(u32 mode)
   // currently only mode 0 supported
   if( mode != 0 )
     return -1; // unsupported mode
-
+  
   if( MIOS32_BOARD_J15_PortInit(APP_LCD_OUTPUT_MODE) < 0 )
     return -2; // failed to initialize J15
-
+  
 #if APP_LCD_USE_J10_FOR_CS
   int pin;
   for(pin=0; pin<8; ++pin)
     MIOS32_BOARD_J10_PinInit(pin, APP_LCD_OUTPUT_MODE ? MIOS32_BOARD_PIN_MODE_OUTPUT_OD : MIOS32_BOARD_PIN_MODE_OUTPUT_PP);
 #endif
-
+  
   // set LCD type
   mios32_lcd_parameters.lcd_type = MIOS32_LCD_TYPE_GLCD_CUSTOM;
   mios32_lcd_parameters.num_x = APP_LCD_NUM_X;
@@ -85,10 +85,10 @@ s32 APP_LCD_Init(u32 mode)
   
   // set default(startup) forecolor to full white
   APP_LCD_FColourSet((u32)0xf);
-
+  
   // hardware reset, we use CS1 as reset
   u16 ctr;
-    MIOS32_BOARD_J15_DataSet(~(1<<1));
+  MIOS32_BOARD_J15_DataSet(~(1<<1));
   // wait for some
   for (ctr=0; ctr<1000; ++ctr)
     MIOS32_DELAY_Wait_uS(1000);
@@ -96,115 +96,119 @@ s32 APP_LCD_Init(u32 mode)
   MIOS32_BOARD_J15_DataSet(1<<1);
   
   // Initialize LCD
-    APP_LCD_Cmd(0x11); //Exit Sleep
+  APP_LCD_Cmd(0x11); //Exit Sleep
   for (ctr=0; ctr<50; ++ctr)
     MIOS32_DELAY_Wait_uS(1000);
-
-    APP_LCD_Cmd(0x26);  //Set Default Gamma
-    APP_LCD_Data(0x04);
-    APP_LCD_Cmd(0xB1);
-    APP_LCD_Data(0x08);//10
-    APP_LCD_Data(0x10);//08
-    APP_LCD_Cmd(0xC0);  //Set VRH1[4:0] & VC[2:0] for VCI1 & GVDD
-    APP_LCD_Data(0x0C);
-    APP_LCD_Data(0x05);
-    APP_LCD_Cmd(0xC1);  //Set BT[2:0] for AVDD & VCL & VGH & VGL
-    APP_LCD_Data(0x02);
-    APP_LCD_Cmd(0xC5);  //Set VMH[6:0] & VML[6:0] for VOMH & VCOML
-    APP_LCD_Data(0x4E);
-    APP_LCD_Data(0x30);
-    APP_LCD_Cmd(0xC7);
-    APP_LCD_Data(0xc0);     //offset=0//C0
-    APP_LCD_Cmd(0x3A);  //Set Color Format
-    APP_LCD_Data(0x05);
-    APP_LCD_Cmd(0x2A);  //Set Column Address
-    APP_LCD_Data(0x00);
-    APP_LCD_Data(0x00);
-    APP_LCD_Data(0x00);
-    APP_LCD_Data(0x7F);
-    APP_LCD_Cmd(0x2B);  //Set Page Address
-    APP_LCD_Data(0x00);
-    APP_LCD_Data(0x00);
-    APP_LCD_Data(0x00);
-    APP_LCD_Data(0x9F);
- //   APP_LCD_Cmd(0xB4);  //frame inversion
-//    APP_LCD_Data(0x07);
-    APP_LCD_Cmd(0x36);  //Set Scanning Direction
-    APP_LCD_Data(0xC0);
- //   APP_LCD_Cmd(0xEC);  //Set pumping clock frequency
-   // APP_LCD_Data(0x0B);
-    APP_LCD_Cmd(0xF2);  //Enable Gamma bit
-    APP_LCD_Data(0x01);
-
-    APP_LCD_Cmd(0xE0);
-    APP_LCD_Data(0x3F);//p1          // xx VP63[5:0]             //       //
-    APP_LCD_Data(0x31);//p2          // xx VP62[5:0]             //       //
-    APP_LCD_Data(0x2D);//p3         // xx VP61[5:0]             //       //
-    APP_LCD_Data(0x2F);//p4          // xx VP59[5:0]             //       //
-    APP_LCD_Data(0x28);//p5          // xx VP57[5:0]             //       //
-    APP_LCD_Data(0x0D);//p6         // xxx VP50[4:0]  //       //
-    APP_LCD_Data(0x59);//p7          // x VP43[6:0]              //       //
-    APP_LCD_Data(0xA8);//p8          // VP36[3:0] VP27[3:0]        //       //
-    APP_LCD_Data(0x44);//p9          // x VP20[6:0]              //       //
-    APP_LCD_Data(0x18);//p10       // xxx VP13[4:0]  //       //
-    APP_LCD_Data(0x1F);//p11       // xx VP6[5:0]               //       //
-    APP_LCD_Data(0x10);//p12       // xx VP4[5:0]               //       //
-    APP_LCD_Data(0x07);//p13       // xx VP2[5:0]               //       //
-    APP_LCD_Data(0x02);//p14       // xx VP1[5:0]               //       //
-    APP_LCD_Data(0x00);//p15       // xx VP0[5:0]               //       //
-    APP_LCD_Cmd(0xE1);
-    APP_LCD_Data(0x00);//p1          // xx VN0[5:0]               //       //
-    APP_LCD_Data(0x0E);//p2         // xx VN1[5:0]               //       //
-    APP_LCD_Data(0x12);//p3          // xx VN2[5:0]               //       //
-    APP_LCD_Data(0x10);//p4          // xx VN4[5:0]              //       //
-    APP_LCD_Data(0x17);//p5          // xx VN6[5:0]               //       //
-    APP_LCD_Data(0x12);//p6          // xxx VN13[4:0] //       //
-    APP_LCD_Data(0x26);//p7          // x VN20[6:0]              //       //
-    APP_LCD_Data(0x57);//p8          // VN36[3:0] VN27[3:0]       //       //
-    APP_LCD_Data(0x3B);//p9         // x VN43[6:0]              //       //
-    APP_LCD_Data(0x07);//p10       // xxx VN50[4:0] //       //
-    APP_LCD_Data(0x20);//p11       // xx VN57[5:0]            //       //
-    APP_LCD_Data(0x2F);//p12       // xx VN59[5:0]            //       //
-    APP_LCD_Data(0x38);//p13       // xx VN61[5:0]            //       //
-    APP_LCD_Data(0x3D);//p14       // xx VN62[5:0]            //       //
-    APP_LCD_Data(0x3f);//p15         // xx VN63[5:0]            //       /
-
-    
-/*    APP_LCD_Cmd(0xE0);
-    APP_LCD_Data(0x36);//p1
-    APP_LCD_Data(0x29);//p2
-    APP_LCD_Data(0x12);//p3
-    APP_LCD_Data(0x22);//p4
-    APP_LCD_Data(0x1C);//p5
-    APP_LCD_Data(0x15);//p6
-    APP_LCD_Data(0x42);//p7
-    APP_LCD_Data(0xB7);//p8
-    APP_LCD_Data(0x2F);//p9
-    APP_LCD_Data(0x13);//p10
-    APP_LCD_Data(0x12);//p11
-    APP_LCD_Data(0x0A);//p12
-    APP_LCD_Data(0x11);//p13
-    APP_LCD_Data(0x0B);//p14
-    APP_LCD_Data(0x06);//p15
-    APP_LCD_Cmd(0xE1);
-    APP_LCD_Data(0x09);//p1
-    APP_LCD_Data(0x16);//p2
-    APP_LCD_Data(0x2D);//p3
-    APP_LCD_Data(0x0D);//p4
-    APP_LCD_Data(0x13);//p5
-    APP_LCD_Data(0x15);//p6
-    APP_LCD_Data(0x40);//p7
-    APP_LCD_Data(0x48);//p8
-    APP_LCD_Data(0x53);//p9
-    APP_LCD_Data(0x0C);//p10
-    APP_LCD_Data(0x1D);//p11
-    APP_LCD_Data(0x25);//p12
-    APP_LCD_Data(0x2E);//p13
-    APP_LCD_Data(0x34);//p14
-    APP_LCD_Data(0x39);//p15       */
-
-    APP_LCD_Cmd(0x29); // Display On
-    APP_LCD_Cmd(0x2C);
+  
+  APP_LCD_Cmd(0x26);  //Set Default Gamma
+  APP_LCD_Data(0x04);
+  APP_LCD_Cmd(0xB1);
+  APP_LCD_Data(0x08);//10
+  APP_LCD_Data(0x10);//08
+  APP_LCD_Cmd(0xC0);  //Set VRH1[4:0] & VC[2:0] for VCI1 & GVDD
+  APP_LCD_Data(0x0C);
+  APP_LCD_Data(0x05);
+  APP_LCD_Cmd(0xC1);  //Set BT[2:0] for AVDD & VCL & VGH & VGL
+  APP_LCD_Data(0x02);
+  APP_LCD_Cmd(0xC5);  //Set VMH[6:0] & VML[6:0] for VOMH & VCOML
+  APP_LCD_Data(0x4E);
+  APP_LCD_Data(0x30);
+  APP_LCD_Cmd(0xC7);
+  APP_LCD_Data(0xc0);     //offset=0//C0
+  APP_LCD_Cmd(0x3A);  //Set Color Format
+  APP_LCD_Data(0x05);
+  APP_LCD_Cmd(0x2A);  //Set Column Address
+  APP_LCD_Data(0x00);
+  APP_LCD_Data(0x00);
+  APP_LCD_Data(0x00);
+  APP_LCD_Data(0x7F);
+  APP_LCD_Cmd(0x2B);  //Set Page Address
+  APP_LCD_Data(0x00);
+  APP_LCD_Data(0x00);
+  APP_LCD_Data(0x00);
+  APP_LCD_Data(0x9F);
+  //   APP_LCD_Cmd(0xB4);  //frame inversion
+  //    APP_LCD_Data(0x07);
+  APP_LCD_Cmd(0x36);  //Set Scanning Direction
+  APP_LCD_Data(0xC0);
+  //   APP_LCD_Cmd(0xEC);  //Set pumping clock frequency
+  // APP_LCD_Data(0x0B);
+  APP_LCD_Cmd(0xF2);  //Enable Gamma bit
+  APP_LCD_Data(0x01);
+  
+  APP_LCD_Cmd(0xE0);
+  APP_LCD_Data(0x3F);//p1          // xx VP63[5:0]             //       //
+  APP_LCD_Data(0x31);//p2          // xx VP62[5:0]             //       //
+  APP_LCD_Data(0x2D);//p3         // xx VP61[5:0]             //       //
+  APP_LCD_Data(0x2F);//p4          // xx VP59[5:0]             //       //
+  APP_LCD_Data(0x28);//p5          // xx VP57[5:0]             //       //
+  APP_LCD_Data(0x0D);//p6         // xxx VP50[4:0]  //       //
+  APP_LCD_Data(0x59);//p7          // x VP43[6:0]              //       //
+  APP_LCD_Data(0xA8);//p8          // VP36[3:0] VP27[3:0]        //       //
+  APP_LCD_Data(0x44);//p9          // x VP20[6:0]              //       //
+  APP_LCD_Data(0x18);//p10       // xxx VP13[4:0]  //       //
+  APP_LCD_Data(0x1F);//p11       // xx VP6[5:0]               //       //
+  APP_LCD_Data(0x10);//p12       // xx VP4[5:0]               //       //
+  APP_LCD_Data(0x07);//p13       // xx VP2[5:0]               //       //
+  APP_LCD_Data(0x02);//p14       // xx VP1[5:0]               //       //
+  APP_LCD_Data(0x00);//p15       // xx VP0[5:0]               //       //
+  APP_LCD_Cmd(0xE1);
+  APP_LCD_Data(0x00);//p1          // xx VN0[5:0]               //       //
+  APP_LCD_Data(0x0E);//p2         // xx VN1[5:0]               //       //
+  APP_LCD_Data(0x12);//p3          // xx VN2[5:0]               //       //
+  APP_LCD_Data(0x10);//p4          // xx VN4[5:0]              //       //
+  APP_LCD_Data(0x17);//p5          // xx VN6[5:0]               //       //
+  APP_LCD_Data(0x12);//p6          // xxx VN13[4:0] //       //
+  APP_LCD_Data(0x26);//p7          // x VN20[6:0]              //       //
+  APP_LCD_Data(0x57);//p8          // VN36[3:0] VN27[3:0]       //       //
+  APP_LCD_Data(0x3B);//p9         // x VN43[6:0]              //       //
+  APP_LCD_Data(0x07);//p10       // xxx VN50[4:0] //       //
+  APP_LCD_Data(0x20);//p11       // xx VN57[5:0]            //       //
+  APP_LCD_Data(0x2F);//p12       // xx VN59[5:0]            //       //
+  APP_LCD_Data(0x38);//p13       // xx VN61[5:0]            //       //
+  APP_LCD_Data(0x3D);//p14       // xx VN62[5:0]            //       //
+  APP_LCD_Data(0x3f);//p15         // xx VN63[5:0]            //       /
+  
+  
+  /*    APP_LCD_Cmd(0xE0);
+   APP_LCD_Data(0x36);//p1
+   APP_LCD_Data(0x29);//p2
+   APP_LCD_Data(0x12);//p3
+   APP_LCD_Data(0x22);//p4
+   APP_LCD_Data(0x1C);//p5
+   APP_LCD_Data(0x15);//p6
+   APP_LCD_Data(0x42);//p7
+   APP_LCD_Data(0xB7);//p8
+   APP_LCD_Data(0x2F);//p9
+   APP_LCD_Data(0x13);//p10
+   APP_LCD_Data(0x12);//p11
+   APP_LCD_Data(0x0A);//p12
+   APP_LCD_Data(0x11);//p13
+   APP_LCD_Data(0x0B);//p14
+   APP_LCD_Data(0x06);//p15
+   APP_LCD_Cmd(0xE1);
+   APP_LCD_Data(0x09);//p1
+   APP_LCD_Data(0x16);//p2
+   APP_LCD_Data(0x2D);//p3
+   APP_LCD_Data(0x0D);//p4
+   APP_LCD_Data(0x13);//p5
+   APP_LCD_Data(0x15);//p6
+   APP_LCD_Data(0x40);//p7
+   APP_LCD_Data(0x48);//p8
+   APP_LCD_Data(0x53);//p9
+   APP_LCD_Data(0x0C);//p10
+   APP_LCD_Data(0x1D);//p11
+   APP_LCD_Data(0x25);//p12
+   APP_LCD_Data(0x2E);//p13
+   APP_LCD_Data(0x34);//p14
+   APP_LCD_Data(0x39);//p15       */
+  
+  APP_LCD_Cmd(0x29); // Display On
+  APP_LCD_Cmd(0x2C);
+  
+  // set the startup colors
+  APP_LCD_BColourSet(0x00000000);  // black
+  APP_LCD_FColourSet(0x00ffffff);  // White
   
   return (display_available & (1 << mios32_lcd_device)) ? 0 : -1; // return -1 if display not available
 }
@@ -221,27 +225,28 @@ s32 APP_LCD_Data(u8 data)
   // select LCD depending on current cursor position
   // THIS PART COULD BE CHANGED TO ARRANGE THE 8 DISPLAYS ON ANOTHER WAY
   u8 cs = mios32_lcd_y / APP_LCD_HEIGHT;
-
+  
   if( cs >= 8 )
     return -1; // invalid CS line
 #endif
-
+  
   u8 cs=0;
-
+  
   // chip select and DC
 #if APP_LCD_USE_J10_FOR_CS
   MIOS32_BOARD_J10_Set(~(1 << cs));
 #else
-  MIOS32_BOARD_J15_DataSet((~(1 << cs))|(1<<1));
+  MIOS32_BOARD_J15_DataSet(0x00);
 #endif
   MIOS32_BOARD_J15_RS_Set(1); // RS pin used to control DC
-
+  
   // send data
   MIOS32_BOARD_J15_SerDataShift(data);
-
+  
+  MIOS32_BOARD_J15_DataSet(0x02);
   // increment graphical cursor
   //++mios32_lcd_x;
-
+  
 #if 0
   // if end of display segment reached: set X position of all segments to 0
   if( (mios32_lcd_x % APP_LCD_WIDTH) == 0 ) {
@@ -250,7 +255,7 @@ s32 APP_LCD_Data(u8 data)
     APP_LCD_Data(0x00);
   }
 #endif
-
+  
   return 0; // no error
 }
 
@@ -266,12 +271,13 @@ s32 APP_LCD_Cmd(u8 cmd)
 #if APP_LCD_USE_J10_FOR_CS
   MIOS32_BOARD_J10_Set(0x00);
 #else
-  MIOS32_BOARD_J15_DataSet(0x02);
+  MIOS32_BOARD_J15_DataSet(0x00);
 #endif
   MIOS32_BOARD_J15_RS_Set(0); // RS pin used to control DC
-
+  
   MIOS32_BOARD_J15_SerDataShift(cmd);
-
+  
+  MIOS32_BOARD_J15_DataSet(0x02);
   return 0; // no error
 }
 
@@ -284,14 +290,15 @@ s32 APP_LCD_Cmd(u8 cmd)
 s32 APP_LCD_Clear(void)
 {
   u8 i, j;
-  APP_LCD_GCursorSet(0, 0)
-  for (j=0; j<160; j++)
-    for (i=0; i<120; i++)
+  APP_LCD_GCursorSet(0, 0);
+  for (j=0; j<160; j++){
+    APP_LCD_GCursorSet(0, j);
+    for (i=0; i<128; i++)
     {
-       APP_LCD_Data(0);
-       APP_LCD_Data(0);
+      APP_LCD_Data(app_lcd_back_color >> 8);
+      APP_LCD_Data(app_lcd_back_color & 0xff);
     }
-
+  }
   return 0;
 }
 
@@ -304,7 +311,7 @@ s32 APP_LCD_Clear(void)
 s32 APP_LCD_CursorSet(u16 column, u16 line)
 {
   // mios32_lcd_x/y set by MIOS32_LCD_CursorSet() function
-  return APP_LCD_GCursorSet(column, line*8);
+  return APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
 }
 
 
@@ -316,34 +323,30 @@ s32 APP_LCD_CursorSet(u16 column, u16 line)
 s32 APP_LCD_GCursorSet(u16 x, u16 y)
 {
   s32 error = 0;
-  u8 YSL,YEL;
+  
   
   mios32_lcd_x = x;
   mios32_lcd_y = y;
   
-    YSL=y & 0xff;
-
-    YEL=159;
-
-    error |= APP_LCD_Cmd(0x2A);
-    error |= APP_LCD_Data(0x00);
-    error |= APP_LCD_Data(x0 & 0x7f);
-    error |= APP_LCD_Data(0x00);
-    error |= APP_LCD_Data(0x7f);
-    error |= APP_LCD_Cmd(0x2B);
-    error |= APP_LCD_Data(0x00);
-    error |= APP_LCD_Data(YSL);
-    error |= APP_LCD_Data(0x00);
-    error |= APP_LCD_Data(YEL);
-    error |= APP_LCD_Cmd(0x2C);//LCD_WriteCMD(GRAMWR);
-
+  error |= APP_LCD_Cmd(0x2A);
+  error |= APP_LCD_Data(0x00);
+  error |= APP_LCD_Data(x);
+  error |= APP_LCD_Data(0x00);
+  error |= APP_LCD_Data(127);
+  error |= APP_LCD_Cmd(0x2B);
+  error |= APP_LCD_Data(0x00);
+  error |= APP_LCD_Data(y);
+  error |= APP_LCD_Data(0x00);
+  error |= APP_LCD_Data(159);
+  error |= APP_LCD_Cmd(0x2C);//LCD_WriteCMD(GRAMWR);
+  
   return error;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 //! Initializes the graphical font<BR>
 //! Only relevant for SSD1322
-//! \param[in] *font pointer to font, colour_depth Is1BIT or Is4BIT
+//! \param[in] *font pointer to font, colour_depth Is1BIT or IsILI
 //! \return < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_FontInit(u8 *font, app_lcd_color_depth_t colour_depth)
@@ -383,22 +386,22 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
     char_bmp.memory += (char_bmp.height>>3) * char_bmp.line_offset * (size_t)c;
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
-    // 4bit depth
-  }else if((bitmap.colour_depth == font_bmp.colour_depth) && (font_bmp.colour_depth == Is4BIT)) {
+    // toDo ili special depth 5:6:5
+  }else if((bitmap.colour_depth == font_bmp.colour_depth) && (font_bmp.colour_depth == IsILI)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
     char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
     char_bmp.memory += (char_bmp.width*char_bmp.height*((size_t)c & 0xf0)/2 + ((((size_t)c %16)*char_bmp.width)/2));
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
-
+    
     // legacy 1bit to 4bit depth
-  }else if((bitmap.colour_depth == Is4BIT) && (font_bmp.colour_depth == Is1BIT)) {
+  }else if((bitmap.colour_depth == IsILI) && (font_bmp.colour_depth == Is1BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
     char_bmp.memory += (char_bmp.height>>3) * char_bmp.line_offset * (size_t)c;
     char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // 4bit to legacy 1bit depth
-  }else if((bitmap.colour_depth == Is1BIT) && (font_bmp.colour_depth == Is4BIT)) {
+  }else if((bitmap.colour_depth == Is1BIT) && (font_bmp.colour_depth == IsILI)) {
     // write it if you need it ;)
     return -1;    // not supported
   }else return -1;   // not supported
@@ -449,7 +452,12 @@ s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, 
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_BColourSet(u32 rgb)
 {
-  app_lcd_back_grayscale = rgb & 0x0f;
+  rgb &= 0x00ffffff;
+  u8 r,g,b;
+  r = (rgb >> 19) & 0x1f;
+  g = (rgb >> 10) & 0x3f;
+  b = (rgb >> 3) & 0x1f;
+  app_lcd_back_color = (r<<11) | (g<<5) | b;
   return -1; // n.a.
 }
 
@@ -462,7 +470,12 @@ s32 APP_LCD_BColourSet(u32 rgb)
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_FColourSet(u32 rgb)
 {
-  app_lcd_fore_grayscale = rgb & 0x0f;
+  rgb &= 0x00ffffff;
+  u8 r,g,b;
+  r = (rgb >> 19) & 0x1f;
+  g = (rgb >> 10) & 0x3f;
+  b = (rgb >> 3) & 0x1f;
+  app_lcd_fore_color = (r<<11) | (g<<5) | b;
   return 0; // no error
 }
 
@@ -510,7 +523,31 @@ mios32_lcd_bitmap_t APP_LCD_BitmapInit(u8 *memory, u16 width, u16 height, u16 li
 // Sets a pixel in the bitmap
 // IN: bitmap, x/y position and fusion mode for native 4Bit bitmap
 // color is given by APP_LCD_FColourSet,
-// app_lcd_fore_grayscale>0 is a white pixel for legacy 1Bit bimap
+// app_lcd_fore_color>0 is a white pixel for legacy 1Bit bimap
+// OUT: returns < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_PixelSet(u16 x, u16 y, u32 colour)
+{
+  if( x >= APP_LCD_WIDTH || y >= APP_LCD_HEIGHT )
+    return -1; // pixel is outside bitmap
+  
+  colour &= 0x00ffffff;
+  u8 r = (colour >> 19) & 0x1f;
+  u8 g = (colour >> 10) & 0x3f;
+  u8 b = (colour >> 3) & 0x1f;
+  u16 color = (r<<11) | (g<<5) | b;
+  APP_LCD_GCursorSet(x, y);
+  APP_LCD_Data(color >> 8);
+  APP_LCD_Data(color & 0xff);
+  
+  return 0; // no error
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Sets a pixel in the bitmap
+// IN: bitmap, x/y position and fusion mode for native 4Bit bitmap
+// color is given by APP_LCD_FColourSet,
+// app_lcd_fore_color>0 is a white pixel for legacy 1Bit bimap
 // OUT: returns < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_BitmapPixelSet(mios32_lcd_bitmap_t bitmap, u16 x, u16 y, u32 colour)
@@ -518,33 +555,136 @@ s32 APP_LCD_BitmapPixelSet(mios32_lcd_bitmap_t bitmap, u16 x, u16 y, u32 colour)
   if( x >= bitmap.width || y >= bitmap.height )
     return -1; // pixel is outside bitmap
   
-  // prepare colour on both nibbles
-  colour &= 0x0f;
-  colour |= ((colour <<4) & 0xf0);    // clean colour
   
-    /* native 4bit depth */
-  if(bitmap.colour_depth == Is4BIT) {
-    u8 *pixel = bitmap.memory + ((bitmap.line_offset*y + x)/2);
-    if(x & 1){    // xi is even
-          *pixel &= 0xf0;   // blank nibble
-          *pixel |= (colour & 0x0f);
-    }else{      // xi is odd
-          *pixel &= 0x0f;   // blank nibble
-          *pixel |= (colour & 0xf0);
-    }
+  /* native 16bit depth. r(15:11), g(10:5), b(4:0)   */
+  if(bitmap.colour_depth == APP_LCD_COLOUR_DEPTH){
+    // prepare colour for 5:6:5
+    colour &= 0x00ffffff;
+    u8 r = (colour >> 19) & 0x1f;
+    u8 g = (colour >> 10) & 0x3f;
+    u8 b = (colour >> 3) & 0x1f;
+    u16 color = (r<<11) | (g<<5) | b;
+    u8 *pixel = bitmap.memory + ((bitmap.line_offset*y + x)*2);
+    *pixel++ = color>>8;
+    *pixel = (color & 0xff);
     
     /* legacy 1bit pixel print */
-  }else if(bitmap.colour_depth == Is1BIT) {
+  }else if(bitmap.colour_depth == 1) {  // 1bit format
     u8 *pixel = (u8 *)&bitmap.memory[bitmap.line_offset*(y / 8) + x];
     u8 mask = 1 << (y % 8);
-    
     *pixel &= ~mask;
-    if( colour )
-      *pixel |= mask;
+    if( colour ) *pixel |= mask;
+    
   }else return -1;  // not supported
   
   return 0; // no error
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// Draw a rectangle in the bm_cs_lcd_screen_bmp from position and size
+// IN: x1/y1 first point, x2/y2 second point, border(e.g. 0x55 is dot line) and fill 0=none 1=empty 2=fill
+// OUT: returns < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_Rectangle(u16 x, u16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color)
+{
+  if( x >= APP_LCD_WIDTH || y >= APP_LCD_HEIGHT )
+    return -1; // pixel is outside bitmap
+  
+  s16 i, j;
+    // fill rect first
+    if(fill)for(i=0; i< (width); i++)for(j=0; j< (height); j++)APP_LCD_PixelSet((u16)(x+i), (u16)(y+j), back_color);
+
+    // border
+    u16 border_pix=0;
+    for(i=0; i< (width); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_PixelSet((u16)(x+i), (u16)y, bd_color);
+      else
+        APP_LCD_PixelSet((u16)(x+i), (u16)y, back_color);
+      border_pix++;
+    }
+    for(i=1; i< (height); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_PixelSet((u16)(x+width-1), (u16)(y+i), bd_color);
+      else
+        APP_LCD_PixelSet((u16)(x+width-1), (u16)(y+i), back_color);
+      border_pix++;
+    }
+    for(i=1; i< (width); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_PixelSet((u16)(x+width-i-1), (u16)(y + height-1), bd_color);
+      else
+        APP_LCD_PixelSet((u16)(x+width-i-1), (u16)(y + height-1), back_color);
+      border_pix++;
+    }
+    for(i=1; i< (height); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_PixelSet((u16)x, (u16)(y+height-i-1), bd_color);
+      else
+        APP_LCD_PixelSet((u16)x, (u16)(y+height-i-1), back_color);
+      border_pix++;
+    }
+
+  return 1; // ok
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Draw a rectangle in the bm_cs_lcd_screen_bmp from position and size
+// IN: x1/y1 first point, x2/y2 second point, border(e.g. 0x55 is dot line) and fill 0=none 1=empty 2=fill
+// OUT: returns < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_BitmapRectangle(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color)
+{
+  if( (x >= bitmap.width) || (y >= bitmap.height) || ((x + width) < 0) || ((y + height) < 0) )return -1; // pixel is outside bm_cs_lcd_screen_bmp
+  s16 i, j;
+
+//  /* native 16bit depth. r(15:11), g(10:5), b(4:0)   */
+//  if(bitmap.colour_depth == APP_LCD_COLOUR_DEPTH){
+//    // toDo
+//
+//    /* legacy 1bit pixel print */
+//  }else if(bitmap.colour_depth == 1) {  // 1bit format
+    // fill rect first
+    if(fill)for(i=0; i< (width); i++)for(j=0; j< (height); j++)APP_LCD_BitmapPixelSet(bitmap, (u16)(x+i), (u16)(y+j), back_color);
+
+    // border
+    if(border){
+    u16 border_pix=0;
+    for(i=0; i< (width); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_BitmapPixelSet(bitmap, (u16)(x+i), (u16)y, bd_color);
+      else
+        APP_LCD_BitmapPixelSet(bitmap, (u16)(x+i), (u16)y, back_color);
+      border_pix++;
+    }
+    for(i=1; i< (height); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_BitmapPixelSet(bitmap, (u16)(x+width-1), (u16)(y+i), bd_color);
+      else
+        APP_LCD_BitmapPixelSet(bitmap, (u16)(x+width-1), (u16)(y+i), back_color);
+      border_pix++;
+    }
+    for(i=1; i< (width); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_BitmapPixelSet(bitmap, (u16)(x+width-i-1), (u16)(y + height-1), bd_color);
+      else
+        APP_LCD_BitmapPixelSet(bitmap, (u16)(x+width-i-1), (u16)(y + height-1), back_color);
+      border_pix++;
+    }
+    for(i=1; i< (height); i++){
+      if((border >> (border_pix%8))&0x01)
+        APP_LCD_BitmapPixelSet(bitmap, (u16)x, (u16)(y+height-i-1), bd_color);
+      else
+        APP_LCD_BitmapPixelSet(bitmap, (u16)x, (u16)(y+height-i-1), back_color);
+      border_pix++;
+    }
+    }
+  //}else return -1;  // not supported
+
+  return 1; // ok
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Sets a byte in the bitmap, whathever its position in y,
@@ -589,7 +729,7 @@ s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value)
 u8 APP_LCD_HelpPixelLuma(u8 pix_mem, u8 pix_parity, float luma)
 {
   
- //DEBUG_MSG("[BM_RoutingPg_MIDI_Process] io %d-%s: 0x%08x ! \n", io.index, io.port_name, midi_package.ALL);
+  //DEBUG_MSG("[BM_RoutingPg_MIDI_Process] io %d-%s: 0x%08x ! \n", io.index, io.port_name, midi_package.ALL);
   if(pix_parity!=0){
     u8 result = (u8)((pix_mem & 0x0f) + ((pix_mem & 0x0f)*(luma)));
     if(result>0x0f)result=0x0f;
@@ -620,7 +760,7 @@ s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, 
     return -2;  // bitmap is outside screen
   
   /* native 4bit depth only */
-  if(bitmap.colour_depth == Is4BIT) {
+  if(bitmap.colour_depth == IsILI) {
     u16 xi, yi;
     // loop y (with crop)
     for(yi=((y<0)? 0 : y); yi<(((height+y)>bitmap.height)? bitmap.height : (height+y)); yi++){
@@ -672,7 +812,7 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd
     return -2;  // bitmap is outside screen
   
   /* native 4bit depth */
-  if((src_bmp.colour_depth == dst_bmp.colour_depth) && (dst_bmp.colour_depth == Is4BIT)) {
+  if((src_bmp.colour_depth == dst_bmp.colour_depth) && (dst_bmp.colour_depth == IsILI)) {
     u16 xi, yi;
     // loop y (with crop)
     for(yi=((y<0)? (0-y) : 0); yi<(((src_bmp.height+y)>dst_bmp.height)? (dst_bmp.height+y) : src_bmp.height); yi++){
@@ -683,7 +823,7 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd
       u16 xi_max = (((src_bmp.width+x)>dst_bmp.width)? (dst_bmp.width-x) : src_bmp.width);
       for(xi=((x<0)? (0-x) : 0); xi<xi_max; xi++){
         // process luma
-
+        
         if(x & 1){    // start point x is odd
           if(!(xi & 1)){    // xi is even
             u8 pixel = *src_mem_ptr;
@@ -791,10 +931,10 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd
     }
     
     /* legacy 1bit to 4bit depth */
-  }else if((src_bmp.colour_depth == Is1BIT) && (dst_bmp.colour_depth == Is4BIT)) {
+  }else if((src_bmp.colour_depth == Is1BIT) && (dst_bmp.colour_depth == IsILI)) {
     u16 xi, yi;
     // prepare colour on both nibbles
-    u8 gray = app_lcd_fore_grayscale & 0x0f;
+    u8 gray = app_lcd_fore_color & 0x0f;
     gray |= ((gray <<4) & 0xf0);
     // loop y (with crop)
     for(yi=((y<0)? (0-y) : 0); yi<(((src_bmp.height+y)>dst_bmp.height)? (dst_bmp.height-y) : src_bmp.height); yi++){
@@ -865,7 +1005,7 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd
     
     
     /* 4bit to legacy 1bit depth */
-  }else if((src_bmp.colour_depth == Is4BIT) && (dst_bmp.colour_depth == Is1BIT)) {
+  }else if((src_bmp.colour_depth == IsILI) && (dst_bmp.colour_depth == Is1BIT)) {
     // write it if you need it ;)
     return -1;  // not supported
   }else return -1;  // not supported
@@ -873,82 +1013,177 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd
   return 0; // no error
 }
 
+/////////////////////////////////////////////////////////////////////////////
+// Transfers Bitmap to the TFT
+// Notes: using back/fore colors respectively from pixel off/on for 1bit,
+// trasferred to APP_LCD_NativeBitmapPrint for native 16bit
+// IN: bitmap
+// OUT: returns < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_width)
+{
+  
+  //if( !MIOS32_LCD_TypeIsGLCD() )
+  //return -1; // no GLCD
+  
+  // abort if max. width reached
+  //if( mios32_lcd_x >= mios32_lcd_parameters.width )
+  //return -2;
+  
+  /* native 16bit depth. r(15:11), g(10:5), b(4:0)   */
+  if(bitmap.colour_depth == APP_LCD_COLOUR_DEPTH){
+    //    u16 *memory_ptr = bitmap.memory + ((bitmap.line_offset*y + x)*2);
+    //    // transfer bitmap
+    //    int x, y;
+    //    for(y=0; y<8; ++y){
+    //      for(x=0; x<bitmap.width; ++x){
+    //        APP_LCD_Data(*memory_ptr >> 8);
+    //        APP_LCD_Data(*memory_ptr++ & 0xff);
+    //      }
+    //    }
+    /* legacy 1bit pixel print */
+  }else if(bitmap.colour_depth == 1) {  // 1bit format
+    //fill fromr regular 1bit using back and fore colors
+    // all GLCDs support the same bitmap scrambling
+    int line;
+    int y_lines = (bitmap.height >> 3);
+    
+    u16 initial_x = mios32_lcd_x;
+    u16 initial_y = mios32_lcd_y;
+    for(line=0; line<y_lines; ++line) {
+      
+      // calculate pointer to bitmap line
+      u8 *memory_ptr = bitmap.memory + line * bitmap.line_offset + b_x;
+      
+      // set graphical cursor after second line has reached
+      //    if( line > 0 ) {
+      //      mios32_lcd_x = initial_x;
+      //      mios32_lcd_y += 1;
+      //      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+      //    }
+      
+      // transfer bitmap
+      int x, y;
+      for(y=0; y<8; ++y){
+        for(x=b_x; ((b_width+b_x)>bitmap.width)? (x<bitmap.width) : (x< (b_width+b_x)); ++x){
+        //for(x=b_x; x< (b_width+b_x); ++x){
+          if(*memory_ptr & (1<<y)){
+            APP_LCD_Data(app_lcd_fore_color >> 8);
+            APP_LCD_Data(app_lcd_fore_color & 0xff);
+          }else{
+            APP_LCD_Data(app_lcd_back_color >> 8);
+            APP_LCD_Data(app_lcd_back_color & 0xff);
+          }
+          //DEBUG_MSG("%d %d %d", x, y, memory_ptr);
+          memory_ptr++;
+        }
+        memory_ptr = bitmap.memory + line * bitmap.line_offset + b_x;
+        mios32_lcd_y += 1;
+        APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+      }
+    }
+    // fix graphical cursor if more than one line has been print
+    mios32_lcd_x += bitmap.width;
+    if( y_lines >= 1 ) {
+      mios32_lcd_y = initial_y;
+      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+    }
+  }else return -1;  // not supported
+  
+  
+  
+  
+  return 0; // no error
+}
 
 /////////////////////////////////////////////////////////////////////////////
-// Transfers a Bitmap to the LCD
-// Notes: Because we've got 2 pixels by byte, try to transfer an even width bitmap
-// to an even x position on screen or you will overwrite some pixels
+// Transfers Bitmap to the TFT
+// Notes: using back/fore colors respectively from pixel off/on for 1bit,
+// trasferred to APP_LCD_NativeBitmapPrint for native 16bit
 // IN: bitmap
 // OUT: returns < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap)
 {
-  int x, y;
-  u16 initial_x = mios32_lcd_x;
-  u16 initial_y = mios32_lcd_y;
-  u16 x_max = (((bitmap.width+initial_x)>APP_LCD_WIDTH)? APP_LCD_WIDTH : (bitmap.width+initial_x));
-  for(y=initial_y; y<(((bitmap.height+initial_y)>APP_LCD_HEIGHT)? APP_LCD_HEIGHT : (bitmap.height+initial_y)); y++){
-    APP_LCD_GCursorSet(initial_x, y);
-    APP_LCD_Cmd(0x5c); // Write RAM
+  
+  //if( !MIOS32_LCD_TypeIsGLCD() )
+  //return -1; // no GLCD
+  
+  // abort if max. width reached
+  //if( mios32_lcd_x >= mios32_lcd_parameters.width )
+  //return -2;
+  
+  /* native 16bit depth. r(15:11), g(10:5), b(4:0)   */
+  if(bitmap.colour_depth == APP_LCD_COLOUR_DEPTH){
     
-    /* 4bit bitmap print */
-    if(bitmap.colour_depth == Is4BIT) {
-      // calculate pointer to bitmap line
-      u8 *memory_ptr = bitmap.memory + (((y-initial_y)*bitmap.line_offset)/2);
-      u8 byte = 0;
-      // loop x (with crop)
-      for(x= initial_x; x<x_max; x++){
-        // transfer bitmap
-        if(initial_x & 1){    // initial_x is odd
-          if(!(x & 1)){    // x is even
-            byte &= 0xf0;   // blank nibble
-            byte |= ((*memory_ptr >>4) & 0x0f);
-            APP_LCD_Data(byte);   // send byte
-          }else{      // xi is odd
-            byte &= 0x0f;   // blank nibble
-            byte |= ((*memory_ptr <<4) & 0xf0);
-            memory_ptr++;      // next source pointer
-          }
-        }else{
-          if(!(x & 1)){   // only when xi is even
-            if(x == (x_max-1)){  // end of line
-              byte &= 0x0f;   // blank nibble
-              byte |= (*memory_ptr & 0xf0);
-              APP_LCD_Data(byte);   // send byte
-            }else{  // aligned, we copy the byte
-              APP_LCD_Data(*memory_ptr++);   // send byte
-            }
-          }
+    u8 *memory_ptr = bitmap.memory;
+    u16 initial_x = mios32_lcd_x;
+    u16 initial_y = mios32_lcd_y;
+    // transfer bitmap
+      int x, y;
+      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+
+      for(y=0; y<(((initial_y + bitmap.height)<=APP_LCD_HEIGHT)? bitmap.height : (APP_LCD_HEIGHT-initial_y)); ++y){
+        for(x=0; x<(((initial_x + bitmap.width)<=APP_LCD_WIDTH)? bitmap.width : (APP_LCD_WIDTH-initial_x)); ++x){
+          APP_LCD_Data(*memory_ptr++);
+          APP_LCD_Data(*memory_ptr++);
+          //DEBUG_MSG("%d %d %d", x, y, memory_ptr);
         }
+        if((mios32_lcd_x + bitmap.width)>APP_LCD_WIDTH)memory_ptr +=(mios32_lcd_x + bitmap.width -APP_LCD_WIDTH)*2;
+        mios32_lcd_y += 1;
+        APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
       }
-    /* legacy 1bit bitmap print */
-    }else if(bitmap.colour_depth == Is1BIT) {
-      // calculate pointer to bitmap line
-      u8 *memory_ptr = bitmap.memory + (((y-initial_y)/8) * bitmap.line_offset);
-      // transfer bitmap
-      u8 mem = *memory_ptr++;
-      u8 byte = 0;
-      u8 bit = (y-initial_y) % 8;
-      // loop x (with crop)
-      for(x=initial_x; x<x_max; x++){
-        if((initial_x & 1) == (x & 1)){      // x parity == xi parity
-          byte &= 0xf0;   // blank nibble
-          mem = *memory_ptr++;
-          if(mem & (1<<bit))byte |= (app_lcd_fore_grayscale & 0x0f);
-          APP_LCD_Data(byte);
-        }else{      // xi is odd
-          byte &= 0x0f;   // blank nibble
-          mem = *memory_ptr++;
-          if(mem & (1<<bit))byte = (app_lcd_fore_grayscale & 0x0f)<<4;
-        }
-      }
+    
+    /* legacy 1bit pixel print */
+  }else if(bitmap.colour_depth == 1) {  // 1bit format
+    //fill fromr regular 1bit using back and fore colors
+    // all GLCDs support the same bitmap scrambling
+    int line;
+    int y_lines = (bitmap.height >> 3);
+    
+    u16 initial_x = mios32_lcd_x;
+    u16 initial_y = mios32_lcd_y;
+    for(line=0; line<y_lines; ++line) {
       
-    }else return -1;  // not supported
-    // reset y to initial position
-    //mios32_lcd_y = initial_y;
-  }
-  // reset x to next position
-  //mios32_lcd_x = x_max;
-  APP_LCD_GCursorSet(x_max, initial_y);
+      // calculate pointer to bitmap line
+      u8 *memory_ptr = bitmap.memory + line * bitmap.line_offset;
+      
+      // set graphical cursor after second line has reached
+      //    if( line > 0 ) {
+      //      mios32_lcd_x = initial_x;
+      //      mios32_lcd_y += 1;
+      //      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+      //    }
+      
+      // transfer bitmap
+      int x, y;
+      for(y=0; y<8; ++y){
+        for(x=0; x<bitmap.width; ++x){
+          if(*memory_ptr & (1<<y)){
+            APP_LCD_Data(app_lcd_fore_color >> 8);
+            APP_LCD_Data(app_lcd_fore_color & 0xff);
+          }else{
+            APP_LCD_Data(app_lcd_back_color >> 8);
+            APP_LCD_Data(app_lcd_back_color & 0xff);
+          }
+          //DEBUG_MSG("%d %d %d", x, y, memory_ptr);
+          memory_ptr++;
+        }
+        memory_ptr = bitmap.memory + line * bitmap.line_offset;
+        mios32_lcd_y += 1;
+        APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+      }
+    }
+    // fix graphical cursor if more than one line has been print
+    mios32_lcd_x += bitmap.width;
+    if( y_lines >= 1 ) {
+      mios32_lcd_y = initial_y;
+      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+    }
+  }else return -1;  // not supported
+  
+  
+  
+  
   return 0; // no error
 }

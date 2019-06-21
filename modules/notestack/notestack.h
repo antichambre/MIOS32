@@ -37,10 +37,12 @@ typedef enum {
 
 
 typedef union {
-  u16 ALL;
+  u32 ALL;
   struct {
     u8 note:7;
     u8 depressed:1;
+    u8 hit_order;
+    u8 dummy;
     u8 tag;
   };
 } notestack_item_t;

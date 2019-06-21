@@ -16,8 +16,8 @@ THUMB_SOURCE += \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_knob_icons.c \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_meter_icons_h.c \
   $(MIOS32_PATH)/modules/glcd_font/glcd_font_meter_icons_v.c\
-  $(MIOS32_PATH)/modules/glcd_font/glcd_font_minitogsel_icons.c
-
+  $(MIOS32_PATH)/modules/glcd_font/glcd_font_minitogsel_icons.c\
+  $(MIOS32_PATH)/modules/glcd_font/glcd_font_miniknob_icons.c
 
 # directories and files that should be part of the distribution (release) package
 DIST += $(MIOS32_PATH)/modules/glcd_font

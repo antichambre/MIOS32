@@ -443,7 +443,7 @@ s32 MIOS32_LCD_PrintChar(char c)
   if( MIOS32_LCD_TypeIsGLCD() ) { // GLCD
     if( !font_bitmap.width )
       return -1;    // font not initialized yet!
-
+    
     mios32_lcd_bitmap_t bitmap = font_bitmap;
     bitmap.memory += (bitmap.height>>3) * bitmap.line_offset * (size_t)c;
     status = APP_LCD_BitmapPrint(bitmap);

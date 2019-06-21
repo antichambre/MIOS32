@@ -15,7 +15,7 @@
  *  Copyright (C) 2009 Thorsten Klose (tk@midibox.org)
  *  Licensed for personal non-commercial use only.
  *  All other rights reserved.
- * 
+ *
  * ==========================================================================
  */
 
@@ -54,7 +54,7 @@ s32 NOTESTACK_Init(notestack_t *n, notestack_mode_t mode, notestack_item_t *note
   n->size = size;
   n->len = 0;
   n->note_items = note_items;
-
+  
   return NOTESTACK_Clear(n);
 }
 
@@ -70,19 +70,20 @@ s32 NOTESTACK_Init(notestack_t *n, notestack_mode_t mode, notestack_item_t *note
 s32 NOTESTACK_Push(notestack_t *n, u8 new_note, u8 tag)
 {
   int i;
-
+  
   u8 hold_mode =
-    n->mode == NOTESTACK_MODE_PUSH_TOP_HOLD ||
-    n->mode == NOTESTACK_MODE_PUSH_BOTTOM_HOLD ||
-    n->mode == NOTESTACK_MODE_SORT_HOLD;
-
+  n->mode == NOTESTACK_MODE_PUSH_TOP_HOLD ||
+  n->mode == NOTESTACK_MODE_PUSH_BOTTOM_HOLD ||
+  n->mode == NOTESTACK_MODE_SORT_HOLD;
+  
   if( hold_mode ) {
     // check if note already in stack - in this case, replace it with the new tag and exit
     for(i=0; i < n->len; ++i) {
       if( n->note_items[i].note == new_note ) {
-	n->note_items[i].depressed = 0;
-	n->note_items[i].tag = tag;
-	return 0; // no error
+        n->note_items[i].depressed = 0;
+        n->note_items[i].tag = tag;
+        // note: no hit_order change here!
+        return 0; // no error
       }
     }
   } else {
@@ -90,7 +91,7 @@ s32 NOTESTACK_Push(notestack_t *n, u8 new_note, u8 tag)
     // check if note already in stack - in this case, remove it
     NOTESTACK_Pop(n, new_note);
   }
-
+  
   int insertion_point = 0;
   if( n->mode == NOTESTACK_MODE_PUSH_BOTTOM || n->mode == NOTESTACK_MODE_PUSH_BOTTOM_HOLD ) {
     // add note to the end of the stack (FIFO)
@@ -102,6 +103,7 @@ s32 NOTESTACK_Push(notestack_t *n, u8 new_note, u8 tag)
       n->note_items[n->size-1].note = new_note;
       n->note_items[n->size-1].depressed = 0;
       n->note_items[n->size-1].tag = tag;
+      // note: no hit_order change here!
       return 0; // no error
     }
     insertion_point = n->len;
@@ -112,36 +114,39 @@ s32 NOTESTACK_Push(notestack_t *n, u8 new_note, u8 tag)
     i = 0;
     if( sort && n->len ) {
       for(i=0; i<n->len; ++i)
-	if( n->note_items[i].note > new_note ) {
-	  insertion_point = i;
-	  break;
-	}
+        if( n->note_items[i].note > new_note ) {
+          insertion_point = i;
+          break;
+        }
     }
-
+    
     if( i == n->len ) {
       // corner case: stack is full, and new note is greater than all others:
       // replace last note by new one and exit
       if( n->len >= n->size ) {
-	n->note_items[n->size-1].note = new_note;
-	n->note_items[n->size-1].depressed = 0;
-	n->note_items[n->size-1].tag = tag;
-	return 0; // no error
+        n->note_items[n->size-1].note = new_note;
+        n->note_items[n->size-1].depressed = 0;
+        n->note_items[n->size-1].tag = tag;
+        // note: no hit_order change here!
+        return 0; // no error
       }
       insertion_point = n->len;
     }
   }
   
+  // hitted position
+  u8 hitpos = n->len;
   // increment length so long it hasn't reached the notestack size
-  if( n->len < n->size )
-    ++n->len;
+  if( n->len < n->size )++n->len;
   
   // add note at insertion point
-  for(i=n->len-1; i > insertion_point; --i)
-    n->note_items[i] = n->note_items[i-1];
+  for(i=n->len-1; i > insertion_point; --i)n->note_items[i] = n->note_items[i-1];
   n->note_items[insertion_point].note = new_note;
   n->note_items[insertion_point].depressed = 0;
   n->note_items[insertion_point].tag = tag;
-
+  //n->note_items[n->size-1].hit_order = hitpos;
+  n->note_items[insertion_point].hit_order = hitpos;
+  
   return 0; // no error
 }
 
@@ -157,37 +162,37 @@ s32 NOTESTACK_Push(notestack_t *n, u8 new_note, u8 tag)
 s32 NOTESTACK_Pop(notestack_t *n, u8 old_note)
 {
   int i, j;
-
+  
   u8 hold_mode =
-    n->mode == NOTESTACK_MODE_PUSH_TOP_HOLD ||
-    n->mode == NOTESTACK_MODE_PUSH_BOTTOM_HOLD ||
-    n->mode == NOTESTACK_MODE_SORT_HOLD;
-
+  n->mode == NOTESTACK_MODE_PUSH_TOP_HOLD ||
+  n->mode == NOTESTACK_MODE_PUSH_BOTTOM_HOLD ||
+  n->mode == NOTESTACK_MODE_SORT_HOLD;
+  
   // search for note with same value and remove it
   // (SEQ_MIDI_IN_Notestack_Push ensures, that a note value only exists one time in stack)
   for(i=0; i < n->len; ++i) {
     if( n->note_items[i].note == old_note ) {
       if( hold_mode ) {
-	n->note_items[i].depressed = 1;
-	
-	// check if any note is still pressed
-	u8 any_note_pressed = 0;
-	for(j=0; !any_note_pressed && j<n->len; ++j)
-	  if( !n->note_items[j].depressed )
-	    any_note_pressed = 1;
-
-	return any_note_pressed ? 1 : 2;
+        n->note_items[i].depressed = 1;
+        
+        // check if any note is still pressed
+        u8 any_note_pressed = 0;
+        for(j=0; !any_note_pressed && j<n->len; ++j)
+          if( !n->note_items[j].depressed )
+            any_note_pressed = 1;
+        
+        return any_note_pressed ? 1 : 2;
       } else {
-	for(j=i; j < n->len-1; ++j)
-	  n->note_items[j] = n->note_items[j+1];
-	--n->len;
-	n->note_items[n->len].ALL = 0x00;
-
-	return 1; // note has been found and removed
+        for(j=i; j < n->len-1; ++j)
+          n->note_items[j] = n->note_items[j+1];
+        --n->len;
+        n->note_items[n->len].ALL = 0x00;
+        
+        return 1; // note has been found and removed
       }
     }
   }
-
+  
   // note hasn't been found
   return 0;
 }
@@ -204,11 +209,11 @@ s32 NOTESTACK_CountActiveNotes(notestack_t *n)
 {
   int i;
   int count = 0;
-
+  
   for(i=0; i<n->len; ++i)
     if( !n->note_items[i].depressed )
       ++count;
-
+  
   return count;
 }
 
@@ -221,17 +226,17 @@ s32 NOTESTACK_CountActiveNotes(notestack_t *n)
 s32 NOTESTACK_RemoveNonActiveNotes(notestack_t *n)
 {
   int i, j;
-
+  
   for(i=0; i < n->len; ++i) {
     if( n->note_items[i].depressed ) {
       for(j=i; j < n->len-1; ++j)
-	n->note_items[j] = n->note_items[j+1];
+        n->note_items[j] = n->note_items[j+1];
       --n->len;
       n->note_items[n->len].ALL = 0x00;
       --i; // note at index "i" has been removed, ensure that next note will be checked
     }
   }
-
+  
   return 0; // no error
 }
 
@@ -244,12 +249,12 @@ s32 NOTESTACK_RemoveNonActiveNotes(notestack_t *n)
 s32 NOTESTACK_Clear(notestack_t *n)
 {
   int i;
-
+  
   n->len = 0;
-
+  
   for(i=0; i<n->size; ++i)
     n->note_items[i].ALL = 0;
-
+  
   return 0; // no error
 }
 
@@ -264,17 +269,17 @@ s32 NOTESTACK_SendDebugMessage(notestack_t *n)
 {
   const char note_name[12][3] = { "C-", "C#", "D-", "D#", "E-", "F-", "F#", "G-", "G#", "A-", "A#", "B-" };
   int i;
-
+  
   MIOS32_MIDI_SendDebugMessage("Notestack Content (len=%d, size=%d)\n", n->len, n->size);
   for(i=0; i<n->len; ++i) {
     MIOS32_MIDI_SendDebugMessage("%02d: %s%-3d (0x%02x) %s tag:0x%02x\n",
-				 i,
-				 note_name[n->note_items[i].note%12], (int)(n->note_items[i].note/12)-2,
-				 n->note_items[i].note,
-				 n->note_items[i].depressed ? "depressed" : "pressed  ",
-				 n->note_items[i].tag);
+                                 i,
+                                 note_name[n->note_items[i].note%12], (int)(n->note_items[i].note/12)-2,
+                                 n->note_items[i].note,
+                                 n->note_items[i].depressed ? "depressed" : "pressed  ",
+                                 n->note_items[i].tag);
   }
-
+  
   return 0; // no error
 }
 

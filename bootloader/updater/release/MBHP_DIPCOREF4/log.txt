@@ -103,3 +103,15 @@ Creating object file for glcd_font_minitogsel_icons.c
 Creating object file for glcd_font_4bit_pix.c
 Creating object file for mini_cpp.cpp
 Creating object file for freertos_heap.cpp
+-------------------------------------------------------------------------------
+Application successfully built for:
+Processor: STM32F405RG
+Family:    STM32F4xx
+Board:     MBHP_DIPCOREF4
+LCD:       ssd1322
+-------------------------------------------------------------------------------
+arm-none-eabi-size project_build/project.elf
+   text	   data	    bss	    dec	    hex	filename
+  84806	    208	  20400	 105414	  19bc6	project_build/project.elf
+20000000 D __ram_start
+20005080 B __ram_end
