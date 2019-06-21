@@ -11,8 +11,8 @@
  * ==========================================================================
  */
 
-#ifndef _SCALE_H
-#define _SCALE_H
+#ifndef _FORCE_TO_SCALE_H
+#define _FORCE_TO_SCALE_H
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -41,4 +41,4 @@ extern s32 SCALE_Note(mios32_midi_package_t *p, u8 scale, u8 root);
 // Export global variables
 /////////////////////////////////////////////////////////////////////////////
 
-#endif /* _SCALE_H */
+#endif /* _FORCE_TO_SCALE_H */
