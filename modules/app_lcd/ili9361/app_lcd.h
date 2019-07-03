@@ -56,7 +56,7 @@ typedef enum{
 // bitmap color depth
 typedef enum{
   Is1BIT = 1,
-  IsILI = APP_LCD_COLOUR_DEPTH
+  Is16BIT = 16
 }app_lcd_color_depth_t;
 
 
@@ -90,7 +90,7 @@ extern s32 APP_LCD_Rectangle(u16 x, u16 y, u16 width, u16 height, u8 border, u32
 extern s32 APP_LCD_BitmapRectangle(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color);   //new
 extern s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value);
 extern s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, float luma);   // new
-extern s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd_bitmap_t dst_bmp, s16 x, s16 y, app_lcd_fusion_t fusion);   // new
+extern s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float src_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion);   // new
 extern s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_width);
 extern s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap);
 

@@ -22,6 +22,7 @@
 #include "app_lcd.h"
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <math.h>
 
 /////////////////////////////////////////////////////////////////////////////
@@ -209,7 +210,7 @@ s32 APP_LCD_Init(u32 mode)
   // set the startup colors
   APP_LCD_BColourSet(0x00000000);  // black
   APP_LCD_FColourSet(0x00ffffff);  // White
-  
+  display_available = 1;
   return (display_available & (1 << mios32_lcd_device)) ? 0 : -1; // return -1 if display not available
 }
 
@@ -387,21 +388,21 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // toDo ili special depth 5:6:5
-  }else if((bitmap.colour_depth == font_bmp.colour_depth) && (font_bmp.colour_depth == IsILI)) {
+  }else if((bitmap.colour_depth == font_bmp.colour_depth) && (font_bmp.colour_depth == Is16BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
     char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
     char_bmp.memory += (char_bmp.width*char_bmp.height*((size_t)c & 0xf0)/2 + ((((size_t)c %16)*char_bmp.width)/2));
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // legacy 1bit to 4bit depth
-  }else if((bitmap.colour_depth == IsILI) && (font_bmp.colour_depth == Is1BIT)) {
+  }else if((bitmap.colour_depth == Is16BIT) && (font_bmp.colour_depth == Is1BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
     char_bmp.memory += (char_bmp.height>>3) * char_bmp.line_offset * (size_t)c;
     char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // 4bit to legacy 1bit depth
-  }else if((bitmap.colour_depth == Is1BIT) && (font_bmp.colour_depth == IsILI)) {
+  }else if((bitmap.colour_depth == Is1BIT) && (font_bmp.colour_depth == Is16BIT)) {
     // write it if you need it ;)
     return -1;    // not supported
   }else return -1;   // not supported
@@ -726,21 +727,14 @@ s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value)
 /////////////////////////////////////////////////////////////////////////////
 // local, used by APP_LCD_Bitmap4BitLuma and APP_LCD_BitmapFusion
 /////////////////////////////////////////////////////////////////////////////
-u8 APP_LCD_HelpPixelLuma(u8 pix_mem, u8 pix_parity, float luma)
+u16 APP_LCD_HelpPixelLuma(u16 pix_mem, float luma)
 {
+  pix_mem &= 0x00ffffff;
+  u8 r = ((pix_mem >> 19) & 0x1f)*luma;
+  u8 g = ((pix_mem >> 10) & 0x3f)*luma;
+  u8 b = ((pix_mem >> 3) & 0x1f)*luma;
+  pix_mem = (r<<11) | (g<<5) | b;
   
-  //DEBUG_MSG("[BM_RoutingPg_MIDI_Process] io %d-%s: 0x%08x ! \n", io.index, io.port_name, midi_package.ALL);
-  if(pix_parity!=0){
-    u8 result = (u8)((pix_mem & 0x0f) + ((pix_mem & 0x0f)*(luma)));
-    if(result>0x0f)result=0x0f;
-    pix_mem &= 0xf0;   // blank nibble
-    pix_mem |= (result & 0x0f);
-  }else{
-    u8 result = (u8)(((pix_mem>>4) & 0x0f) + (((pix_mem>>4) & 0x0f)*(luma)));
-    if(result>0x0f)result=0x0f;
-    pix_mem &= 0x0f;   // blank nibble
-    pix_mem |= ((result <<4) & 0xf0);
-  }
   return pix_mem;
 }
 
@@ -760,21 +754,21 @@ s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, 
     return -2;  // bitmap is outside screen
   
   /* native 4bit depth only */
-  if(bitmap.colour_depth == IsILI) {
+  if(bitmap.colour_depth == Is16BIT) {
     u16 xi, yi;
     // loop y (with crop)
     for(yi=((y<0)? 0 : y); yi<(((height+y)>bitmap.height)? bitmap.height : (height+y)); yi++){
       // set src and dest pointers (with crop)
-      //u8* src_mem_ptr = src_bmp.memory + ((yi*src_bmp.line_offset + ((x<0) ? (0-x) : 0))/2);
+      //u8* top_mem_ptr = src_bmp.memory + ((yi*src_bmp.line_offset + ((x<0) ? (0-x) : 0))/2);
       u8* bmp_mem_ptr = bitmap.memory + ((yi*bitmap.line_offset + ((x<0) ? 0 : x))/2);
       // loop y (with crop)
       for(xi=((x<0)? 0 : x); xi<(((width+x)>bitmap.width)? bitmap.width : (width+x)); xi++){
         if(xi & 1){    // msb
-          *bmp_mem_ptr = APP_LCD_HelpPixelLuma(*bmp_mem_ptr, 1, luma);
+          *bmp_mem_ptr = APP_LCD_HelpPixelLuma(*bmp_mem_ptr, luma);
           bmp_mem_ptr++;      // next dest pointer
           
         }else{      // lsb
-          *bmp_mem_ptr = APP_LCD_HelpPixelLuma(*bmp_mem_ptr, 0, luma);
+          *bmp_mem_ptr = APP_LCD_HelpPixelLuma(*bmp_mem_ptr, luma);
         }
       }
     }
@@ -806,206 +800,134 @@ s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, 
 //!   XOR, xor bit or nibble (pixels)
 //! \return < 0 on errors, resulting bimap is in destination bitmap
 /////////////////////////////////////////////////////////////////////////////
-s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t src_bmp, float src_luma, mios32_lcd_bitmap_t dst_bmp, s16 x, s16 y, app_lcd_fusion_t fusion)
+s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float src_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion)
 {
-  if( (x >= dst_bmp.width) || (y >= dst_bmp.height) || ((x+src_bmp.width) < 0) || ((y+src_bmp.height) < 0))
+  if( (top_pos_x >= bmp.width) || (top_pos_y >= bmp.height) || ((top_pos_x+top_bmp.width) < 0) || ((top_pos_y+top_bmp.height) < 0))
     return -2;  // bitmap is outside screen
   
   /* native 4bit depth */
-  if((src_bmp.colour_depth == dst_bmp.colour_depth) && (dst_bmp.colour_depth == IsILI)) {
-    u16 xi, yi;
-    // loop y (with crop)
-    for(yi=((y<0)? (0-y) : 0); yi<(((src_bmp.height+y)>dst_bmp.height)? (dst_bmp.height+y) : src_bmp.height); yi++){
+  if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is16BIT)) {
+    u16 x, y;
+    // loop pos y (with crop)
+    for(y=((top_pos_y<0)? (0-top_pos_y) : 0); y<(((top_bmp.height+top_pos_y)>bmp.height)? (bmp.height+top_pos_y) : top_bmp.height); y++){
       // set src and dest pointers (with crop)
-      u8* src_mem_ptr = src_bmp.memory + ((yi*src_bmp.line_offset + ((x<0) ? (0-x) : 0))/2);
-      u8* dst_mem_ptr = dst_bmp.memory + (((yi+y)*dst_bmp.line_offset + ((x<0) ? 0 : x))/2);
-      // loop y (with crop)
-      u16 xi_max = (((src_bmp.width+x)>dst_bmp.width)? (dst_bmp.width-x) : src_bmp.width);
-      for(xi=((x<0)? (0-x) : 0); xi<xi_max; xi++){
+      u8* top_mem_ptr = top_bmp.memory + ((y*top_bmp.line_offset + ((top_pos_x<0) ? (0-top_pos_x) : 0))*(bmp.colour_depth/8));
+      u8* bmp_mem_ptr = bmp.memory + (((y+top_pos_y)*bmp.line_offset + ((top_pos_x<0) ? 0 : top_pos_x))*(bmp.colour_depth/8));
+      // loop pos x (with crop)
+      u16 xi_max = (((top_bmp.width+top_pos_x)>bmp.width)? (bmp.width-top_pos_x) : top_bmp.width);
+      for(x=((top_pos_x<0)? (0-top_pos_x) : 0); x<xi_max; x++){
         // process luma
         
-        if(x & 1){    // start point x is odd
-          if(!(xi & 1)){    // xi is even
-            u8 pixel = *src_mem_ptr;
-            pixel = (u8)APP_LCD_HelpPixelLuma(pixel, 0, src_luma);
-            switch (fusion) {
-              case NOBLACK:
-                if(!(pixel)){
-                  break;
-                }
-              case REPLACE:
-                *dst_mem_ptr &= 0xf0;   // blank nibble
-              case OR:
-                *dst_mem_ptr |= ((pixel >>4) & 0x0f);
-                break;
-              case AND:
-                *dst_mem_ptr &= ((pixel >>4) | 0xf0);
-                break;
-              case XOR:
-                *dst_mem_ptr ^= ((pixel >>4) & 0x0f);
-                break;
-              default:
-                break;
+        
+        u16 top_pix = *top_mem_ptr <<8;
+        top_pix |= *(top_mem_ptr+1);
+        u16 bmp_pix = *bmp_mem_ptr<<8;
+        bmp_pix |= *(bmp_mem_ptr+1);
+        //bmp_pix = (u16)APP_LCD_HelpPixelLuma(bmp_pix, src_luma);
+        switch (fusion) {
+          case NOBLACK:
+            if(!top_pix){
+              break;
             }
-            dst_mem_ptr++;      // next dest pointer
-            
-          }else{      // xi is odd
-            u8 pixel = *src_mem_ptr;
-            pixel = (u8)APP_LCD_HelpPixelLuma(pixel, 1, src_luma);
-            switch (fusion) {
-              case NOBLACK:
-                if(!(pixel)){
-                  break;
-                }
-              case REPLACE:
-                *dst_mem_ptr &= 0x0f;   // blank nibble
-              case OR:
-                *dst_mem_ptr |= ((pixel <<4) & 0xf0);
-                break;
-              case AND:
-                *dst_mem_ptr &= ((pixel <<4) | 0x0f);
-                break;
-              case XOR:
-                *dst_mem_ptr ^= ((pixel <<4) & 0xf0);
-                break;
-              default:
-                break;
-            }
-            src_mem_ptr++;      // next source pointer
-            
-          }
-        }else{
-          if(!(xi & 1)){   // only when xi is even
-            if(xi == (xi_max-1)){  // end of line
-              u8 pixel = *src_mem_ptr;
-              pixel = (u8)APP_LCD_HelpPixelLuma(pixel, 0, src_luma);
-              switch (fusion) {
-                case NOBLACK:
-                  if(!(pixel)){
-                    break;
-                  }
-                case REPLACE:
-                  *dst_mem_ptr &= 0x0f;   // blank nibble
-                case OR:
-                  *dst_mem_ptr |= (pixel & 0xf0);
-                  break;
-                case AND:
-                  *dst_mem_ptr &= (pixel | 0x0f);
-                  break;
-                case XOR:
-                  *dst_mem_ptr ^= (pixel & 0xf0);
-                  break;
-                default:
-                  break;
-              }
-            }else{  // aligned, we copy the byte
-              u8 pixel = *src_mem_ptr;
-              pixel = (u8)APP_LCD_HelpPixelLuma(pixel, 0, src_luma);
-              pixel = (u8)APP_LCD_HelpPixelLuma(pixel, 1, src_luma);
-              switch (fusion) {
-                case NOBLACK:
-                  if(!(pixel)){
-                    break;
-                  }
-                case REPLACE:
-                  *dst_mem_ptr = pixel;
-                  break;
-                case OR:
-                  *dst_mem_ptr |= pixel;
-                  break;
-                case XOR:
-                  *dst_mem_ptr &= pixel;
-                  break;
-                case AND:
-                  *dst_mem_ptr ^= pixel;
-                  break;
-                default:
-                  break;
-              }
-              src_mem_ptr++;    // next source pointer
-              dst_mem_ptr++;    // next dest pointer
-            }
-          }
+          case REPLACE:
+            bmp_pix = top_pix;
+            break;
+          case OR:
+            bmp_pix |= top_pix;
+            break;
+          case XOR:
+            bmp_pix &= top_pix;
+            break;
+          case AND:
+            bmp_pix ^= top_pix;
+            break;
+          default:
+            break;
         }
+        top_mem_ptr +=2;    // next top pointer
+        *bmp_mem_ptr = bmp_pix >>8;
+        bmp_mem_ptr++;    // next dest pointer
+        *bmp_mem_ptr = bmp_pix &0xff;
+        bmp_mem_ptr++;    // next dest pointer
       }
     }
     
     /* legacy 1bit to 4bit depth */
-  }else if((src_bmp.colour_depth == Is1BIT) && (dst_bmp.colour_depth == IsILI)) {
-    u16 xi, yi;
+  }else if((top_bmp.colour_depth == Is1BIT) && (bmp.colour_depth == Is16BIT)) {
+    u16 x, y;
     // prepare colour on both nibbles
     u8 gray = app_lcd_fore_color & 0x0f;
     gray |= ((gray <<4) & 0xf0);
-    // loop y (with crop)
-    for(yi=((y<0)? (0-y) : 0); yi<(((src_bmp.height+y)>dst_bmp.height)? (dst_bmp.height-y) : src_bmp.height); yi++){
+    // loop top_pos_y (with crop)
+    for(y=((top_pos_y<0)? (0-top_pos_y) : 0); y<(((top_bmp.height+top_pos_y)>bmp.height)? (bmp.height-top_pos_y) : top_bmp.height); y++){
       // set src and dest pointers (with crop)
-      u8* src_mem_ptr = src_bmp.memory + ((yi/8) * src_bmp.line_offset + ((x<0) ? (0-x) : 0));
-      u8* dst_mem_ptr = dst_bmp.memory + (((yi+y)*dst_bmp.line_offset + ((x<0) ? 0 : x))/2);
-      u8 bit = yi % 8;
-      // loop y (with crop)
-      for(xi=((x<0)? (0-x) : 0); xi<(((src_bmp.width+x)>dst_bmp.width)? (dst_bmp.width-x) : src_bmp.width); xi++){
-        u8 pixel = *src_mem_ptr++;
+      u8* top_mem_ptr = top_bmp.memory + ((y/8) * top_bmp.line_offset + ((top_pos_x<0) ? (0-top_pos_x) : 0));
+      u8* bmp_mem_ptr = bmp.memory + (((y+top_pos_y)*bmp.line_offset + ((top_pos_x<0) ? 0 : top_pos_x))/2);
+      u8 bit = y % 8;
+      // loop top_pos_y (with crop)
+      for(x=((top_pos_x<0)? (0-top_pos_x) : 0); x<(((top_bmp.width+top_pos_x)>bmp.width)? (bmp.width-top_pos_x) : top_bmp.width); x++){
+        u8 pixel = *top_mem_ptr++;
         pixel = (pixel & (1<<bit)? gray : 0);
         //Process luma
-        pixel = APP_LCD_HelpPixelLuma(pixel, xi & 1, src_luma);
-        //APP_LCD_HelpPixelLuma(&pixel, xi & 1, src_luma);
-        if((xi & 1) == (x & 1)){      // x parity == xi parity
+        pixel = APP_LCD_HelpPixelLuma(pixel, src_luma);
+        //APP_LCD_HelpPixelLuma(&pixel, x & 1, src_luma);
+        if((x & 1) == (top_pos_x & 1)){      // top_pos_x parity == x parity
           switch (fusion) {
             case NOBLACK:
               if(!pixel){
                 break;
               }
             case REPLACE:
-              *dst_mem_ptr &= 0x0f;   // blank nibble
+              *bmp_mem_ptr &= 0x0f;   // blank nibble
             case OR:
-              *dst_mem_ptr |= (pixel & 0xf0);
+              *bmp_mem_ptr |= (pixel & 0xf0);
               break;
             case AND:
-              *dst_mem_ptr &= (pixel | 0x0f);
+              *bmp_mem_ptr &= (pixel | 0x0f);
               break;
             case XOR:
-              *dst_mem_ptr ^= (pixel & 0xf0);
+              *bmp_mem_ptr ^= (pixel & 0xf0);
               break;
             default:
               break;
           }
-        }else{                      // x parity != xi parity
+        }else{                      // top_pos_x parity != x parity
           switch (fusion) {
             case NOBLACK:
               if(!pixel){
                 break;
               }
             case REPLACE:
-              *dst_mem_ptr &= 0xf0;   // blank nibble
+              *bmp_mem_ptr &= 0xf0;   // blank nibble
             case OR:
-              *dst_mem_ptr |= (pixel & 0x0f);
+              *bmp_mem_ptr |= (pixel & 0x0f);
               break;
             case AND:
-              *dst_mem_ptr &= (pixel | 0xf0);
+              *bmp_mem_ptr &= (pixel | 0xf0);
               break;
             case XOR:
-              *dst_mem_ptr ^= (pixel & 0x0f);
+              *bmp_mem_ptr ^= (pixel & 0x0f);
               break;
             default:
               break;
           }
-          dst_mem_ptr++;
+          bmp_mem_ptr++;
         }
       }
     }
     
     /* legacy 1bit to 1bit, no depth here we copy the pixels, notes: the position in the legacy segment doesn't care ;) */
-  }else if((src_bmp.colour_depth == dst_bmp.colour_depth) && (dst_bmp.colour_depth == Is1BIT) && (fusion == REPLACE)) {
+  }else if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is1BIT) && (fusion == REPLACE)) {
     int i, j;
-    u8 *byte = src_bmp.memory;
-    for(j=0; j< (src_bmp.height/8); j++)
+    u8 *byte = top_bmp.memory;
+    for(j=0; j< (top_bmp.height/8); j++)
       // forward to legacy 1bit process
-      for(i=0; i< src_bmp.width; i++)
-        APP_LCD_BitmapByteSet(dst_bmp, x+i, y+(j*8), *(byte+i+(j*src_bmp.line_offset)));
+      for(i=0; i< top_bmp.width; i++)
+        APP_LCD_BitmapByteSet(bmp, top_pos_x+i, top_pos_y+(j*8), *(byte+i+(j*top_bmp.line_offset)));
     
     
     /* 4bit to legacy 1bit depth */
-  }else if((src_bmp.colour_depth == IsILI) && (dst_bmp.colour_depth == Is1BIT)) {
+  }else if((top_bmp.colour_depth == Is16BIT) && (bmp.colour_depth == Is1BIT)) {
     // write it if you need it ;)
     return -1;  // not supported
   }else return -1;  // not supported
@@ -1032,9 +954,9 @@ s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_widt
   
   /* native 16bit depth. r(15:11), g(10:5), b(4:0)   */
   if(bitmap.colour_depth == APP_LCD_COLOUR_DEPTH){
-    //    u16 *memory_ptr = bitmap.memory + ((bitmap.line_offset*y + x)*2);
+    //    u16 *memory_ptr = bitmap.memory + ((bitmap.line_offset*top_pos_y + top_pos_x)*2);
     //    // transfer bitmap
-    //    int x, y;
+    //    int top_pos_x, y;
     //    for(y=0; y<8; ++y){
     //      for(x=0; x<bitmap.width; ++x){
     //        APP_LCD_Data(*memory_ptr >> 8);
@@ -1066,7 +988,7 @@ s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_widt
       int x, y;
       for(y=0; y<8; ++y){
         for(x=b_x; ((b_width+b_x)>bitmap.width)? (x<bitmap.width) : (x< (b_width+b_x)); ++x){
-        //for(x=b_x; x< (b_width+b_x); ++x){
+          //for(x=b_x; x< (b_width+b_x); ++x){
           if(*memory_ptr & (1<<y)){
             APP_LCD_Data(app_lcd_fore_color >> 8);
             APP_LCD_Data(app_lcd_fore_color & 0xff);
@@ -1120,19 +1042,19 @@ s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap)
     u16 initial_x = mios32_lcd_x;
     u16 initial_y = mios32_lcd_y;
     // transfer bitmap
-      int x, y;
-      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
-
-      for(y=0; y<(((initial_y + bitmap.height)<=APP_LCD_HEIGHT)? bitmap.height : (APP_LCD_HEIGHT-initial_y)); ++y){
-        for(x=0; x<(((initial_x + bitmap.width)<=APP_LCD_WIDTH)? bitmap.width : (APP_LCD_WIDTH-initial_x)); ++x){
-          APP_LCD_Data(*memory_ptr++);
-          APP_LCD_Data(*memory_ptr++);
-          //DEBUG_MSG("%d %d %d", x, y, memory_ptr);
-        }
-        if((mios32_lcd_x + bitmap.width)>APP_LCD_WIDTH)memory_ptr +=(mios32_lcd_x + bitmap.width -APP_LCD_WIDTH)*2;
-        mios32_lcd_y += 1;
-        APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+    int x, y;
+    APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+    
+    for(y=0; y<(((initial_y + bitmap.height)<=APP_LCD_HEIGHT)? bitmap.height : (APP_LCD_HEIGHT-initial_y)); ++y){
+      for(x=0; x<(((initial_x + bitmap.width)<=APP_LCD_WIDTH)? bitmap.width : (APP_LCD_WIDTH-initial_x)); ++x){
+        APP_LCD_Data(*memory_ptr++);
+        APP_LCD_Data(*memory_ptr++);
+        //DEBUG_MSG("%d %d %d", x, y, memory_ptr);
       }
+      if((mios32_lcd_x + bitmap.width)>APP_LCD_WIDTH)memory_ptr +=(mios32_lcd_x + bitmap.width -APP_LCD_WIDTH)*2;
+      mios32_lcd_y += 1;
+      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
+    }
     
     /* legacy 1bit pixel print */
   }else if(bitmap.colour_depth == 1) {  // 1bit format

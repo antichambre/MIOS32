@@ -46,14 +46,14 @@ typedef union {
   struct {
     u8 notes[6]; // unfortunately "unsigned notes:4[12]" doesn't work
   };
-} seq_scale_entry_t;
+} fts_entry_t;
 
 
 /////////////////////////////////////////////////////////////////////////////
 // Local variables
 /////////////////////////////////////////////////////////////////////////////
 
-static const seq_scale_entry_t seq_scale_table[] = {
+static const fts_entry_t fts_table[] = {
 //	        C 	C#	D 	D#	E 	F 	F#	G 	G#	A 	A#	B
 //	        0 	1 	2 	3 	4 	5 	6 	7 	8 	9 	10	11 	Semitone
 //              1 	b2	2 	b3	3 	4 	b5	5 	b6	6 	b7	7	Minor Tone
@@ -245,7 +245,7 @@ static const seq_scale_entry_t seq_scale_table[] = {
 /////////////////////////////////////////////////////////////////////////////
 // Initialisation
 /////////////////////////////////////////////////////////////////////////////
-s32 SCALE_Init(u32 mode)
+s32 FTS_Init(u32 mode)
 {
   // here we could also generate the scale table in RAM...
 
@@ -256,9 +256,9 @@ s32 SCALE_Init(u32 mode)
 /////////////////////////////////////////////////////////////////////////////
 // returns number of available scales
 /////////////////////////////////////////////////////////////////////////////
-s32 SCALE_NumGet(void)
+s32 FTS_NumGet(void)
 {
-  return sizeof(seq_scale_table)/sizeof(seq_scale_entry_t);
+  return sizeof(fts_table)/sizeof(fts_entry_t);
 }
 
 
@@ -266,12 +266,12 @@ s32 SCALE_NumGet(void)
 // returns pointer to the name of a scale
 // Length: 20 characters + zero terminator
 /////////////////////////////////////////////////////////////////////////////
-char *SCALE_NameGet(u8 scale)
+char *FTS_NameGet(u8 scale)
 {
-  if( scale >= SCALE_NumGet() )
+  if( scale >= FTS_NumGet() )
     return "Invalid Scale       ";
 
-  return (char *)seq_scale_table[scale].name;
+  return (char *)fts_table[scale].name;
 }
 
 
@@ -280,12 +280,12 @@ char *SCALE_NameGet(u8 scale)
 // selected scale
 // IN: *p: midi note (a mios32_midi_package_t) - will be modified, 
 //     therefore passed as pointer
-//     scale: within the range 0..SCALE_GetNum()-1
+//     scale: within the range 0..FTS_GetNum()-1
 //     root: the root note (0..11)
 // returns modified note in *p
 // returns < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
-s32 SCALE_Note(mios32_midi_package_t *p, u8 scale, u8 root)
+s32 FTS_Note(mios32_midi_package_t *p, u8 scale, u8 root)
 {
   // exit if no Note event
   if( p->type != NoteOn && p->type != NoteOff )
@@ -298,7 +298,7 @@ s32 SCALE_Note(mios32_midi_package_t *p, u8 scale, u8 root)
   note_number = note_number % 12;
 
   // get scaled value from table
-  u8 tmp = seq_scale_table[scale].notes[note_number>>1];
+  u8 tmp = fts_table[scale].notes[note_number>>1];
   u8 note_scaled = (note_number & 1) ? (tmp >> 4) : (tmp & 0xf);
 
   // add octave and root note
