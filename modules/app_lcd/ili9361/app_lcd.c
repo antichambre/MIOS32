@@ -394,14 +394,14 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
     char_bmp.memory += (char_bmp.width*char_bmp.height*((size_t)c & 0xf0)/2 + ((((size_t)c %16)*char_bmp.width)/2));
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
-    // legacy 1bit to 4bit depth
+    // legacy 1bit to '16bit' depth
   }else if((bitmap.colour_depth == Is16BIT) && (font_bmp.colour_depth == Is1BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
     char_bmp.memory += (char_bmp.height>>3) * char_bmp.line_offset * (size_t)c;
     char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
-    // 4bit to legacy 1bit depth
+    // '16bit' to legacy 1bit depth
   }else if((bitmap.colour_depth == Is1BIT) && (font_bmp.colour_depth == Is16BIT)) {
     // write it if you need it ;)
     return -1;    // not supported
@@ -451,14 +451,24 @@ s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, 
 // IN: r/g/b value
 // OUT: returns < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
-s32 APP_LCD_BColourSet(u32 rgb)
+u16 APP_LCD_ColourConvert(u32 rgb)
 {
   rgb &= 0x00ffffff;
-  u8 r,g,b;
-  r = (rgb >> 19) & 0x1f;
-  g = (rgb >> 10) & 0x3f;
-  b = (rgb >> 3) & 0x1f;
-  app_lcd_back_color = (r<<11) | (g<<5) | b;
+  u8 r = (rgb >> 19) & 0x1f;
+  u8 g = (rgb >> 10) & 0x3f;
+  u8 b = (rgb >> 3) & 0x1f;
+  return ((r<<11) | (g<<5) | b);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Sets the background colour
+// Only relevant for colour GLCDs
+// IN: r/g/b value
+// OUT: returns < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_BColourSet(u32 rgb)
+{
+  app_lcd_back_color = APP_LCD_ColourConvert(rgb);
   return -1; // n.a.
 }
 
@@ -471,12 +481,8 @@ s32 APP_LCD_BColourSet(u32 rgb)
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_FColourSet(u32 rgb)
 {
-  rgb &= 0x00ffffff;
-  u8 r,g,b;
-  r = (rgb >> 19) & 0x1f;
-  g = (rgb >> 10) & 0x3f;
-  b = (rgb >> 3) & 0x1f;
-  app_lcd_fore_color = (r<<11) | (g<<5) | b;
+
+  app_lcd_fore_color = APP_LCD_ColourConvert(rgb);
   return 0; // no error
 }
 
@@ -729,13 +735,10 @@ s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value)
 /////////////////////////////////////////////////////////////////////////////
 u16 APP_LCD_HelpPixelLuma(u16 pix_mem, float luma)
 {
-  pix_mem &= 0x00ffffff;
-  u8 r = ((pix_mem >> 19) & 0x1f)*luma;
-  u8 g = ((pix_mem >> 10) & 0x3f)*luma;
-  u8 b = ((pix_mem >> 3) & 0x1f)*luma;
-  pix_mem = (r<<11) | (g<<5) | b;
-  
-  return pix_mem;
+  u8 r = (u8)(((pix_mem >> 11) & 0x1f)*(luma));
+  u8 g = (u8)(((pix_mem >> 5) & 0x3f)*(luma));
+  u8 b = (u8)((pix_mem & 0x1f)*(luma));
+  return ((r<<11) | (g<<5) | b);
 }
 
 
@@ -800,7 +803,7 @@ s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, 
 //!   XOR, xor bit or nibble (pixels)
 //! \return < 0 on errors, resulting bimap is in destination bitmap
 /////////////////////////////////////////////////////////////////////////////
-s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float src_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion)
+s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion)
 {
   if( (top_pos_x >= bmp.width) || (top_pos_y >= bmp.height) || ((top_pos_x+top_bmp.width) < 0) || ((top_pos_y+top_bmp.height) < 0))
     return -2;  // bitmap is outside screen
@@ -816,14 +819,14 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float src_luma, mios32_lcd
       // loop pos x (with crop)
       u16 xi_max = (((top_bmp.width+top_pos_x)>bmp.width)? (bmp.width-top_pos_x) : top_bmp.width);
       for(x=((top_pos_x<0)? (0-top_pos_x) : 0); x<xi_max; x++){
-        // process luma
-        
-        
+        // get the pixels
         u16 top_pix = *top_mem_ptr <<8;
         top_pix |= *(top_mem_ptr+1);
         u16 bmp_pix = *bmp_mem_ptr<<8;
         bmp_pix |= *(bmp_mem_ptr+1);
-        //bmp_pix = (u16)APP_LCD_HelpPixelLuma(bmp_pix, src_luma);
+        //Process luma
+        top_pix = APP_LCD_HelpPixelLuma(top_pix, top_luma);
+        //bmp_pix = APP_LCD_HelpPixelLuma(bmp_pix, bmp_luma);
         switch (fusion) {
           case NOBLACK:
             if(!top_pix){
@@ -862,61 +865,46 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float src_luma, mios32_lcd
     for(y=((top_pos_y<0)? (0-top_pos_y) : 0); y<(((top_bmp.height+top_pos_y)>bmp.height)? (bmp.height-top_pos_y) : top_bmp.height); y++){
       // set src and dest pointers (with crop)
       u8* top_mem_ptr = top_bmp.memory + ((y/8) * top_bmp.line_offset + ((top_pos_x<0) ? (0-top_pos_x) : 0));
-      u8* bmp_mem_ptr = bmp.memory + (((y+top_pos_y)*bmp.line_offset + ((top_pos_x<0) ? 0 : top_pos_x))/2);
+      u8* bmp_mem_ptr = bmp.memory + (((y+top_pos_y)*bmp.line_offset + ((top_pos_x<0) ? 0 : top_pos_x))*(bmp.colour_depth/8));
       u8 bit = y % 8;
       // loop top_pos_y (with crop)
       for(x=((top_pos_x<0)? (0-top_pos_x) : 0); x<(((top_bmp.width+top_pos_x)>bmp.width)? (bmp.width-top_pos_x) : top_bmp.width); x++){
-        u8 pixel = *top_mem_ptr++;
-        pixel = (pixel & (1<<bit)? gray : 0);
+        // get the pixels
+        u16 top_pix = (u16)(*top_mem_ptr++);
+        top_pix = (top_pix & (1<<bit)? app_lcd_fore_color : app_lcd_back_color);
+        u16 bmp_pix = *bmp_mem_ptr<<8;
+        bmp_pix |= *(bmp_mem_ptr+1);
         //Process luma
-        pixel = APP_LCD_HelpPixelLuma(pixel, src_luma);
-        //APP_LCD_HelpPixelLuma(&pixel, x & 1, src_luma);
-        if((x & 1) == (top_pos_x & 1)){      // top_pos_x parity == x parity
-          switch (fusion) {
-            case NOBLACK:
-              if(!pixel){
-                break;
-              }
-            case REPLACE:
-              *bmp_mem_ptr &= 0x0f;   // blank nibble
-            case OR:
-              *bmp_mem_ptr |= (pixel & 0xf0);
+        top_pix = APP_LCD_HelpPixelLuma(top_pix, top_luma);
+        //bmp_pix = APP_LCD_HelpPixelLuma(bmp_pix, bmp_luma);
+        switch (fusion) {
+          case NOBLACK:
+            if(!top_pix){
               break;
-            case AND:
-              *bmp_mem_ptr &= (pixel | 0x0f);
-              break;
-            case XOR:
-              *bmp_mem_ptr ^= (pixel & 0xf0);
-              break;
-            default:
-              break;
-          }
-        }else{                      // top_pos_x parity != x parity
-          switch (fusion) {
-            case NOBLACK:
-              if(!pixel){
-                break;
-              }
-            case REPLACE:
-              *bmp_mem_ptr &= 0xf0;   // blank nibble
-            case OR:
-              *bmp_mem_ptr |= (pixel & 0x0f);
-              break;
-            case AND:
-              *bmp_mem_ptr &= (pixel | 0xf0);
-              break;
-            case XOR:
-              *bmp_mem_ptr ^= (pixel & 0x0f);
-              break;
-            default:
-              break;
-          }
-          bmp_mem_ptr++;
+            }
+          case REPLACE:
+            bmp_pix = top_pix;
+            break;
+          case OR:
+            bmp_pix |= top_pix;
+            break;
+          case XOR:
+            bmp_pix &= top_pix;
+            break;
+          case AND:
+            bmp_pix ^= top_pix;
+            break;
+          default:
+            break;
         }
+        *bmp_mem_ptr = bmp_pix >>8;
+        bmp_mem_ptr++;    // next dest pointer
+        *bmp_mem_ptr = bmp_pix &0xff;
+        bmp_mem_ptr++;    // next dest pointer
       }
     }
     
-    /* legacy 1bit to 1bit, no depth here we copy the pixels, notes: the position in the legacy segment doesn't care ;) */
+    /* legacy 1bit to 1bit, no depth here we copy the pixels, notes: the position doesn't care  */
   }else if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is1BIT) && (fusion == REPLACE)) {
     int i, j;
     u8 *byte = top_bmp.memory;
