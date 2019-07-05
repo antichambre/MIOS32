@@ -39,6 +39,9 @@
 // size of u8 array is 256*64/2 = 8192
 #define APP_LCD_4BITMAP_SIZE ((APP_LCD_NUM_X*APP_LCD_WIDTH * APP_LCD_NUM_Y*APP_LCD_HEIGHT * APP_LCD_COLOUR_DEPTH) / 8)
 
+#define APP_LCD_STRING_ALIGN_LEFT     0
+#define APP_LCD_STRING_ALIGN_CENTER   1
+#define APP_LCD_STRING_ALIGN_RIGHT    2
 /////////////////////////////////////////////////////////////////////////////
 // Global Types
 /////////////////////////////////////////////////////////////////////////////
@@ -76,8 +79,8 @@ extern s32 APP_LCD_GCursorSet(u16 x, u16 y);
 extern s32 APP_LCD_FontInit(u8 *font, app_lcd_color_depth_t colour_depth);    // new
 extern s32 APP_LCD_SpecialCharInit(u8 num, u8 table[8]);
 extern s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, char c);   // new
-extern s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, const char *str);   // new
-extern s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, const char *format, ...);   //new
+extern s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *str);   // new
+extern s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *format, ...);   //new
 
 extern u16 APP_LCD_ColourConvert(u32 rgb);
 extern s32 APP_LCD_BColourSet(u32 rgb);   // used for: rectDraw fill.
@@ -91,6 +94,7 @@ extern s32 APP_LCD_Rectangle(u16 x, u16 y, u16 width, u16 height, u8 border, u32
 extern s32 APP_LCD_BitmapRectangle(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color);   //new
 extern s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value);
 extern s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, float luma);   // new
+extern u16 APP_LCD_HelpPixelLuma(u16 pix_mem, float luma);
 extern u16 APP_LCD_PixelFusion(u16 fore_pix, float fore_luma, u16 back_pix, float back_luma, app_lcd_fusion_t fusion);
 extern s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion);   // new
 extern s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_width);

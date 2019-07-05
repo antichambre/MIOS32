@@ -417,10 +417,14 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
 //! \param[in]
 //! \return < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
-s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, const char *str)
+s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *str)
 {
   s32 status = 0;
   u16 offset =0;
+  u8 len=strlen(str);
+  //while( *str++ != '\0' )len++;
+  if(alignment==APP_LCD_STRING_ALIGN_CENTER)x -= font_bmp.width*len/2;
+  if(alignment==APP_LCD_STRING_ALIGN_RIGHT)x -= font_bmp.width*len;
   while( *str != '\0' ){
     status |= APP_LCD_PrintChar(bitmap, luma, x+(font_bmp.width*offset), y, fusion, *str++);
     offset++;
@@ -435,14 +439,14 @@ s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, ap
 //! \param ... additional arguments
 //! \return < 0 on errors
 /////////////////////////////////////////////////////////////////////////////
-s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, const char *format, ...)
+s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *format, ...)
 {
   char buffer[64]; // TODO: tmp!!! Provide a streamed COM method later!
   va_list args;
   
   va_start(args, format);
   vsprintf((char *)buffer, format, args);
-  return APP_LCD_PrintString(bitmap, luma, x, y, fusion, buffer);
+  return APP_LCD_PrintString(bitmap, luma, x, y, fusion, alignment, buffer);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -735,6 +739,7 @@ s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value)
 /////////////////////////////////////////////////////////////////////////////
 u16 APP_LCD_HelpPixelLuma(u16 pix_mem, float luma)
 {
+  if(luma == 1.0)return pix_mem;
   u8 r = (u8)(((pix_mem >> 11) & 0x1f)*(luma));
   u8 g = (u8)(((pix_mem >> 5) & 0x3f)*(luma));
   u8 b = (u8)((pix_mem & 0x1f)*(luma));
