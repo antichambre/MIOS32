@@ -803,6 +803,62 @@ s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, 
 //!   XOR, xor bit or nibble (pixels)
 //! \return < 0 on errors, resulting bimap is in destination bitmap
 /////////////////////////////////////////////////////////////////////////////
+u16 APP_LCD_PixelFusion(u16 fore_pix, float fore_luma, u16 back_pix, float back_luma, app_lcd_fusion_t fusion)
+{
+  u16 pix;
+        //Process luma
+        fore_pix = APP_LCD_HelpPixelLuma(fore_pix, fore_luma);
+        back_pix = APP_LCD_HelpPixelLuma(back_pix, back_luma);
+        pix = back_pix;
+        switch (fusion) {
+          case NOBLACK:
+            if(!fore_pix){
+              break;
+            }
+          case REPLACE:
+            pix = fore_pix;
+            break;
+          case OR:
+            pix |= fore_pix;
+            break;
+          case XOR:
+            pix &= fore_pix;
+            break;
+          case AND:
+            pix ^= fore_pix;
+            break;
+          default:
+            break;
+        }
+
+  return pix; // no error
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//! Only supported for graphical SSD1322 OLEDs:
+//! fusion, with different modes, of two bitmaps at specific position.
+//! Luminance of the source can be modified at the same time
+//! Note: if you need to mod luma the dest please use APP_LCD_Bitmap4BitLuma
+//! see notes in APP_LCD_Bitmap4BitLuma
+//!
+//! Example for a legacy 1Bit(bitmap) to a native 4Bit bitmap(screen_bmp):
+//! \code
+//!   // bitmap is source
+//!   APP_LCD_FColourSet(55);
+//!   APP_LCD_BitmapFusion(bitmap, 0.0, screen_bmp, 0, 0, XOR);
+//!   APP_LCD_BitmapPrint(screen_bmp);
+//! \endcode
+//!
+//! \param[in] source, destination bitmaps, x/y position, fusion mode
+//! fusion modes(new):
+//!   REPLACE, replace bit or nibble (pixels)
+//!   NOBLACK, pixel or nibble replace except if 0(black)
+//!   OR, or bit or nibble (pixels)
+//!   AND, and bit or nibble (pixels)
+//!   XOR, xor bit or nibble (pixels)
+//! \return < 0 on errors, resulting bimap is in destination bitmap
+/////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion)
 {
   if( (top_pos_x >= bmp.width) || (top_pos_y >= bmp.height) || ((top_pos_x+top_bmp.width) < 0) || ((top_pos_y+top_bmp.height) < 0))
