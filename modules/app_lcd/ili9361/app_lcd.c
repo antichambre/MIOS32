@@ -712,14 +712,14 @@ s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value)
   u8 mask;
   u8 val;
   if((y % 8) !=0){
-    if(y >=0){
+    if(y > 0){
       u8 *byte1 = (u8 *)&bitmap.memory[bitmap.line_offset*(y / 8) + x];
       mask = 0xff << (y % 8);
       val = value << (y % 8);
       *byte1 &= ~mask;
       if( value ) *byte1 |= val;
     }
-    if(((y+8) < bitmap.height) && ((y+8) >=0)){
+    if((y+8) >=0){
       u8 *byte2 = (u8 *)&bitmap.memory[bitmap.line_offset*((y+8) / 8) + x];
       mask = 0xff >> (8-((y+8) % 8));
       val = value >> (8-((y+8) % 8));
@@ -966,10 +966,10 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd
     }
     
     /* legacy 1bit to 1bit, no depth here we copy the pixels, notes: the position doesn't care  */
-  }else if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is1BIT) && (fusion == REPLACE)) {
+  }else if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is1BIT) ) {
     int i, j;
     u8 *byte = top_bmp.memory;
-    for(j=0; j< (top_bmp.height/8); j++)
+    for(j=0; j< (top_bmp.height/8 + ((top_bmp.height%8) ? 1 : 0)); j++)
       // forward to legacy 1bit process
       for(i=0; i< top_bmp.width; i++)
         APP_LCD_BitmapByteSet(bmp, top_pos_x+i, top_pos_y+(j*8), *(byte+i+(j*top_bmp.line_offset)));
