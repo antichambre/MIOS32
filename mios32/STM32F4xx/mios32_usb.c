@@ -1065,15 +1065,6 @@ static const USBD_Usr_cb_TypeDef USBD_USR_Callbacks =
 };
 
 
-
-
-
-
-
-
-
-
-
 /*--------------- LCD Messages ---------------*/
 const uint8_t MSG_HOST_INIT[]          = "> Host Library Initialized\n";
 const uint8_t MSG_DEV_ATTACHED[]       = "> Device Attached\n";
@@ -1086,7 +1077,7 @@ const uint8_t MSG_DEV_ERROR[]          = "> Device fault \n";
 
 const uint8_t MSG_MSC_CLASS[]          = "> Mass storage device connected\n";
 const uint8_t MSG_HID_CLASS[]          = "> HID device connected\n";
-const uint8_t MSG_MIDI_CLASS[]          = "> MIDI device connected\n";
+const uint8_t MSG_MIDI_CLASS[]         = "> MIDI device connected\n";
 
 const uint8_t USB_HID_MouseStatus[]    = "> HID Demo Device : Mouse\n";
 const uint8_t USB_HID_KeybrdStatus[]   = "> HID Demo Device : Keyboard\n";
@@ -1725,11 +1716,8 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE *pdev)
 void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 {
   MIOS32_IRQ_Install(OTG_FS_IRQn, MIOS32_IRQ_USB_PRIORITY);
-#if defined(MIOS32_BOARD_MBHP_DIPCOREF4)
-#ifdef MIOS32_USE_USB_HS
-  //USB_OTG_EnableCommonInt(pdev);
-  MIOS32_IRQ_Install(OTG_HS_IRQn, MIOS32_IRQ_USB_PRIORITY+3);
-#endif
+#ifndef MIOS32_DONT_USE_USB_HS_HOST
+  MIOS32_IRQ_Install(OTG_HS_IRQn, MIOS32_IRQ_USB_PRIORITY);
 #endif
 }
 
@@ -2064,6 +2052,7 @@ static const USBD_Class_cb_TypeDef MIOS32_USB_CLASS_cb =
  */
 static USBH_Status USBH_InterfaceInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 {
+DEBUG_MSG("Host interface Init-passed");
 	USBH_Status status=USBH_NOT_SUPPORTED;
 	USBH_HOST *pphost = phost;
 	USBH_Class_Status* class_status;
@@ -2408,15 +2397,15 @@ s32 MIOS32_USB_ForceDeviceMode(void)
 /////////////////////////////////////////////////////////////////////////////
 s32 MIOS32_USB_HOST_Process(void){
 
-#ifndef MIOS32_DONT_USE_USB_HOST
+#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
     // process the USB host events for OTG_FS
 	if(USB_Host_Class != USBH_IS_MIDI)USBH_Process(&USB_OTG_dev, &USB_Host);
 #endif
-#ifndef MIOS32_DONT_USE_USB_HS_HOST
-  	// process the USB host events for OTG_HS
-	USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-  	//if(USB_HS_Host_Class != USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+#if !defined(MIOS32_DONT_USE_USB_HS_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
+  // process the USB host events for OTG_HS
+  if(USB_HS_Host_Class != USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
 #endif
+
 	return 0;
 }
 //! \}

@@ -34,8 +34,13 @@
 #include <usb_hcd_int.h>
 #include <usbh_hcs.h>
 
-
 #include <string.h>
+
+#ifndef DEBUG_MSG
+#define DEBUG_MSG MIOS32_MIDI_SendDebugMessage
+#endif
+
+#define DEBUG_HID_VERBOSE_LEVEL 1
 
 #define USB_HID_BOOT_CODE                                  0x01
 #define USB_HID_KEYBRD_BOOT_CODE                           0x01
@@ -339,10 +344,10 @@ USB_HID_cb_t HID_GAMPAD_cb=
  */
 void MIOS32_USB_HID_Mouse_Init	(void)
 {
-
+#if DEBUG_HID_VERBOSE_LEVEL >= 2
   DEBUG_MSG((void*)USB_HID_MouseStatus);
   DEBUG_MSG("\n\n\n\n\n\n\n\n");
-
+#endif
 }
 
 /**
@@ -363,7 +368,10 @@ void MIOS32_USB_HID_Mouse_Decode(uint8_t *data)
 	if ((Mouse_Data.x != 0) && (Mouse_Data.y != 0))
 	{
 		//HID_MOUSE_UpdatePosition(data->x , data->y);
-		DEBUG_MSG("Mouse position, x:%d, y:%d \n", (s8)Mouse_Data.x, (s8)Mouse_Data.y);
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
+    DEBUG_MSG("Mouse position, x:%d, y:%d \n", (s8)Mouse_Data.x, (s8)Mouse_Data.y);
+#endif
+	
 	}
 
 	for ( idx = 0 ; idx < 3 ; idx ++)
@@ -374,7 +382,9 @@ void MIOS32_USB_HID_Mouse_Decode(uint8_t *data)
 			if(b_state[idx] == 0)
 			{
 				//HID_MOUSE_ButtonPressed (idx);
-				DEBUG_MSG("Mouse button %d pressed \n", idx);
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
+        DEBUG_MSG("Mouse button %d pressed \n", idx);
+#endif
 				b_state[idx] = 1;
 			}
 		}
@@ -383,7 +393,9 @@ void MIOS32_USB_HID_Mouse_Decode(uint8_t *data)
 			if(b_state[idx] == 1)
 			{
 				//HID_MOUSE_ButtonReleased (idx);
-				DEBUG_MSG("Mouse button %d released \n", idx);
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
+        DEBUG_MSG("Mouse button %d pressed \n", idx);
+#endif
 				b_state[idx] = 0;
 			}
 		}
@@ -398,10 +410,11 @@ void MIOS32_USB_HID_Mouse_Decode(uint8_t *data)
  */
 void  MIOS32_USB_HID_Keyboard_Init (void)
 {
-
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
   DEBUG_MSG((void*)USB_HID_KeybrdStatus);
   DEBUG_MSG("> Use Keyboard to tape characters: \n\n");
   DEBUG_MSG("\n\n\n\n\n\n");
+#endif
 
 }
 
@@ -485,13 +498,13 @@ void  MIOS32_USB_HID_Keyboard_Decode (uint8_t *pbuf)
 
 		/* call user process handle */ // toDo callback!
 		//keyboard_callback(output);
-		DEBUG_MSG("KB data: %c", output);
-
+    
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
+    DEBUG_MSG("KB data: %c", output);
+#endif
 	} else {
 		key_newest = 0x00;
 	}
-
-
 	nbr_keys_last  = nbr_keys;
 	for (ix = 0; ix < KBR_MAX_NBR_PRESSED; ix++) {
 		keys_last[ix] = keys[ix];
@@ -508,9 +521,10 @@ void  MIOS32_USB_HID_Keyboard_Decode (uint8_t *pbuf)
  */
 void MIOS32_USB_HID_Gamepad_Init	(void)
 {
-
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
   DEBUG_MSG((void*)USB_HID_GampadStatus);
   DEBUG_MSG("\n\n\n\n\n\n\n\n");
+#endif
 
 }
 
@@ -522,7 +536,11 @@ void MIOS32_USB_HID_Gamepad_Init	(void)
  */
 void MIOS32_USB_HID_Gamepad_Decode(uint8_t *data)
 {
-	DEBUG_MSG("Gamepad datas %d", *data);
+  // TODO: gamepad decode
+#if DEBUG_HID_VERBOSE_LEVEL >= 1
+  DEBUG_MSG("Gamepad datas %d", *data);
+#endif
+
 }
 
 
@@ -834,7 +852,6 @@ static USBH_Status USBH_InterfaceInit ( USB_OTG_CORE_HANDLE *pdev, void *phost)
 
 		if(pphost->device_prop.Itf_Desc[i].bInterfaceSubClass  == USB_HID_BOOT_CODE)
 		{
-			DEBUG_MSG("Gamepad code %d", pphost->device_prop.Itf_Desc[i].bInterfaceProtocol);
 			/*Decode Bootclass Protocl: Mouse or Keyboard*/
 			if(pphost->device_prop.Itf_Desc[i].bInterfaceProtocol == USB_HID_KEYBRD_BOOT_CODE)
 			{

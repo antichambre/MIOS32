@@ -344,7 +344,7 @@ s32 MIOS32_USB_MIDI_Periodic_mS(void)
   if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
 #ifndef MIOS32_DONT_USE_USB_HOST
     // process the USB host events for OTG_FS
-	if(USB_Host_Class != USBH_IS_HID)USBH_Process(&USB_OTG_dev, &USB_Host);
+	if(USB_Host_Class == USBH_IS_MIDI)USBH_Process(&USB_OTG_dev, &USB_Host);
 #endif
   } else {
     // check for received packages
@@ -355,7 +355,7 @@ s32 MIOS32_USB_MIDI_Periodic_mS(void)
   }
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
   	// process the USB host events for OTG_HS
-  	if(USB_HS_Host_Class != USBH_IS_HID)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+  	if(USB_HS_Host_Class == USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
 #endif
   return 0;
 }
