@@ -125,9 +125,9 @@
  
 /****************** USB OTG HS CONFIGURATION **********************************/
 #ifdef USB_OTG_HS_CORE
-#define RX_FIFO_HS_SIZE                          64
+#define RX_FIFO_HS_SIZE                          128
 #define TX0_FIFO_HS_SIZE                         64
-#define TX1_FIFO_HS_SIZE                         64
+#define TX1_FIFO_HS_SIZE                         128
 #define TX2_FIFO_HS_SIZE                          0
 #define TX3_FIFO_HS_SIZE                          0
 #define TX4_FIFO_HS_SIZE                          0
@@ -148,14 +148,14 @@
 #define USB_OTG_EMBEDDED_PHY_ENABLED
 #endif
 //#define USB_OTG_HS_INTERNAL_DMA_ENABLED
-//#define USB_OTG_HS_DEDICATED_EP1_ENABLED
+#define USB_OTG_HS_DEDICATED_EP1_ENABLED
 #endif
 
 /****************** USB OTG FS CONFIGURATION **********************************/
 #ifdef USB_OTG_FS_CORE
- #define RX_FIFO_FS_SIZE                          128
+ #define RX_FIFO_FS_SIZE                          64
  #define TX0_FIFO_FS_SIZE                          64
- #define TX1_FIFO_FS_SIZE                         128
+ #define TX1_FIFO_FS_SIZE                         64
  #define TX2_FIFO_FS_SIZE                          0
  #define TX3_FIFO_FS_SIZE                          0
  #define TXH_NP_FS_FIFOSIZ                         96

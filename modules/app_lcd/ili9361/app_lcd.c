@@ -391,7 +391,7 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
   }else if((bitmap.colour_depth == font_bmp.colour_depth) && (font_bmp.colour_depth == Is16BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
     char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
-    char_bmp.memory += (char_bmp.width*char_bmp.height*((size_t)c & 0xf0)/2 + ((((size_t)c %16)*char_bmp.width)/2));
+    char_bmp.memory += (char_bmp.width*char_bmp.height*((size_t)c & 0xf0)*2 + ((((size_t)c %16)*char_bmp.width)*2));
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // legacy 1bit to '16bit' depth

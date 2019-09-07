@@ -85,6 +85,7 @@ s32 MIOS32_DELAY_Init(u32 mode)
 /////////////////////////////////////////////////////////////////////////////
 s32 MIOS32_DELAY_Wait_uS(u16 uS)
 {
+  //DEBUG_MSG("[MIOS32_DELAY_Wait_uS]");
   u16 start = MIOS32_DELAY_TIMER->CNT;
 
   // note that this even works on 16bit counter wrap-arounds

@@ -169,7 +169,7 @@ void USBH_Init(USB_OTG_CORE_HANDLE *pdev,
   USB_OTG_BSP_Init(pdev);  
   
   /* configure GPIO pin used for switching VBUS power */
-  USB_OTG_BSP_ConfigVBUS(0);  
+  USB_OTG_BSP_ConfigVBUS(pdev);
   
   
   /* Host de-initializations */

@@ -40,7 +40,7 @@
 #define DEBUG_MSG MIOS32_MIDI_SendDebugMessage
 #endif
 
-#define DEBUG_HID_VERBOSE_LEVEL 1
+#define DEBUG_HID_VERBOSE_LEVEL 2
 
 #define USB_HID_BOOT_CODE                                  0x01
 #define USB_HID_KEYBRD_BOOT_CODE                           0x01
@@ -806,6 +806,326 @@ static void  USBH_ParseHIDDesc (USBH_HIDDesc_TypeDef *desc, uint8_t *buf)
   desc->wItemLength              =  LE16  (buf + 7);
 
 }
+//
+//
+///*--------------- LCD Messages ---------------*/
+//const uint8_t MSG_HOST_INIT[]          = "> Host Library Initialized\n";
+//const uint8_t MSG_DEV_ATTACHED[]       = "> Device Attached\n";
+//const uint8_t MSG_DEV_DISCONNECTED[]   = "> Device Disconnected\n";
+//const uint8_t MSG_DEV_ENUMERATED[]     = "> Enumeration completed\n";
+//const uint8_t MSG_DEV_HIGHSPEED[]      = "> High speed device detected\n";
+//const uint8_t MSG_DEV_FULLSPEED[]      = "> Full speed device detected\n";
+//const uint8_t MSG_DEV_LOWSPEED[]       = "> Low speed device detected\n";
+//const uint8_t MSG_DEV_ERROR[]          = "> Device fault \n";
+//
+//const uint8_t MSG_MSC_CLASS[]          = "> Mass storage device connected\n";
+//const uint8_t MSG_HID_CLASS[]          = "> HID device connected\n";
+//const uint8_t MSG_MIDI_CLASS[]         = "> MIDI device connected\n";
+//
+//const uint8_t USB_HID_MouseStatus[]    = "> HID Demo Device : Mouse\n";
+//const uint8_t USB_HID_KeybrdStatus[]   = "> HID Demo Device : Keyboard\n";
+//const uint8_t MSG_UNREC_ERROR[]        = "> UNRECOVERED ERROR STATE\n";
+//
+//
+//
+///**
+// * @brief  USBH_HID_USR_Init
+// *         Displays the message on LCD for host lib initialization
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_Init(void)
+//{
+//  static uint8_t startup = 0;
+//
+//  if(startup == 0 )
+//  {
+//    startup = 1;
+//#ifdef USE_USB_OTG_HS
+//    DEBUG_MSG(" USB OTG HS HID Host FS Mode");
+//    DEBUG_MSG("> USB Host library started.\n");
+//    DEBUG_MSG("  USB Host Library v2.1.0" );
+//#else
+//    DEBUG_MSG(" USB OTG HS not used");
+//#endif
+//
+//  }
+//}
+//
+///**
+// * @brief  USBH_HID_USR_DeviceAttached
+// *         Displays the message on LCD on device attached
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_DeviceAttached(void)
+//{
+//  DEBUG_MSG ((char*)MSG_DEV_ATTACHED);
+//}
+//
+///**
+// * @brief  USBH_HID_USR_UnrecoveredError
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_UnrecoveredError (void)
+//{
+//  DEBUG_MSG ((char*)MSG_UNREC_ERROR);
+//}
+//
+///**
+// * @brief  USBH_DisconnectEvent
+// *         Device disconnect event
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_DeviceDisconnected (void)
+//{
+//  MIOS32_USB_MIDI_ChangeConnectionState(1, 0);
+//  DEBUG_MSG ((char*)MSG_DEV_DISCONNECTED);
+//}
+//
+///**
+// * @brief  USBH_HID_USR_ResetUSBDevice
+// *         Reset USB Device
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_ResetDevice(void)
+//{
+//  /* Users can do their application actions here for the USB-Reset */
+//  DEBUG_MSG ("Reseted");
+//}
+//
+//
+///**
+// * @brief  USBH_HID_USR_DeviceSpeedDetected
+// *         Displays the message on LCD for device speed
+// * @param  Devicespeed : Device Speed
+// * @retval None
+// */
+//static void USBH_HID_USR_DeviceSpeedDetected(uint8_t DeviceSpeed)
+//{
+//  if(DeviceSpeed == HPRT0_PRTSPD_HIGH_SPEED)
+//  {
+//    DEBUG_MSG ((char*)MSG_DEV_HIGHSPEED);
+//  }
+//  else if(DeviceSpeed == HPRT0_PRTSPD_FULL_SPEED)
+//  {
+//    DEBUG_MSG ((char*)MSG_DEV_FULLSPEED);
+//  }
+//  else if(DeviceSpeed == HPRT0_PRTSPD_LOW_SPEED)
+//  {
+//    DEBUG_MSG ((char*)MSG_DEV_LOWSPEED);
+//  }
+//  else
+//  {
+//    DEBUG_MSG ((char*)MSG_DEV_ERROR);
+//  }
+//
+//}
+//
+///**
+// * @brief  USBH_HID_USR_Device_DescAvailable
+// *         Displays the message on LCD for device descriptor
+// * @param  DeviceDesc : device descriptor
+// * @retval None
+// */
+//static void USBH_HID_USR_Device_DescAvailable(void *DeviceDesc)
+//{
+//  uint8_t temp[50];
+//  USBH_DevDesc_TypeDef *hs;
+//  hs = DeviceDesc;
+//
+//
+//  sprintf((char *)temp , "VID : %04Xh\n" , (uint32_t)(*hs).idVendor);
+//  DEBUG_MSG((void *)temp);
+//
+//
+//  sprintf((char *)temp , "PID : %04Xh\n" , (uint32_t)(*hs).idProduct);
+//  DEBUG_MSG((void *)temp);
+//}
+//
+///**
+// * @brief  USBH_HID_USR_DeviceAddressAssigned
+// *         USB device is successfully assigned the Address
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_DeviceAddressAssigned(void)
+//{
+//    DEBUG_MSG ("addr assigned");
+//}
+//
+//u8 current_class = 0xff;
+///**
+// * @brief  USBH_HID_USR_Conf_Desc
+// *         Displays the message on LCD for configuration descriptor
+// * @param  ConfDesc : Configuration descriptor
+// * @retval None
+// */
+//static void USBH_HID_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
+//                                                     USBH_InterfaceDesc_TypeDef *itfDesc,
+//                                                     USBH_EpDesc_TypeDef *epDesc)
+//{
+//  USBH_InterfaceDesc_TypeDef *id;
+//
+//  id = itfDesc;
+//  DEBUG_MSG ("class 0x%02X", (*id).bInterfaceClass);
+//  if((*id).bInterfaceClass  == 0x08)
+//  {
+//    DEBUG_MSG ((char*)MSG_MSC_CLASS);
+//  }
+//  else if((*id).bInterfaceClass  == 0x03)
+//  {
+//    DEBUG_MSG ((char*)MSG_HID_CLASS);
+//
+//  }
+//  else if((*id).bInterfaceClass  == 0x01)
+//  {
+//    DEBUG_MSG ((char*)MSG_MIDI_CLASS);
+//
+//  }
+//}
+//
+///**
+// * @brief  USBH_HID_USR_Manufacturer_String
+// *         Displays the message on LCD for Manufacturer String
+// * @param  ManufacturerString : Manufacturer String of Device
+// * @retval None
+// */
+//static void USBH_HID_USR_Manufacturer_String(void *ManufacturerString)
+//{
+//  MIOS32_MIDI_SendDebugMessage("[USBH_USR] Manufacturer: %s", ManufacturerString);
+//
+//}
+//
+///**
+// * @brief  USBH_HID_USR_Product_String
+// *         Displays the message on LCD for Product String
+// * @param  ProductString : Product String of Device
+// * @retval None
+// */
+//static void USBH_HID_USR_Product_String(void *ProductString)
+//{
+//  MIOS32_MIDI_SendDebugMessage("[USBH_USR] Product: %s", ProductString);
+//
+//}
+//
+///**
+// * @brief  USBH_HID_USR_SerialNum_String
+// *         Displays the message on LCD for SerialNum_String
+// * @param  SerialNumString : SerialNum_String of device
+// * @retval None
+// */
+//static void USBH_HID_USR_SerialNum_String(void *SerialNumString)
+//{
+//  MIOS32_MIDI_SendDebugMessage("[USBH_USR] Serial Number: %s", SerialNumString);
+//}
+//
+///**
+// * @brief  EnumerationDone
+// *         User response request is displayed to ask for
+// *         application jump to class
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_EnumerationDone(void)
+//{
+////  /* Enumeration complete */
+//  DEBUG_MSG ((char*)MSG_DEV_ENUMERATED);
+////  DEBUG_MSG("To start the HID class operations: " );
+////  DEBUG_MSG("Press Key...                       ");
+//}
+//
+///**
+// * @brief  USBH_HID_USR_DeviceNotSupported
+// *         Device is not supported
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_DeviceNotSupported(void)
+//{
+//  DEBUG_MSG ("> Device not supported.\n");
+//
+//}
+//
+//
+///**
+// * @brief  USBH_HID_USR_UserInput
+// *         User Action for application state entry
+// * @param  None
+// * @retval USBH_HID_USR_Status : User response for key button
+// */
+//static USBH_USR_Status USBH_HID_USR_UserInput(void)
+//{
+//
+////  USBH_USR_Status usbh_usr_status;
+////
+////  usbh_usr_status = USBH_USR_NO_RESP;
+////  //
+////  //  /*Key B3 is in polling mode to detect user action */
+////  //  if(STM_EVAL_PBGetState(Button_KEY) == RESET)
+////  //  {
+////  //
+////  //    usbh_usr_status = USBH_USR_RESP_OK;
+////  //
+////  //  }
+////  //
+//
+//  return USBH_USR_RESP_OK;
+//
+//}
+//
+///**
+// * @brief  USBH_HID_USR_OverCurrentDetected
+// *         Device Overcurrent detection event
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_OverCurrentDetected (void)
+//{
+//  DEBUG_MSG ("Overcurrent detected.\n");
+//
+//}
+//
+//
+///**
+// * @brief  USBH_HID_USR_DeInit
+// *         Deint User state and associated variables
+// * @param  None
+// * @retval None
+// */
+//static void USBH_HID_USR_DeInit(void)
+//{
+//}
+//
+//
+//USBH_Usr_cb_TypeDef USBH_HID_USR_Callbacks =
+//{
+//  USBH_HID_USR_Init,
+//  USBH_HID_USR_DeInit,
+//  USBH_HID_USR_DeviceAttached,
+//  USBH_HID_USR_ResetDevice,
+//  USBH_HID_USR_DeviceDisconnected,
+//  USBH_HID_USR_OverCurrentDetected,
+//  USBH_HID_USR_DeviceSpeedDetected,
+//  USBH_HID_USR_Device_DescAvailable,
+//  USBH_HID_USR_DeviceAddressAssigned,
+//  USBH_HID_USR_Configuration_DescAvailable,
+//  USBH_HID_USR_Manufacturer_String,
+//  USBH_HID_USR_Product_String,
+//  USBH_HID_USR_SerialNum_String,
+//  USBH_HID_USR_EnumerationDone,
+//  USBH_HID_USR_UserInput,
+//  NULL,
+//  USBH_HID_USR_DeviceNotSupported,
+//  USBH_HID_USR_UnrecoveredError
+//};
+//
+//
+
+
 
 
 /** @defgroup USBH_HID_CORE_Private_Functions

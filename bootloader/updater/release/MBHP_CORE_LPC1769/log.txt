@@ -61,6 +61,7 @@ Creating object file for glcd_font_knob_icons.c
 Creating object file for glcd_font_meter_icons_h.c
 Creating object file for glcd_font_meter_icons_v.c
 Creating object file for glcd_font_minitogsel_icons.c
+Creating object file for glcd_font_miniknob_icons.c
 Creating object file for mini_cpp.cpp
 Creating object file for freertos_heap.cpp
 -------------------------------------------------------------------------------
