@@ -1094,7 +1094,7 @@ const uint8_t MSG_UNREC_ERROR[]        = "> UNRECOVERED ERROR STATE\n";
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 
-#ifndef MIOS32_DONT_USE_USB_HOST
+#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
 
 /**
  * @brief  USBH_USR_Init
@@ -1149,7 +1149,6 @@ static void USBH_USR_UnrecoveredError (void)
  */
 static void USBH_USR_DeviceDisconnected (void)
 {
-  MIOS32_USB_MIDI_ChangeConnectionState(1, 0);
 #ifdef MIOS32_MIDI_USBH_DEBUG
   DEBUG_MSG ((char*)MSG_DEV_DISCONNECTED);
 #endif
@@ -1169,15 +1168,6 @@ static void USBH_USR_ResetDevice(void)
   DEBUG_MSG ("Reseted");
 #endif
 
-#ifndef MIOS32_DONT_USE_USB_HS_HOST
-
-  USB_OTG_DriveVbus(&USB_OTG_HS_dev, 1);
-#endif
-#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HS_HOST)
-#if !defined(MIOS32_DONT_USE_USB_HID)
-  MIOS32_USB_HID_Init(0);
-#endif
-#endif
 }
 
 
@@ -1256,26 +1246,32 @@ static void USBH_USR_Configuration_DescAvailable(USBH_CfgDesc_TypeDef * cfgDesc,
 						 USBH_InterfaceDesc_TypeDef *itfDesc,
 						 USBH_EpDesc_TypeDef *epDesc)
 {
-#ifdef MIOS32_MIDI_USBH_DEBUG
+
   USBH_InterfaceDesc_TypeDef *id;
 
   id = itfDesc;
+#ifdef MIOS32_MIDI_USBH_DEBUG
   DEBUG_MSG ("class 0x%02X", (*id).bInterfaceClass);
+#endif
   if((*id).bInterfaceClass  == 0x08)
   {
+#ifdef MIOS32_MIDI_USBH_DEBUG
     DEBUG_MSG ((char*)MSG_MSC_CLASS);
+#endif
   }
   else if((*id).bInterfaceClass  == 0x03)
   {
+#ifdef MIOS32_MIDI_USBH_DEBUG
     DEBUG_MSG ((char*)MSG_HID_CLASS);
-
+#endif
   }
   else if((*id).bInterfaceClass  == 0x01)
   {
+#ifdef MIOS32_MIDI_USBH_DEBUG
     DEBUG_MSG ((char*)MSG_MIDI_CLASS);
-
-  }
 #endif
+  }
+
 }
 
 /**
@@ -1411,7 +1407,7 @@ static const USBH_Usr_cb_TypeDef USBH_USR_Callbacks =
 };
 
 
-#endif /* MIOS32_DONT_USE_USB_HOST */
+#endif /* !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HID) */
 
 
 
@@ -2221,11 +2217,22 @@ s32 MIOS32_USB_ForceDeviceMode(void)
 /////////////////////////////////////////////////////////////////////////////
 s32 MIOS32_USB_HOST_Process(void){
 
-#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
+//  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
+//#ifndef MIOS32_DONT_USE_USB_HOST
+//    // process the USB host events for OTG_FS
+//    USBH_Process(&USB_OTG_dev, &USB_Host);
+//#endif
+//  }
+//#ifndef MIOS32_DONT_USE_USB_HS_HOST
+//  // process the USB host events for OTG_HS
+//  USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+//#endif
+
+#if !defined(MIOS32_DONT_USE_USB_HOST)
     // process the USB host events for OTG_FS
-	if((USB_Host_Class != USBH_IS_MIDI) && (USB_OTG_GetMode(&USB_OTG_dev) == HOST_MODE))USBH_Process(&USB_OTG_dev, &USB_Host);
+  if((USB_Host_Class != USBH_IS_MIDI) && (USB_OTG_GetMode(&USB_OTG_dev) == HOST_MODE))USBH_Process(&USB_OTG_dev, &USB_Host);
 #endif
-#if !defined(MIOS32_DONT_USE_USB_HS_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
+#if !defined(MIOS32_DONT_USE_USB_HS_HOST)
   // process the USB host events for OTG_HS
   if(USB_HS_Host_Class != USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
 #endif

@@ -1294,12 +1294,12 @@ s32 MIOS32_MIDI_Receive_Handler(void *_callback_package)
     }
   }
 #endif
-  
+
+  // handle all CAN MIDI packages
 #if defined(MIOS32_USE_CAN) && defined(MIOS32_USE_CAN_MIDI)
 #if MIOS32_CAN_NUM >= 1
   {
     s32 status;
-    //u32 get_ctr = 0;
     mios32_midi_package_t package;
     while( (status=MIOS32_CAN_MIDI_PackageReceive(&package)) >= 0 ) {
       if(status == 1)MIOS32_MIDI_ReceivePackage(MCAN0 + package.cable, package, _callback_package);
