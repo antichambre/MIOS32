@@ -145,7 +145,7 @@ s32 NOTESTACK_Push(notestack_t *n, u8 new_note, u8 tag)
   n->note_items[insertion_point].depressed = 0;
   n->note_items[insertion_point].tag = tag;
   //n->note_items[n->size-1].hit_order = hitpos;
-  n->note_items[insertion_point].hit_order = hitpos;
+  //n->note_items[insertion_point].hit_order = hitpos;
   
   return 0; // no error
 }

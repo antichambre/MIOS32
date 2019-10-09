@@ -10,10 +10,20 @@
 #ifndef _MIOS32_CONFIG_H
 #define _MIOS32_CONFIG_H
 
+#define DEBUG_MSG MIOS32_MIDI_SendDebugMessage
+#define MIOS32_MIDI_USBH_DEBUG
+
 // The boot message which is print during startup and returned on a SysEx query
 #define MIOS32_LCD_BOOT_MSG_DELAY 0 // we delay the boot and print a message inside the app
 #define MIOS32_LCD_BOOT_MSG_LINE1 "MIDIbox NG V1.036"
 #define MIOS32_LCD_BOOT_MSG_LINE2 "(C) 2018 T.Klose"
+
+
+#define MIOS32_DONT_USE_SPI1
+
+#define MIOS32_DONT_USE_USB_HOST
+
+#define MIOS32_USE_USB_HS
 
 // define a unique VID/PID for this application
 #define MIOS32_USB_PRODUCT_STR  "MIDIbox NG"
