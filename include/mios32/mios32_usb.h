@@ -21,7 +21,7 @@
 
 #ifndef MIOS32_BOARD_MBHP_DIPCOREF4
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-//#define MIOS32_DONT_USE_USB_HS_HOST
+#define MIOS32_DONT_USE_USB_HS_HOST
 #endif
 #endif
 
@@ -83,6 +83,10 @@ extern s32 MIOS32_USB_IsInitialized(void);
 extern s32 MIOS32_USB_ForceSingleUSB(void);
 extern s32 MIOS32_USB_ForceDeviceMode(void);
 extern s32 MIOS32_USB_HOST_Process(void);
+extern s32 MIOS32_USB_HOST_Report(uint8_t reportType,
+                          uint8_t reportId,
+                          uint8_t reportLen,
+                          uint8_t* reportBuff);
 
 /////////////////////////////////////////////////////////////////////////////
 // Export global variables

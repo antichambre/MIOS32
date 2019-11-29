@@ -1875,7 +1875,7 @@ DEBUG_MSG("Host interface Init-passed");
 		}else{
       if(*class_status == USBH_IS_MIDI)MIOS32_MIDI_USBH_Callbacks.DeInit(pdev, phost);
       else if(*class_status == USBH_IS_HID)MIOS32_HID_USBH_Callbacks.DeInit(pdev, phost);
-      class_status = USBH_NO_CLASS;
+      *class_status = USBH_NO_CLASS;
       status = USBH_NOT_SUPPORTED;
     }
 	}
@@ -2239,6 +2239,56 @@ s32 MIOS32_USB_HOST_Process(void){
 
 	return 0;
 }
+
+
+/////////////////////////////////////////////////////////////////////////////
+//! Process Host, others than MIDI(to keep safe priority)
+/////////////////////////////////////////////////////////////////////////////
+s32 MIOS32_USB_HOST_Report(uint8_t reportType,
+                          uint8_t reportId,
+                          uint8_t reportLen,
+                          uint8_t* reportBuff)
+{
+
+//  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
+//#ifndef MIOS32_DONT_USE_USB_HOST
+//    // process the USB host events for OTG_FS
+//    USBH_Process(&USB_OTG_dev, &USB_Host);
+//#endif
+//  }
+//#ifndef MIOS32_DONT_USE_USB_HS_HOST
+//  // process the USB host events for OTG_HS
+//  USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+//#endif
+
+#if !defined(MIOS32_DONT_USE_USB_HOST)
+    // process the USB host events for OTG_FS
+  if((USB_Host_Class != USBH_IS_MIDI) && (USB_OTG_GetMode(&USB_OTG_dev) == HOST_MODE)){
+
+    USBH_Status status = USBH_BUSY;
+    do
+    {
+      status=USBH_Set_Report(&USB_OTG_dev, &USB_Host,reportType,reportId,reportLen,reportBuff);
+    }
+    while(status != USBH_OK);
+  }
+#endif
+#if !defined(MIOS32_DONT_USE_USB_HS_HOST)
+  // process the USB host events for OTG_HS
+  if(USB_HS_Host_Class != USBH_IS_MIDI){
+    u8 c=3;
+    USBH_Status status = USBH_BUSY;
+    do
+    {
+      status=USBH_Set_Report(&USB_OTG_HS_dev, &USB_HS_Host,0x02,0x00,0x01,&c);
+    }
+    while(status != USBH_OK);
+  }
+#endif
+
+  return 0;
+}
+
 //! \}
 
 
