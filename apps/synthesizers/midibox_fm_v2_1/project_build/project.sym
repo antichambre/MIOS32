@@ -2061,9 +2061,9 @@
 2001acee B mios32_lcd_cursor_map
 2001acf2 B mios32_lcd_line
 2001acf4 B mios32_lcd_x
-2001acf8 B USB_rx_buffer
-2001ad38 B USB_OTG_dev
-2001b7cc B USB_Host
+2001acf8 B USB_FS_rx_buffer
+2001ad38 B USB_OTG_FS_dev
+2001b7cc B USB_FS_Host
 2001b850 B SET_TEST_MODE
 2001b854 B USBD_StrDesc
 2001b8b8 B USBH_CfgDesc

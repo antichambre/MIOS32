@@ -1,9 +1,9 @@
-// $Id: mios32_usb_com.c 1800 2013-06-02 22:09:03Z tk $
+// $Id:
 //! \defgroup MIOS32_USB_HS
 //!
 //! USB HID layer for MIOS32
 //! 
-//! Not supported for STM32F4 (yet)
+//! Only supported for STM32F4 
 //!
 //! \{
 /* ==========================================================================
@@ -69,4 +69,4 @@ s32 MIOS32_USB_HS_Process(void){
 
 //! \}
 
-#endif /* MIOS32_USE_USB_COM */
+#endif /* MIOS32_DONT_USE_USB_HID */

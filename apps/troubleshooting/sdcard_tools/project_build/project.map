@@ -60,7 +60,7 @@ mios32_srio_din_changed
                     0x10              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/common/mios32_srio.o
 SET_TEST_MODE       0x4               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_core.o
 USB_OTG_FS_dev      0xa94             project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
-USB_rx_buffer       0x40              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_FS_rx_buffer       0x40              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 USBH_CfgDesc        0x200             project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_HOST_Library/Core/src/usbh_stdreq.o
 ucHeap              0x2800            project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/programming_models/traditional/main.o
 xQueueRegistry      0x50              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/FreeRTOS/Source/queue.o
@@ -5052,7 +5052,7 @@ END GROUP
  COMMON         0x0000000020003f08      0xb78 project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
                 0x0000000020003f08                USB_FS_Host
                 0x0000000020003fac                USB_OTG_FS_dev
-                0x0000000020004a40                USB_rx_buffer
+                0x0000000020004a40                USB_FS_rx_buffer
  COMMON         0x0000000020004a80        0x4 project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_core.o
                 0x0000000020004a80                SET_TEST_MODE
  COMMON         0x0000000020004a84       0x64 project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_req.o

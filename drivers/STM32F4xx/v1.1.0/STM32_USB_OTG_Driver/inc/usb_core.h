@@ -224,7 +224,7 @@ typedef struct _Device_cb
 
   uint8_t  *(*GetConfigDescriptor)( uint8_t speed , uint16_t *length); 
 #ifdef USB_OTG_HS_CORE 
-  uint8_t  *(*GetOtherConfigDescriptor)( uint8_t speed , uint16_t *length);   
+  uint8_t  *(*GetOtherConfigDescriptor)( uint8_t speed , uint16_t *length);
 #endif
 
 #ifdef USB_SUPPORT_USER_STRING_DESC 

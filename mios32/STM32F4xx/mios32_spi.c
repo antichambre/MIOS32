@@ -454,8 +454,8 @@ s32 MIOS32_SPI_IO_Init(u8 spi, mios32_spi_pin_driver_t spi_pin_driver)
       MIOS32_SPI0_MOSI_AF;
 
       if( slave ) {
-//#if !defined(MIOS32_BOARD_MBHP_DIPCOREF4)
-#if 1
+#if !defined(MIOS32_BOARD_MBHP_DIPCOREF4)
+//#if 1
 	return -3; // slave mode not supported for this pin
 #else
 	// SCLK and DOUT are inputs assigned to alternate functions
@@ -498,7 +498,7 @@ s32 MIOS32_SPI_IO_Init(u8 spi, mios32_spi_pin_driver_t spi_pin_driver)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
 	GPIO_Init(GPIOE, &GPIO_InitStructure);
 	MIOS32_SYS_STM_PINSET_1(GPIOE, GPIO_Pin_3);
-//#elif defined(MIOS32_BOARD_MBHP_DIPCOREF4)
+#elif defined(MIOS32_BOARD_MBHP_DIPCOREF4)
 // nothing to do.
 #else
 # warning "Please doublecheck if RE3 has to be set to 1 to disable MEMs"
@@ -524,9 +524,9 @@ s32 MIOS32_SPI_IO_Init(u8 spi, mios32_spi_pin_driver_t spi_pin_driver)
       MIOS32_SPI1_MOSI_AF;
 
       if( slave ) {
-//#if defined(MIOS32_BOARD_MBHP_DIPCOREF4)
-//	return -3; // slave mode not supported for this pin
-//#else
+#if defined(MIOS32_BOARD_MBHP_DIPCOREF4)
+	return -3; // slave mode not supported for this pin
+#else
 	// SCLK and DOUT are inputs assigned to alternate functions
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_Pin  = MIOS32_SPI1_SCLK_PIN;
@@ -545,7 +545,7 @@ s32 MIOS32_SPI_IO_Init(u8 spi, mios32_spi_pin_driver_t spi_pin_driver)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_Pin  = MIOS32_SPI1_MISO_PIN;
 	GPIO_Init(MIOS32_SPI1_MISO_PORT, &GPIO_InitStructure);
-//#endif
+#endif
       } else {
 	// SCLK and DIN are inputs
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
@@ -553,14 +553,14 @@ s32 MIOS32_SPI_IO_Init(u8 spi, mios32_spi_pin_driver_t spi_pin_driver)
 	GPIO_Init(MIOS32_SPI1_SCLK_PORT, &GPIO_InitStructure);
 	GPIO_InitStructure.GPIO_Pin  = MIOS32_SPI1_MOSI_PIN;
 	GPIO_Init(MIOS32_SPI1_MOSI_PORT, &GPIO_InitStructure);
-    
+
 	// RCLK (resp. CS) are configured as inputs as well
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
 	GPIO_InitStructure.GPIO_Pin  = MIOS32_SPI1_RCLK1_PIN;
 	GPIO_Init(MIOS32_SPI1_RCLK1_PORT, &GPIO_InitStructure);
 	GPIO_InitStructure.GPIO_Pin  = MIOS32_SPI1_RCLK2_PIN;
 	GPIO_Init(MIOS32_SPI1_RCLK2_PORT, &GPIO_InitStructure);
-    
+
 	// DIN is input with pull-up
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
@@ -718,9 +718,11 @@ s32 MIOS32_SPI_TransferModeInit(u8 spi, mios32_spi_mode_t spi_mode, mios32_spi_p
 #ifdef MIOS32_DONT_USE_SPI0
       return -1; // disabled SPI port
 #else
+#if defined(MIOS32_BOARD_STM32F4DISCOVERY) || defined(MIOS32_BOARD_MBHP_CORE_STM32F4)
       if( SPI_InitStructure.SPI_Mode == SPI_Mode_Slave ) {
 	return -3; // slave mode not supported for this SPI
       }
+#endif
       u16 prev_cr1 = MIOS32_SPI0_PTR->CR1;
       SPI_InitStructure.SPI_BaudRatePrescaler = ((u16)spi_prescaler&7) << 3;
       SPI_Init(MIOS32_SPI0_PTR, &SPI_InitStructure);
@@ -740,23 +742,23 @@ s32 MIOS32_SPI_TransferModeInit(u8 spi, mios32_spi_mode_t spi_mode, mios32_spi_p
 #ifdef MIOS32_DONT_USE_SPI1
       return -1; // disabled SPI port
 #else
-//#if defined(MIOS32_BOARD_MBHP_DIPCOREF4)
-//      if( SPI_InitStructure.SPI_Mode == SPI_Mode_Slave ) {
-//	return -3; // slave mode not supported for this SPI
-//      }
-//#endif
+#if defined(MIOS32_BOARD_MBHP_DIPCOREF4)
+      if( SPI_InitStructure.SPI_Mode == SPI_Mode_Slave ) {
+        return -3; // slave mode not supported for this SPI
+      }
+#endif
       u16 prev_cr1 = MIOS32_SPI1_PTR->CR1;
 
       SPI_InitStructure.SPI_BaudRatePrescaler = (((u16)spi_prescaler&7)-1) << 3;
       SPI_Init(MIOS32_SPI1_PTR, &SPI_InitStructure);
-
+      
       if( SPI_InitStructure.SPI_Mode == SPI_Mode_Master ) {
-	if( (prev_cr1 ^ MIOS32_SPI1_PTR->CR1) & 3 ) { // CPOL and CPHA located at bit #1 and #0
-	  // clock configuration has been changed - we should send a dummy byte
-	  // before the application activates chip select.
-	  // this solves a dependency between SDCard and ENC28J60 driver
-	  MIOS32_SPI_TransferByte(spi, 0xff);
-	}
+        if( (prev_cr1 ^ MIOS32_SPI1_PTR->CR1) & 3 ) { // CPOL and CPHA located at bit #1 and #0
+          // clock configuration has been changed - we should send a dummy byte
+          // before the application activates chip select.
+          // this solves a dependency between SDCard and ENC28J60 driver
+          MIOS32_SPI_TransferByte(spi, 0xff);
+        }
       }
 #endif
     } break;

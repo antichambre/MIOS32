@@ -1673,6 +1673,12 @@ static RESULT MIOS32_USB_CB_Get_Interface_Setting(u8 Interface, u8 AlternateSett
   return USB_SUCCESS;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+//! Process Host, others than MIDI(to keep safe priority)
+/////////////////////////////////////////////////////////////////////////////
+s32 MIOS32_USB_HOST_Process(void){
+  return 0;
+}
 
 #ifdef STM32F10X_CL
 /*******************************************************************************

@@ -144,7 +144,7 @@ mios32_srio_dout_page_ctr
                     0x1               project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/common/mios32_srio.o
 xMIDIOUTSemaphore   0x4               project_build/src/app.o
 mainmode            0x1               project_build/src/mbfm_controlhandler.o
-USB_rx_buffer       0x40              project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_FS_rx_buffer       0x40              project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 mbng_patch_ain      0x24              project_build/src/mbng_patch.o
 pre_modlparams      0x1d4             project_build/src/mbfm_modulation.o
 midichanmapping     0x24              project_build/src/mbfm.o
@@ -242,7 +242,7 @@ file_dfs_errno      0x4               project_build//data/Hardware/MIDIbox/mios3
 uip_draddr          0x4               project_build//data/Hardware/MIDIbox/mios32/trunk/modules/uip/uip/uip.o
 voicedupl           0x24              project_build/src/mbfm.o
 uip_stat            0x34              project_build//data/Hardware/MIDIbox/mios32/trunk/modules/uip/uip/uip.o
-USB_OTG_dev         0xa94             project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_OTG_FS_dev         0xa94             project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 voiceactualnotes    0x48              project_build/src/mbfm.o
 modl_varis          0x24              project_build/src/mbfm_modulation.o
 toggle              0x1               project_build//data/Hardware/MIDIbox/mios32/trunk/modules/opl3/opl3.o
@@ -258,7 +258,7 @@ seq_masterpos       0x2               project_build/src/mbfm_sequencer.o
 midiportinopts      0x6               project_build/src/mbfm.o
 last_event_item_id  0x2               project_build/src/mbng_event.o
 drumnames           0x2c              project_build/src/mbfm_patch.o
-USB_Host            0x84              project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_FS_Host            0x84              project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 holdmode            0x1               project_build/src/mbfm_controlhandler.o
 xUIPSemaphore       0x4               project_build//data/Hardware/MIDIbox/mios32/trunk/modules/uip_task_standard/uip_task.o
 seq_midi_out_allocated
@@ -8729,9 +8729,9 @@ END GROUP
                 0x2001acf4                mios32_lcd_x
  *fill*         0x2001acf6        0x2 00
  COMMON         0x2001acf8      0xb58 project_build//data/Hardware/MIDIbox/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
-                0x2001acf8                USB_rx_buffer
-                0x2001ad38                USB_OTG_dev
-                0x2001b7cc                USB_Host
+                0x2001acf8                USB_FS_rx_buffer
+                0x2001ad38                USB_OTG_FS_dev
+                0x2001b7cc                USB_FS_Host
  COMMON         0x2001b850        0x4 project_build//data/Hardware/MIDIbox/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_core.o
                 0x2001b850                SET_TEST_MODE
  COMMON         0x2001b854       0x64 project_build//data/Hardware/MIDIbox/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_req.o

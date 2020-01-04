@@ -121,7 +121,7 @@ static  const  uint8_t  HID_KEYBRD_Codes[] = {
 };
 
 #ifdef QWERTY_KEYBOARD
-static  const  int8_t  HID_KEYBRD_Key[] = {
+static  const  char  HID_KEYBRD_Key[] = {
   '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',
   '7',  '8',  '9',  '0',  '-',  '=',  '\0', '\r',
   '\t',  'q',  'w',  'e',  'r',  't',  'y',  'u',
@@ -142,7 +142,7 @@ static  const  int8_t  HID_KEYBRD_Key[] = {
   '\0', '\0', '\0', '\0'
 };
 
-static  const  int8_t  HID_KEYBRD_ShiftKey[] = {
+static  const  char  HID_KEYBRD_ShiftKey[] = {
   '\0', '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',
   '_',  '+',  '\0', '\0', '\0', 'Q',  'W',  'E',  'R',  'T',  'Y',  'U',
   'I',  'O',  'P',  '{',  '}',  '|',  '\0', 'A',  'S',  'D',  'F',  'G',
@@ -158,7 +158,7 @@ static  const  int8_t  HID_KEYBRD_ShiftKey[] = {
 
 #else
 
-static  const  int8_t  HID_KEYBRD_Key[] = {
+static  const  char  HID_KEYBRD_Key[] = {
   '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0',
   '-',  '=',  '\0', '\r', '\t',  'a',  'z',  'e',  'r',  't',  'y',  'u',
   'i',  'o',  'p',  '[',  ']', '\\', '\0',  'q',  's',  'd',  'f',  'g',
@@ -172,7 +172,7 @@ static  const  int8_t  HID_KEYBRD_Key[] = {
   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
 };
 
-static  const  int8_t  HID_KEYBRD_ShiftKey[] = {
+static  const  char  HID_KEYBRD_ShiftKey[] = {
   '\0', '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',  '_',
   '+',  '\0', '\0', '\0', 'A',  'Z',  'E',  'R',  'T',  'Y',  'U',  'I',  'O',
   'P',  '{',  '}',  '*', '\0', 'Q',  'S',  'D',  'F',  'G',  'H',  'J',  'K',
@@ -224,7 +224,7 @@ HID_ReportItemTypes_t;
 
 typedef struct HID_cb
 {
-  void  (*Init)   (void);
+  void  (*Init)   (USB_OTG_CORE_HANDLE *pdev , void  *phost);
   void  (*Decode) (USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *data);
 
 } USB_HID_cb_t;
@@ -256,7 +256,7 @@ USB_HID_Report_t;
 /* Structure for HID process */
 typedef struct _HID_Process
 {
-  uint8_t			   transfer_possible;
+  uint8_t			        transfer_possible;
   volatile uint8_t 	   start_toggle;
   uint8_t              buff[64];
   uint8_t              hc_num_in;
@@ -273,27 +273,8 @@ typedef struct _HID_Process
 }
 USB_HID_machine_t;
 
-typedef struct _HID_MOUSE_Data
-{
-  uint8_t              x;
-  uint8_t              y;
-  uint8_t              z;               /* Not Supported */
-  uint8_t              button;
-}
-USB_HID_Mouse_Data_t;
 
-typedef union _HID_KEYBOARD_State{
-  struct {
-    uint8_t ALL;
-  };
-  struct
-  {
-    uint8_t              num_lock:1;
-    uint8_t              caps_lock:1;
-    uint8_t              scroll_lock:1;
-    uint8_t              dummy:5;
-  };
-}USB_HID_Keyboard_Stat_t;
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Variables
@@ -301,9 +282,9 @@ typedef union _HID_KEYBOARD_State{
 
 #ifndef MIOS32_DONT_USE_USB_HOST
 // imported from mios32_usb.c
-extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
-extern USBH_HOST USB_Host;
-extern USBH_Class_Status USB_Host_Class;
+extern USB_OTG_CORE_HANDLE  USB_OTG_FS_dev;
+extern USBH_HOST USB_FS_Host;
+extern USBH_Class_Status USB_FS_Host_Class;
 __ALIGN_BEGIN USB_HID_machine_t  	USB_FS_HID_machine __ALIGN_END ;
 //__ALIGN_BEGIN USB_HID_Report_t   	USB_FS_HID_Report __ALIGN_END ;
 //__ALIGN_BEGIN USB_Setup_TypeDef  	USB_FS_HID_Setup __ALIGN_END ;
@@ -329,7 +310,7 @@ __ALIGN_BEGIN USBH_HIDDesc_TypeDef  USB_HS_HID_Desc __ALIGN_END ;
 // Local prototypes
 /////////////////////////////////////////////////////////////////////////////
 
-static void  MIOS32_USB_HID_Mouse_Init (void);
+static void  MIOS32_USB_HID_Mouse_Init (USB_OTG_CORE_HANDLE *pdev , void  *phost);
 static void  MIOS32_USB_HID_Mouse_Decode(USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *data);
 
 USB_HID_cb_t HID_MOUSE_cb=
@@ -338,10 +319,10 @@ USB_HID_cb_t HID_MOUSE_cb=
 	MIOS32_USB_HID_Mouse_Decode
 };
 
-USB_HID_Mouse_Data_t Mouse_Data;
+mios32_mouse_data_t Mouse_Data;
 
 
-static void  MIOS32_USB_HID_Keyboard_Init (void);
+static void  MIOS32_USB_HID_Keyboard_Init (USB_OTG_CORE_HANDLE *pdev , void  *phost);
 static void  MIOS32_USB_HID_Keyboard_Decode(USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *pbuf);
 
 USB_HID_cb_t HID_KEYBRD_cb=
@@ -350,8 +331,10 @@ USB_HID_cb_t HID_KEYBRD_cb=
 	MIOS32_USB_HID_Keyboard_Decode
 };
 
-USB_HID_Keyboard_Stat_t Keyboard_State;
-static u8 Keyboard_OldState;
+mios32_kbd_state_t Keyboard_State;
+static u8 keys_last[KBR_MAX_NBR_PRESSED];
+static u8 Keyboard_LastLocks;
+
 
 static USBH_Status USBH_Set_Idle (USB_OTG_CORE_HANDLE *pdev,
                                   USBH_HOST *phost,
@@ -365,6 +348,10 @@ static USBH_Status USBH_Set_Report (USB_OTG_CORE_HANDLE *pdev,
                                     uint8_t* reportBuff);
 
 
+// callbacks
+static void (*mouse_callback_func)(mios32_mouse_data_t mouse_data);
+static void (*keyboard_callback_func)(mios32_kbd_state_t kbd_state, mios32_kbd_key_t kbd_key);
+
 
 /**
  * @brief  USR_MOUSE_Init
@@ -372,7 +359,7 @@ static USBH_Status USBH_Set_Report (USB_OTG_CORE_HANDLE *pdev,
  * @param  None
  * @retval None
  */
-void MIOS32_USB_HID_Mouse_Init	(void)
+void MIOS32_USB_HID_Mouse_Init(USB_OTG_CORE_HANDLE *pdev , void  *phost)
 {
 #if DEBUG_HID_VERBOSE_LEVEL >= 2
   DEBUG_MSG((void*)USB_HID_MouseStatus);
@@ -438,10 +425,26 @@ void MIOS32_USB_HID_Mouse_Decode(USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8
  * @param  None
  * @retval None
  */
-void  MIOS32_USB_HID_Keyboard_Init (void)
+void MIOS32_USB_HID_Keyboard_Init (USB_OTG_CORE_HANDLE *pdev , void  *phost)
 {
   Keyboard_State.ALL=0;
-  Keyboard_OldState = 0;
+  Keyboard_State.connected=1;
+  // send report
+  USBH_HOST *pphost = phost;
+  u8 locks = (u8)Keyboard_State.locks;
+  int i;
+  for (i=0; i<32; i++)USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, 0x07);
+  for (i=0; i<KBR_MAX_NBR_PRESSED; i++) {
+    keys_last[KBR_MAX_NBR_PRESSED]= 0;
+  }
+  Keyboard_LastLocks=locks;
+  USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &locks);
+  /* call user process handle */
+  mios32_kbd_key_t key;
+  key.code = 0;
+  key.value = 0;
+  if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key);
+ 
 #if DEBUG_HID_VERBOSE_LEVEL >= 1
   DEBUG_MSG((void*)USB_HID_KeybrdStatus);
   
@@ -458,139 +461,112 @@ void  MIOS32_USB_HID_Keyboard_Init (void)
  * @param  data : Keyboard data to be displayed
  * @retval None
  */
-void  MIOS32_USB_HID_Keyboard_Decode (USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *pbuf)
+void MIOS32_USB_HID_Keyboard_Decode (USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *pbuf)
 {
-	static  uint8_t   shift;
-	static  uint8_t   keys[KBR_MAX_NBR_PRESSED];
-	static  uint8_t   keys_new[KBR_MAX_NBR_PRESSED];
-	static  uint8_t   keys_last[KBR_MAX_NBR_PRESSED];
-	static  uint8_t   key_newest;
-	static  uint8_t   nbr_keys;
-	static  uint8_t   nbr_keys_new;
-	static  uint8_t   nbr_keys_last;
-
-	uint8_t   ix;
-	uint8_t   jx;
+  int i;
+	u8 keys_new[KBR_MAX_NBR_PRESSED];
+  
 	uint8_t   error;
-	uint8_t   output;
  
-   USBH_Status status = USBH_OK;
-   USBH_HOST *pphost = phost;
-//   if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
-// #ifndef MIOS32_DONT_USE_USB_HOST
-//     machine = &USB_FS_HID_machine;
-//     //MIOS32_MIDI_DebugPortSet(UART0);
-// #else
-//     return USBH_NOT_SUPPORTED; //
-// #endif
-//   }else{
-// #ifndef MIOS32_DONT_USE_USB_HS_HOST
-//     machine = &USB_HS_HID_machine;
-//     //MIOS32_MIDI_DebugPortSet(USB0);
-// #else
-//     return USBH_NOT_SUPPORTED; //
-// #endif
-//  }
-	nbr_keys      = 0;
-	nbr_keys_new  = 0;
-	nbr_keys_last = 0;
-	key_newest    = 0x00;
-
-
-	/* Check if Shift key is pressed */
-	if ((pbuf[0] == KBD_LEFT_SHIFT) || (pbuf[0] == KBD_RIGHT_SHIFT)) {
-		shift = 1;
-	} else {
-		shift = 0;
-	}
+  USBH_Status status = USBH_OK;
+  USBH_HOST *pphost = phost;
  
-	error = 0;
+#if DEBUG_HID_VERBOSE_LEVEL >= 2
+    DEBUG_MSG("pbuf: %02x %02x %02x %02x %02x %02x %02x %02x", pbuf[0], pbuf[1], pbuf[2], pbuf[3], pbuf[4], pbuf[5], pbuf[6], pbuf[7]);
+#endif
 
-	/* Check for the value of pressed key */
-	for (ix = 2; ix < 2 + KBR_MAX_NBR_PRESSED; ix++) {
-		if ((pbuf[ix] == 0x01) ||
-				(pbuf[ix] == 0x02) ||
-				(pbuf[ix] == 0x03)) {
+	/* Store new modifiers */
+  Keyboard_State.modifiers = pbuf[0];
+
+	/* Check for errors */
+  error = 0;
+	for (i = 2; i < 2 + KBR_MAX_NBR_PRESSED; i++) {
+		if ((pbuf[i] == 0x01) ||
+				(pbuf[i] == 0x02) ||
+				(pbuf[i] == 0x03)) {
 			error = 1;
 		}
 	}
 	if (error == 1) {
 		return;
 	}
-
+ 
+  // structure for changes storage
+  mios32_kbd_key_t key_changes[6];
+  u8 key_changes_count = 0;
   
-	nbr_keys     = 0;
-	nbr_keys_new = 0;
-	for (ix = 2; ix < 2 + KBR_MAX_NBR_PRESSED; ix++) {
-		if (pbuf[ix] != 0) {
-			keys[nbr_keys] = pbuf[ix];
-			nbr_keys++;
-			for (jx = 0; jx < nbr_keys_last; jx++) {
-				if (pbuf[ix] == keys_last[jx]) {
-					break;
-				}
-			}
-
-			if (jx == nbr_keys_last) {
-				keys_new[nbr_keys_new] = pbuf[ix];
-				nbr_keys_new++;
-			}
-		}
-	}
+  // copy the new keys
+  memcpy(&keys_new, &pbuf[2], 6);
   
-	if (nbr_keys_new == 1) {
-		key_newest = keys_new[0];
-    
-    switch (key_newest) {
+  // look for released keys
+  for (i=0; i<6; i++) {
+    if(keys_last[i] != 0){
+      if(memchr(&keys_new, keys_last[i], 6)==NULL){
+        key_changes[key_changes_count].code = keys_last[i];
+        key_changes[key_changes_count].value = 0;
+        key_changes_count++;
+      }
+    }else break;
+  }
+  // look for pushed keys
+  for (i=0; i<6; i++) {
+    if(keys_new[i] != 0){
+      if(memchr(&keys_last, keys_new[i], 6)==NULL){
+        key_changes[key_changes_count].code = keys_new[i];
+        key_changes[key_changes_count].value = 1;
+        key_changes_count++;
+      }
+    }else break;
+  }
+  
+#if DEBUG_HID_VERBOSE_LEVEL >= 2
+  DEBUG_MSG("keys_last: %02x %02x %02x %02x %02x %02x", keys_last[0], keys_last[1], keys_last[2], keys_last[3], keys_last[4], keys_last[5]);
+  DEBUG_MSG("keys_new : %02x %02x %02x %02x %02x %02x", keys_new[0], keys_new[1], keys_new[2], keys_new[3], keys_new[4], keys_new[5]);
+#endif
+  
+  for (i=0; i<key_changes_count; i++) {
+    switch (key_changes[i].code) {
       case 0x53:
         // caps_lock
-        Keyboard_State.num_lock = ~Keyboard_State.num_lock;
+        if (key_changes[i].value)Keyboard_State.num_lock = ~Keyboard_State.num_lock;
+        key_changes[i].character =  HID_KEYBRD_Key[HID_KEYBRD_Codes[key_changes[i].code]];
         break;
       case 0x39:
         // caps_lock
-        Keyboard_State.caps_lock = ~Keyboard_State.caps_lock;
+        if (key_changes[i].value)Keyboard_State.caps_lock = ~Keyboard_State.caps_lock;
+        key_changes[i].character =  HID_KEYBRD_Key[HID_KEYBRD_Codes[key_changes[i].code]];
         break;
       case 0x47:
         // scroll_lock
-        Keyboard_State.scroll_lock = ~Keyboard_State.scroll_lock;
+        if (key_changes[i].value)Keyboard_State.scroll_lock = ~Keyboard_State.scroll_lock;
+        key_changes[i].character =  HID_KEYBRD_Key[HID_KEYBRD_Codes[key_changes[i].code]];
         break;
       default:
-        if (((shift == 1)&& (Keyboard_State.caps_lock==0)) ||((shift == 0)&& (Keyboard_State.caps_lock==1))) {
-          output =  HID_KEYBRD_ShiftKey[HID_KEYBRD_Codes[key_newest]];
+        if (((Keyboard_State.left_shift || Keyboard_State.right_shift)&& (Keyboard_State.caps_lock==0)) || (((Keyboard_State.left_shift==0) && (Keyboard_State.right_shift==0))&& (Keyboard_State.caps_lock==1))) {
+          key_changes[i].character =  HID_KEYBRD_ShiftKey[HID_KEYBRD_Codes[key_changes[i].code]];
         } else {
-          output =  HID_KEYBRD_Key[HID_KEYBRD_Codes[key_newest]];
+          key_changes[i].character =  HID_KEYBRD_Key[HID_KEYBRD_Codes[key_changes[i].code]];
         }
-        
-        /* call user process handle */ // toDo callback!
-        //keyboard_callback(output);
-        
-#if DEBUG_HID_VERBOSE_LEVEL >= 1
-        DEBUG_MSG("KB data: %c", output);
-#endif
         break;
     }
+    
+    /* call user process handle */
+    if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key_changes[i]);
+  }
+  
+  // send set report
+  if(Keyboard_LastLocks != Keyboard_State.locks){
+    u8 locks = (u8)Keyboard_State.locks;
+    status = USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &locks);
+    if(status==0)Keyboard_LastLocks = Keyboard_State.locks;
+#if DEBUG_HID_VERBOSE_LEVEL >= 2
+    DEBUG_MSG("USBH_Set_Report stat:%d", (u8)(status));
+#endif
+  }
+  
+  // store new keys
+  memcpy(&keys_last, &keys_new, 6);
 
-  } else {
-    key_newest = 0x00;
-  }
-  if(Keyboard_OldState != Keyboard_State.ALL){
-    //      u8 count = 0;
-    //      do
-    //      {
-    //        USBH_Set_Idle (pdev, pphost, 0x01, 0x00);
-    status = USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &Keyboard_State.ALL);
-    if(status==0)Keyboard_OldState = Keyboard_State.ALL;
-       DEBUG_MSG("USBH_Set_Report stat:%d", (u8)(status));
-    //        count++;
-    //      }
-    //      while((status != 0) && (count<=6));
-  }
-  nbr_keys_last  = nbr_keys;
-  for (ix = 0; ix < KBR_MAX_NBR_PRESSED; ix++) {
-    keys_last[ix] = keys[ix];
-  }
-  
-  
 }
 
 
@@ -634,6 +610,14 @@ s32 MIOS32_USB_HID_ChangeConnectionState(u8 dev, u8 connected)
 	  } else {
 		// device disconnected: disable transfers
 		  USB_FS_HID_machine.transfer_possible = 0;
+      if(Keyboard_State.connected){
+        Keyboard_State.connected = 0;
+        /* call user process handle */
+        mios32_kbd_key_t key;
+        key.code = 0;
+        key.value = 0;
+        if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key);
+      }
 	  }
   }
 #endif
@@ -644,6 +628,14 @@ s32 MIOS32_USB_HID_ChangeConnectionState(u8 dev, u8 connected)
 	  } else {
 		// device disconnected: disable transfers
 		  USB_HS_HID_machine.transfer_possible = 0;
+      if(Keyboard_State.connected){
+        Keyboard_State.ALL = 0;
+        /* call user process handle */
+        mios32_kbd_key_t key;
+        key.code = 0;
+        key.value = 0;
+        if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key);
+      }
 	  }
   }
 #endif
@@ -675,13 +667,42 @@ s32 MIOS32_USB_HID_CheckAvailable(u8 dev)
 
 
 
-s32 MIOS32_USB_HID_Process(void)
+//////////////////////////////////////////////////////////////////////////
+//! Installs an optional Direct Midi package Callback callback
+//! If the function returns 0, SysEx bytes will be forwarded to APP_MIDI_NotifyPackage() as well.
+//! With return value != 0, APP_MIDI_NotifyPackage() won't get the already processed package.
+//! \return < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 MIOS32_USB_HID_MouseCallback_Init(void (*mouse_callback)(mios32_mouse_data_t mouse_data))
 {
-	//USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-	//if(USB_HS_Host_Class == USBH_IS_HID)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-	return 0;
+#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HS_HOST)
+#if !defined(MIOS32_DONT_USE_USB_HID)
+  mouse_callback_func = mouse_callback;
+  return 0; // no error
+#else
+  return -1; // not supported
+#endif
+#endif
 }
 
+
+//////////////////////////////////////////////////////////////////////////
+//! Installs an optional Direct Midi package Callback callback
+//! If the function returns 0, SysEx bytes will be forwarded to APP_MIDI_NotifyPackage() as well.
+//! With return value != 0, APP_MIDI_NotifyPackage() won't get the already processed package.
+//! \return < 0 on errors
+/////////////////////////////////////////////////////////////////////////////
+s32 MIOS32_USB_HID_KeyboardCallback_Init(void (*keyboard_callback)(mios32_kbd_state_t kbd_state, mios32_kbd_key_t kbd_key))
+{
+#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HS_HOST)
+#if !defined(MIOS32_DONT_USE_USB_HID)
+  keyboard_callback_func = keyboard_callback;
+  return 0; // no error
+#else
+  return -1; // not supported
+#endif
+#endif
+}
 
 
 /**
@@ -1158,7 +1179,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev , void   *phost)
   {
 
   case HID_IDLE:
-    machine->cb->Init();
+    machine->cb->Init(pdev, phost);
     machine->state = HID_SYNC;
 
   case HID_SYNC:

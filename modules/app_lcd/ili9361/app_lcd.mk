@@ -6,8 +6,9 @@ C_INCLUDE +=	-I $(MIOS32_PATH)/modules/app_lcd/ili9361
 
 # add modules to thumb sources
 THUMB_SOURCE += \
-	$(MIOS32_PATH)/modules/app_lcd/ili9361/app_lcd.c
-
+	$(MIOS32_PATH)/modules/app_lcd/ili9361/app_lcd.c \
+  $(MIOS32_PATH)/modules/app_lcd/ili9361/app_lcd_bmp.c
+   
 # include fonts
 include $(MIOS32_PATH)/modules/glcd_font/glcd_font.mk
 

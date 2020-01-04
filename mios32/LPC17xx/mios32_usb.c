@@ -1145,6 +1145,14 @@ static BOOL HandleCustomRequest(TSetupPacket *pSetup, int *piLen, U8 **ppbData)
   return FALSE;
 }
 
+
+/////////////////////////////////////////////////////////////////////////////
+//! Process Host, others than MIDI(to keep safe priority)
+/////////////////////////////////////////////////////////////////////////////
+s32 MIOS32_USB_HOST_Process(void){
+  return 0;
+}
+
 //! \}
 
 #endif /* MIOS32_DONT_USE_USB */

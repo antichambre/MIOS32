@@ -23,6 +23,10 @@
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
 #define MIOS32_DONT_USE_USB_HS_HOST
 #endif
+#else
+#ifndef MIOS32_DONT_USE_USB_HS_HOST
+#define USE_USB_OTG_HS
+#endif
 #endif
 
 // Following settings allow to customize the USB device descriptor
@@ -83,10 +87,6 @@ extern s32 MIOS32_USB_IsInitialized(void);
 extern s32 MIOS32_USB_ForceSingleUSB(void);
 extern s32 MIOS32_USB_ForceDeviceMode(void);
 extern s32 MIOS32_USB_HOST_Process(void);
-extern s32 MIOS32_USB_HOST_Report(uint8_t reportType,
-                          uint8_t reportId,
-                          uint8_t reportLen,
-                          uint8_t* reportBuff);
 
 /////////////////////////////////////////////////////////////////////////////
 // Export global variables
@@ -94,6 +94,7 @@ extern s32 MIOS32_USB_HOST_Report(uint8_t reportType,
 
 extern void (*pEpInt_IN[7])(void);
 extern void (*pEpInt_OUT[7])(void);
+// toDo: to remove and add PHY preporcessor condition in usbd_req.c
 extern  uint8_t USBD_DeviceQualifierDesc[0x0A];
 
 #endif /* _MIOS32_USB_H */

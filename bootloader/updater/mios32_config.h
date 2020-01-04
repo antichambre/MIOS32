@@ -15,4 +15,5 @@
 #define MIOS32_LCD_BOOT_MSG_LINE2 "(C) 2014 T.Klose"
 
 #define DEBUG_MSG MIOS32_MIDI_SendDebugMessage
+
 #endif /* _MIOS32_CONFIG_H */

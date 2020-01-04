@@ -26,8 +26,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
 
-//#define USE_USB_OTG_HS  
-//#define USE_USB_OTG_FS
+#ifdef MIOS32_DONT_USE_USB_HS_HOST
+#define USE_USB_OTG_HS
+#endif
+#define USE_USB_OTG_FS
 
 #define USBD_CFG_MAX_NUM           1
 #define USBD_ITF_MAX_NUM           1

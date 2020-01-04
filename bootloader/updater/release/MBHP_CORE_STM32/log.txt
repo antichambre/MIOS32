@@ -92,6 +92,6 @@ LCD:       universal
 -------------------------------------------------------------------------------
 arm-none-eabi-size project_build/project.elf
    text	   data	    bss	    dec	    hex	filename
-  74906	     96	  12864	  87866	  1573a	project_build/project.elf
+  74906	     96	  12856	  87858	  15732	project_build/project.elf
 20000000 D __ram_start
-200032a0 B __ram_end
+20003298 B __ram_end

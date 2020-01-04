@@ -448,7 +448,7 @@ static void USBD_GetDescriptor(USB_OTG_CORE_HANDLE  *pdev,
     }
     break;
   case USB_DESC_TYPE_DEVICE_QUALIFIER:                   
-#ifdef USB_OTG_HS_CORE
+#if defined(USB_OTG_HS_CORE) && defined(USE_ULPI_PHY)
     if(pdev->cfg.speed == USB_OTG_SPEED_HIGH  )   
     {
       

@@ -42,10 +42,10 @@
 #define APP_LCD_STRING_ALIGN_LEFT     0
 #define APP_LCD_STRING_ALIGN_CENTER   1
 #define APP_LCD_STRING_ALIGN_RIGHT    2
+
 /////////////////////////////////////////////////////////////////////////////
 // Global Types
 /////////////////////////////////////////////////////////////////////////////
-
 
 // Graphics, bitmaps fusion mode
 typedef enum{
@@ -93,7 +93,7 @@ extern s32 APP_LCD_BitmapPixelSet(mios32_lcd_bitmap_t bitmap, u16 x, u16 y, u32 
 extern s32 APP_LCD_Rectangle(u16 x, u16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color);
 extern s32 APP_LCD_BitmapRectangle(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, u8 border, u32 bd_color, u8 fill, u32 back_color);   //new
 extern s32 APP_LCD_BitmapByteSet(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u8 value);
-extern s32 APP_LCD_Bitmap4BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, float luma);   // new
+extern s32 APP_LCD_Bitmap16BitLuma(mios32_lcd_bitmap_t bitmap, s16 x, s16 y, u16 width, u16 height, float luma);   // new
 extern u16 APP_LCD_HelpPixelLuma(u16 pix_mem, float luma);
 extern u16 APP_LCD_PixelFusion(u16 fore_pix, float fore_luma, u16 back_pix, float back_luma, app_lcd_fusion_t fusion);
 extern s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd_bitmap_t bmp, s16 top_pos_x, s16 top_pos_y, app_lcd_fusion_t fusion);   // new

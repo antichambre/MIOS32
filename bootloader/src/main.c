@@ -24,7 +24,7 @@
 #include <usb_core.h>
 
 // imported from mios32_usb.c
-extern USB_OTG_CORE_HANDLE  USB_OTG_dev;
+extern USB_OTG_CORE_HANDLE  USB_OTG_FS_dev;
 #endif
 
 
@@ -368,8 +368,8 @@ int main(void)
       if( MIOS32_USB_IsInitialized() )
 	OTGD_FS_DisableGlobalInt();
 #elif defined(MIOS32_FAMILY_STM32F4xx)
-      if( MIOS32_USB_IsInitialized() && USB_OTG_dev.dev.class_cb != NULL ) {
-	USB_OTG_DisableGlobalInt(&USB_OTG_dev);
+      if( MIOS32_USB_IsInitialized() && USB_OTG_FS_dev.dev.class_cb != NULL ) {
+	USB_OTG_DisableGlobalInt(&USB_OTG_FS_dev);
       }
 #else
       _SetCNTR(0); // clear USB interrupt mask

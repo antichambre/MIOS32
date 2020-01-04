@@ -60,8 +60,8 @@
 /////////////////////////////////////////////////////////////////////////////
 
 // also used in mios32_usb_midi.c
-__ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_dev __ALIGN_END;
-uint32_t USB_rx_buffer[MIOS32_USB_MIDI_DATA_OUT_SIZE/4];
+__ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_FS_dev __ALIGN_END;
+uint32_t USB_FS_rx_buffer[MIOS32_USB_MIDI_DATA_OUT_SIZE/4];
 
 #if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HS_HOST)
 extern const USBH_Class_cb_TypeDef MIOS32_MIDI_USBH_Callbacks; // implemented in mios32_usb_midi.c
@@ -69,11 +69,17 @@ extern const USBH_Class_cb_TypeDef MIOS32_HID_USBH_Callbacks; // implemented in 
 #endif
 
 #ifndef MIOS32_DONT_USE_USB_HOST
-__ALIGN_BEGIN USBH_HOST USB_Host __ALIGN_END;
-USBH_Class_Status USB_Host_Class;
+#pragma message "USB HS Host supported"
+__ALIGN_BEGIN USBH_HOST USB_FS_Host __ALIGN_END;
+USBH_Class_Status USB_FS_Host_Class;
+#ifndef MIOS32_DONT_USE_USB_HID
+static s8 USB_HOST_Process_Delay;
+#endif
 #endif
 
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
+#pragma message "USB HS Host supported"
+
 //#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
 //#if defined ( __ICCARM__ ) /*!< IAR Compiler */
 //#pragma data_alignment=4
@@ -89,6 +95,7 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_HS_dev __ALIGN_END ;
 __ALIGN_BEGIN USBH_HOST  USB_HS_Host __ALIGN_END ;
 
 USBH_Class_Status USB_HS_Host_Class;
+static u16 USB_HS_HOST_Process_Delay;
 #endif
 
 
@@ -1066,9 +1073,15 @@ static const USBD_Usr_cb_TypeDef USBD_USR_Callbacks =
 
 
 
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+// User Host hooks for different device states
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
 
-/*--------------- LCD Messages ---------------*/
-const uint8_t MSG_HOST_INIT[]          = "> Host Library Initialized\n";
+#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
+/*--------------- HOST Messages ---------------*/
+const uint8_t MSG_HOST_INIT[]          = "> Host Initialized\n";
 const uint8_t MSG_DEV_ATTACHED[]       = "> Device Attached\n";
 const uint8_t MSG_DEV_DISCONNECTED[]   = "> Device Disconnected\n";
 const uint8_t MSG_DEV_ENUMERATED[]     = "> Enumeration completed\n";
@@ -1076,6 +1089,7 @@ const uint8_t MSG_DEV_HIGHSPEED[]      = "> High speed device detected\n";
 const uint8_t MSG_DEV_FULLSPEED[]      = "> Full speed device detected\n";
 const uint8_t MSG_DEV_LOWSPEED[]       = "> Low speed device detected\n";
 const uint8_t MSG_DEV_ERROR[]          = "> Device fault \n";
+const uint8_t MSG_DEV_RESET[]          = "> Device reseted \n";
 
 const uint8_t MSG_MSC_CLASS[]          = "> Mass storage device connected\n";
 const uint8_t MSG_HID_CLASS[]          = "> HID device connected\n";
@@ -1085,16 +1099,6 @@ const uint8_t USB_HID_MouseStatus[]    = "> HID Demo Device : Mouse\n";
 const uint8_t USB_HID_KeybrdStatus[]   = "> HID Demo Device : Keyboard\n";
 const uint8_t MSG_UNREC_ERROR[]        = "> UNRECOVERED ERROR STATE\n";
 
-
-
-
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-// User Host hooks for different device states
-/////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
-
-#if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HID)
 
 /**
  * @brief  USBH_USR_Init
@@ -1106,9 +1110,7 @@ static void USBH_USR_Init(void)
 {
 #ifdef MIOS32_MIDI_USBH_DEBUG
 #ifdef USE_USB_OTG_HS
-    DEBUG_MSG(" USB OTG HS HID Host FS Mode");
-    DEBUG_MSG("> USB Host library started.\n");
-    DEBUG_MSG("  USB Host Library v2.1.0" );
+    DEBUG_MSG(" USB OTG HS Host FS Mode");
 #else
     DEBUG_MSG(" USB OTG HS not used");
 #endif
@@ -1509,15 +1511,15 @@ void USB_OTG_BSP_EnableInterrupt(USB_OTG_CORE_HANDLE *pdev)
 void OTG_FS_IRQHandler(void)
 {
 #ifndef MIOS32_DONT_USE_USB_HOST
-  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
-    USBH_OTG_ISR_Handler(&USB_OTG_dev);
+  if( USB_OTG_IsHostMode(&USB_OTG_FS_dev) ) {
+    USBH_OTG_ISR_Handler(&USB_OTG_FS_dev);
   } else {
-    USBD_OTG_ISR_Handler(&USB_OTG_dev);
+    USBD_OTG_ISR_Handler(&USB_OTG_FS_dev);
   }
 
-  STM32_USBO_OTG_ISR_Handler(&USB_OTG_dev);
+  STM32_USBO_OTG_ISR_Handler(&USB_OTG_FS_dev);
 #else
-  USBD_OTG_ISR_Handler(&USB_OTG_dev);
+  USBD_OTG_ISR_Handler(&USB_OTG_FS_dev);
 #endif
 }
 
@@ -1684,9 +1686,9 @@ static uint8_t  MIOS32_USB_CLASS_Init (void  *pdev,
   DCD_EP_Open(pdev, MIOS32_USB_MIDI_DATA_IN_EP, MIOS32_USB_MIDI_DATA_IN_SIZE, USB_OTG_EP_BULK);
 
   // configuration for next transfer
-  DCD_EP_PrepareRx(&USB_OTG_dev,
+  DCD_EP_PrepareRx(&USB_OTG_FS_dev,
 		   MIOS32_USB_MIDI_DATA_OUT_EP,
-		   (uint8_t*)(USB_rx_buffer),
+		   (uint8_t*)(USB_FS_rx_buffer),
 		   MIOS32_USB_MIDI_DATA_OUT_SIZE);
 #endif
 
@@ -1800,7 +1802,7 @@ static uint8_t *MIOS32_USB_CLASS_GetUsrStrDesc(uint8_t speed, uint8_t index, uin
 }
 
 
-/* CDC interface class callbacks structure */
+/* interface class callbacks structure */
 static const USBD_Class_cb_TypeDef MIOS32_USB_CLASS_cb = 
 {
   MIOS32_USB_CLASS_Init,
@@ -1842,11 +1844,11 @@ DEBUG_MSG("Host interface Init-passed");
 	USBH_Class_Status* class_status;
 	if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
 #else
 		return status; //
 #endif
-	}else{
+	}else if(pdev->cfg.coreID == USB_OTG_HS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
 		class_status = &USB_HS_Host_Class;
 #else
@@ -1867,14 +1869,18 @@ DEBUG_MSG("Host interface Init-passed");
       // MIDI class interface init
       *class_status = USBH_IS_MIDI;
       status = USBH_OK;
+#if !defined(MIOS32_DONT_USE_USB_HID)
 		}else if( (pphost->device_prop.Itf_Desc[i].bInterfaceClass == 3) &&
         (MIOS32_HID_USBH_Callbacks.Init(pdev, phost)==USBH_OK)){
 			// HID class interface init
   		*class_status = USBH_IS_HID;
 			status = USBH_OK;
+#endif
 		}else{
       if(*class_status == USBH_IS_MIDI)MIOS32_MIDI_USBH_Callbacks.DeInit(pdev, phost);
+#if !defined(MIOS32_DONT_USE_USB_HID)
       else if(*class_status == USBH_IS_HID)MIOS32_HID_USBH_Callbacks.DeInit(pdev, phost);
+#endif
       *class_status = USBH_NO_CLASS;
       status = USBH_NOT_SUPPORTED;
     }
@@ -1894,11 +1900,11 @@ static void USBH_InterfaceDeInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 	USBH_Class_Status* class_status;
 	if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
 #else
 		return; //
 #endif
-	}else{
+	}else if(pdev->cfg.coreID == USB_OTG_HS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
 		class_status = &USB_HS_Host_Class;
 #else
@@ -1910,10 +1916,12 @@ static void USBH_InterfaceDeInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 		MIOS32_MIDI_USBH_Callbacks.DeInit(pdev, phost);
 		class_status = USBH_NO_CLASS; // back to parser class
 		break;
+#if !defined(MIOS32_DONT_USE_USB_HID)
 	case USBH_IS_HID:
 		MIOS32_HID_USBH_Callbacks.DeInit(pdev, phost);
 		class_status = USBH_NO_CLASS; // back to parser class
 		break;
+#endif
 	default:
 		break;
 	}
@@ -1933,11 +1941,11 @@ static USBH_Status USBH_ClassRequest(USB_OTG_CORE_HANDLE *pdev, void *phost)
 	USBH_Class_Status* class_status;
 	if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
 #else
 		return status; //
 #endif
-	}else{
+	}else if(pdev->cfg.coreID == USB_OTG_HS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
 		class_status = &USB_HS_Host_Class;
 #else
@@ -1948,9 +1956,11 @@ static USBH_Status USBH_ClassRequest(USB_OTG_CORE_HANDLE *pdev, void *phost)
 	case USBH_IS_MIDI:
 		status = MIOS32_MIDI_USBH_Callbacks.Requests(pdev, phost);
 		break;
+#if !defined(MIOS32_DONT_USE_USB_HID)
 	case USBH_IS_HID:
 		status = MIOS32_HID_USBH_Callbacks.Requests(pdev, phost);
 		break;
+#endif
 	default:
 		break;
 	}
@@ -1970,11 +1980,11 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
 	USBH_Class_Status* class_status;
 	if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
 #else
 		return status; //
 #endif
-	}else{
+	}else if(pdev->cfg.coreID == USB_OTG_HS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
 		class_status = &USB_HS_Host_Class;
 #else
@@ -1985,9 +1995,11 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
 	case USBH_IS_MIDI:
 		status = MIOS32_MIDI_USBH_Callbacks.Machine(pdev, phost);
 		break;
+#if !defined(MIOS32_DONT_USE_USB_HID)
 	case USBH_IS_HID:
 		status = MIOS32_HID_USBH_Callbacks.Machine(pdev, phost);
 		break;
+#endif
 	default:
 		break;
 	}
@@ -2029,10 +2041,10 @@ s32 MIOS32_USB_Init(u32 mode)
 
 #ifndef MIOS32_DONT_USE_USB_HOST
   /* Init Host Library */
-  USBH_Init(&USB_OTG_dev,
+  USBH_Init(&USB_OTG_FS_dev,
             USB_OTG_FS_CORE_ID,
-            &USB_Host,
-            (USBH_Class_cb_TypeDef *)&MIOS32_MIDI_USBH_Callbacks,
+            &USB_FS_Host,
+            (USBH_Class_cb_TypeDef *)&MIOS32_USBH_Callbacks,
             (USBH_Usr_cb_TypeDef *)&USBH_USR_Callbacks);
 #endif
 
@@ -2044,7 +2056,7 @@ s32 MIOS32_USB_Init(u32 mode)
 
 #if 0
     // init USB device and driver
-    USBD_Init(&USB_OTG_dev,
+    USBD_Init(&USB_OTG_FS_dev,
         USB_OTG_FS_CORE_ID,
         (USBD_DEVICE *)&USR_desc,
         (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb,
@@ -2054,56 +2066,56 @@ s32 MIOS32_USB_Init(u32 mode)
     // don't run complete driver init sequence to ensure that the connection doesn't get lost!
 
     // phys interface re-initialisation (just to ensure)
-    USB_OTG_BSP_Init(&USB_OTG_dev);
+    USB_OTG_BSP_Init(&USB_OTG_FS_dev);
 
     // USBD_Init sets these pointer in the handle
-    USB_OTG_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
-    USB_OTG_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
-    USB_OTG_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
+    USB_OTG_FS_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
+    USB_OTG_FS_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
+    USB_OTG_FS_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
 
     // some additional handle init stuff which doesn't hurt
-    USB_OTG_SelectCore(&USB_OTG_dev, USB_OTG_FS_CORE_ID);
+    USB_OTG_SelectCore(&USB_OTG_FS_dev, USB_OTG_FS_CORE_ID);
 
     // enable interrupts
-    USB_OTG_EnableGlobalInt(&USB_OTG_dev);
-    USB_OTG_EnableDevInt(&USB_OTG_dev);
-    USB_OTG_BSP_EnableInterrupt(&USB_OTG_dev);
+    USB_OTG_EnableGlobalInt(&USB_OTG_FS_dev);
+    USB_OTG_EnableDevInt(&USB_OTG_FS_dev);
+    USB_OTG_BSP_EnableInterrupt(&USB_OTG_FS_dev);
 #endif
 
     // select configuration
-    USB_OTG_dev.dev.device_config = 1;
-    USB_OTG_dev.dev.device_status = USB_OTG_CONFIGURED;
+    USB_OTG_FS_dev.dev.device_config = 1;
+    USB_OTG_FS_dev.dev.device_status = USB_OTG_CONFIGURED;
 
     // init endpoints
-    MIOS32_USB_CLASS_Init(&USB_OTG_dev, 1);
+    MIOS32_USB_CLASS_Init(&USB_OTG_FS_dev, 1);
 
     // assume that device is (still) configured
     USBD_USR_DeviceConfigured();
   } else {
     // init USB device and driver
-    USBD_Init(&USB_OTG_dev,
+    USBD_Init(&USB_OTG_FS_dev,
         USB_OTG_FS_CORE_ID,
         (USBD_DEVICE *)&USR_desc,
         (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb,
         (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks);
 
     // disconnect device
-    DCD_DevDisconnect(&USB_OTG_dev);
+    DCD_DevDisconnect(&USB_OTG_FS_dev);
 
     // wait 50 mS
     USB_OTG_BSP_mDelay(50);
 
     // connect device
-    DCD_DevConnect(&USB_OTG_dev);
+    DCD_DevConnect(&USB_OTG_FS_dev);
   }
 
 #ifndef MIOS32_DONT_USE_USB_HOST
   // switch to host or device mode depending on the ID pin (Bootloader allows to overrule this pin)
   if( MIOS32_USB_ForceDeviceMode() || MIOS32_SYS_STM_PINGET(GPIOA, GPIO_Pin_10) ) {
-    USB_OTG_SetCurrentMode(&USB_OTG_dev, DEVICE_MODE);
+    USB_OTG_SetCurrentMode(&USB_OTG_FS_dev, DEVICE_MODE);
   } else {
-    USB_OTG_DriveVbus(&USB_OTG_dev, 1);
-    USB_OTG_SetCurrentMode(&USB_OTG_dev, HOST_MODE);
+    USB_OTG_DriveVbus(&USB_OTG_FS_dev, 1);
+    USB_OTG_SetCurrentMode(&USB_OTG_FS_dev, HOST_MODE);
   }
 #endif
 
@@ -2212,82 +2224,60 @@ s32 MIOS32_USB_ForceDeviceMode(void)
 #endif
 }
 
+
 /////////////////////////////////////////////////////////////////////////////
-//! Process Host, others than MIDI(to keep safe priority)
+//! Process Host, others than MIDI (to keep safe priority)
 /////////////////////////////////////////////////////////////////////////////
 s32 MIOS32_USB_HOST_Process(void){
-
-//  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
-//#ifndef MIOS32_DONT_USE_USB_HOST
-//    // process the USB host events for OTG_FS
-//    USBH_Process(&USB_OTG_dev, &USB_Host);
-//#endif
-//  }
-//#ifndef MIOS32_DONT_USE_USB_HS_HOST
-//  // process the USB host events for OTG_HS
-//  USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-//#endif
-
+  
 #if !defined(MIOS32_DONT_USE_USB_HOST)
-    // process the USB host events for OTG_FS
-  if((USB_Host_Class != USBH_IS_MIDI) && (USB_OTG_GetMode(&USB_OTG_dev) == HOST_MODE))USBH_Process(&USB_OTG_dev, &USB_Host);
+  if((USB_OTG_GetMode(&USB_OTG_FS_dev) == HOST_MODE)){
+    switch (USB_FS_Host_Class) {
+#if !defined(MIOS32_DONT_USE_USB_HID)
+      case USBH_IS_HID:
+        // polling delay
+        if(USB_HOST_Process_Delay <= 0){
+          USB_HOST_Process_Delay = MIOS32_USB_HID_PROCESS_DELAY;
+          // process the USB host events for OTG_FS
+          USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
+        }else USB_HOST_Process_Delay--;
+        break;
 #endif
-#if !defined(MIOS32_DONT_USE_USB_HS_HOST)
-  // process the USB host events for OTG_HS
-  if(USB_HS_Host_Class != USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-#endif
-
-	return 0;
-}
-
-
-/////////////////////////////////////////////////////////////////////////////
-//! Process Host, others than MIDI(to keep safe priority)
-/////////////////////////////////////////////////////////////////////////////
-s32 MIOS32_USB_HOST_Report(uint8_t reportType,
-                          uint8_t reportId,
-                          uint8_t reportLen,
-                          uint8_t* reportBuff)
-{
-
-//  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
-//#ifndef MIOS32_DONT_USE_USB_HOST
-//    // process the USB host events for OTG_FS
-//    USBH_Process(&USB_OTG_dev, &USB_Host);
-//#endif
-//  }
-//#ifndef MIOS32_DONT_USE_USB_HS_HOST
-//  // process the USB host events for OTG_HS
-//  USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-//#endif
-
-#if !defined(MIOS32_DONT_USE_USB_HOST)
-    // process the USB host events for OTG_FS
-  if((USB_Host_Class != USBH_IS_MIDI) && (USB_OTG_GetMode(&USB_OTG_dev) == HOST_MODE)){
-
-    USBH_Status status = USBH_BUSY;
-    do
-    {
-      status=USBH_Set_Report(&USB_OTG_dev, &USB_Host,reportType,reportId,reportLen,reportBuff);
+      case USBH_NO_CLASS:
+        // process the USB host events for OTG_FS
+        USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
+        break;
+      case USBH_IS_MIDI:
+      default:
+        break;
     }
-    while(status != USBH_OK);
   }
 #endif
+  
 #if !defined(MIOS32_DONT_USE_USB_HS_HOST)
-  // process the USB host events for OTG_HS
-  if(USB_HS_Host_Class != USBH_IS_MIDI){
-    u8 c=3;
-    USBH_Status status = USBH_BUSY;
-    do
-    {
-      status=USBH_Set_Report(&USB_OTG_HS_dev, &USB_HS_Host,0x02,0x00,0x01,&c);
-    }
-    while(status != USBH_OK);
+  switch (USB_HS_Host_Class) {
+#if !defined(MIOS32_DONT_USE_USB_HID)
+    case USBH_IS_HID:
+      // polling delay
+      if(USB_HS_HOST_Process_Delay <= 0){
+        USB_HS_HOST_Process_Delay = MIOS32_USB_HID_PROCESS_DELAY;
+        // process the USB host events for OTG_HS
+        USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+      }else USB_HS_HOST_Process_Delay--;
+      break;
+#endif
+    case USBH_NO_CLASS:
+      // process the USB host events for OTG_HS
+      USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+      break;
+    case USBH_IS_MIDI:
+    default:
+      break;
   }
 #endif
-
   return 0;
 }
+
 
 //! \}
 

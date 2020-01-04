@@ -113,6 +113,6 @@ LCD:       ssd1322
 -------------------------------------------------------------------------------
 arm-none-eabi-size project_build/project.elf
    text	   data	    bss	    dec	    hex	filename
-  84134	    128	  20400	 104662	  198d6	project_build/project.elf
+  84742	    120	  20240	 105102	  19a8e	project_build/project.elf
 20000000 D __ram_start
-20005030 B __ram_end
+20004f88 B __ram_end

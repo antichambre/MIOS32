@@ -11,7 +11,7 @@ Module Private Functions and Variables
 static volatile DSTATUS Stat = STA_NOINIT;	/* Disk status */
 
 extern USB_OTG_CORE_HANDLE          USB_OTG_Core;
-extern USBH_HOST                     USB_Host;
+extern USBH_HOST                     USB_FS_Host;
 
 /*-----------------------------------------------------------------------*/
 /* Initialize Disk Drive                                                 */
@@ -71,7 +71,7 @@ DRESULT disk_read (
     do
     {
       status = USBH_MSC_Read10(&USB_OTG_Core, buff,sector,512 * count);
-      USBH_MSC_HandleBOTXfer(&USB_OTG_Core ,&USB_Host);
+      USBH_MSC_HandleBOTXfer(&USB_OTG_Core ,&USB_FS_Host);
       
       if(!HCD_IsDeviceConnected(&USB_OTG_Core))
       { 
@@ -112,7 +112,7 @@ DRESULT disk_write (
     do
     {
       status = USBH_MSC_Write10(&USB_OTG_Core,(BYTE*)buff,sector,512 * count);
-      USBH_MSC_HandleBOTXfer(&USB_OTG_Core, &USB_Host);
+      USBH_MSC_HandleBOTXfer(&USB_OTG_Core, &USB_FS_Host);
       
       if(!HCD_IsDeviceConnected(&USB_OTG_Core))
       { 
