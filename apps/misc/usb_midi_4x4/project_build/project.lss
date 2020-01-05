@@ -15316,7 +15316,7 @@ static void USBH_InterfaceDeInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
  8013886:	7ac3      	ldrb	r3, [r0, #11]
  8013888:	2b01      	cmp	r3, #1
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
  801388a:	bf0c      	ite	eq
  801388c:	4b0d      	ldreq	r3, [pc, #52]	; (80138c4 <USBH_InterfaceDeInit+0x40>)
 #else
@@ -15449,7 +15449,7 @@ static USBH_Status USBH_InterfaceInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 	USBH_Class_Status* class_status;
 	if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
  80138fc:	4e20      	ldr	r6, [pc, #128]	; (8013980 <USBH_InterfaceInit+0xa0>)
 		class_status = &USB_HS_Host_Class;
 #else
@@ -16238,13 +16238,13 @@ static uint8_t  MIOS32_USB_CLASS_Init (void  *pdev,
  8013c02:	f004 f8f7 	bl	8017df4 <DCD_EP_Open>
 
   // configuration for next transfer
-  DCD_EP_PrepareRx(&USB_OTG_dev,
+  DCD_EP_PrepareRx(&USB_OTG_FS_dev,
  8013c06:	2102      	movs	r1, #2
  8013c08:	4a03      	ldr	r2, [pc, #12]	; (8013c18 <MIOS32_USB_CLASS_Init+0x2c>)
  8013c0a:	4804      	ldr	r0, [pc, #16]	; (8013c1c <MIOS32_USB_CLASS_Init+0x30>)
  8013c0c:	2340      	movs	r3, #64	; 0x40
  8013c0e:	f004 f92b 	bl	8017e68 <DCD_EP_PrepareRx>
-		   (uint8_t*)(USB_rx_buffer),
+		   (uint8_t*)(USB_FS_rx_buffer),
 		   MIOS32_USB_MIDI_DATA_OUT_SIZE);
 #endif
 
@@ -16270,7 +16270,7 @@ static USBH_Status USBH_ClassRequest(USB_OTG_CORE_HANDLE *pdev, void *phost)
  8013c22:	7ac3      	ldrb	r3, [r0, #11]
  8013c24:	2b01      	cmp	r3, #1
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
  8013c26:	bf0c      	ite	eq
  8013c28:	4b07      	ldreq	r3, [pc, #28]	; (8013c48 <USBH_ClassRequest+0x28>)
 #else
@@ -16345,7 +16345,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
  8013c5a:	7ac3      	ldrb	r3, [r0, #11]
  8013c5c:	2b01      	cmp	r3, #1
 #ifndef MIOS32_DONT_USE_USB_HOST
-		class_status = &USB_Host_Class;
+		class_status = &USB_FS_Host_Class;
  8013c5e:	bf0c      	ite	eq
  8013c60:	4b07      	ldreq	r3, [pc, #28]	; (8013c80 <USBH_Handle+0x28>)
 #else
@@ -16694,33 +16694,33 @@ void OTG_FS_IRQHandler(void)
 {
  8013dc4:	b508      	push	{r3, lr}
 #ifndef MIOS32_DONT_USE_USB_HOST
-  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
+  if( USB_OTG_IsHostMode(&USB_OTG_FS_dev) ) {
  8013dc6:	4808      	ldr	r0, [pc, #32]	; (8013de8 <OTG_FS_IRQHandler+0x24>)
  8013dc8:	f003 fb2e 	bl	8017428 <USB_OTG_IsHostMode>
  8013dcc:	b118      	cbz	r0, 8013dd6 <OTG_FS_IRQHandler+0x12>
-    USBH_OTG_ISR_Handler(&USB_OTG_dev);
+    USBH_OTG_ISR_Handler(&USB_OTG_FS_dev);
  8013dce:	4806      	ldr	r0, [pc, #24]	; (8013de8 <OTG_FS_IRQHandler+0x24>)
  8013dd0:	f005 fd94 	bl	80198fc <USBH_OTG_ISR_Handler>
  8013dd4:	e002      	b.n	8013ddc <OTG_FS_IRQHandler+0x18>
   } else {
-    USBD_OTG_ISR_Handler(&USB_OTG_dev);
+    USBD_OTG_ISR_Handler(&USB_OTG_FS_dev);
  8013dd6:	4804      	ldr	r0, [pc, #16]	; (8013de8 <OTG_FS_IRQHandler+0x24>)
  8013dd8:	f004 f8c4 	bl	8017f64 <USBD_OTG_ISR_Handler>
   }
 
-  STM32_USBO_OTG_ISR_Handler(&USB_OTG_dev);
+  STM32_USBO_OTG_ISR_Handler(&USB_OTG_FS_dev);
  8013ddc:	4802      	ldr	r0, [pc, #8]	; (8013de8 <OTG_FS_IRQHandler+0x24>)
 #else
-  USBD_OTG_ISR_Handler(&USB_OTG_dev);
+  USBD_OTG_ISR_Handler(&USB_OTG_FS_dev);
 #endif
 }
  8013dde:	e8bd 4008 	ldmia.w	sp!, {r3, lr}
-    USBH_OTG_ISR_Handler(&USB_OTG_dev);
+    USBH_OTG_ISR_Handler(&USB_OTG_FS_dev);
   } else {
-    USBD_OTG_ISR_Handler(&USB_OTG_dev);
+    USBD_OTG_ISR_Handler(&USB_OTG_FS_dev);
   }
 
-  STM32_USBO_OTG_ISR_Handler(&USB_OTG_dev);
+  STM32_USBO_OTG_ISR_Handler(&USB_OTG_FS_dev);
  8013de2:	f005 be2f 	b.w	8019a44 <STM32_USBO_OTG_ISR_Handler>
  8013de6:	bf00      	nop
  8013de8:	200036cc 	.word	0x200036cc
@@ -17163,10 +17163,10 @@ s32 MIOS32_USB_Init(u32 mode)
 
 #ifndef MIOS32_DONT_USE_USB_HOST  
   /* Init Host Library */
-  USBH_Init(&USB_OTG_dev,
+  USBH_Init(&USB_OTG_FS_dev,
  8013f4c:	4c36      	ldr	r4, [pc, #216]	; (8014028 <MIOS32_USB_Init+0xe8>)
             USB_OTG_FS_CORE_ID,
-            &USB_Host,
+            &USB_FS_Host,
             (USBH_Class_cb_TypeDef *)&MIOS32_MIDI_USBH_Callbacks, 
             (USBH_Usr_cb_TypeDef *)&USBH_USR_Callbacks);
  8013f4e:	4b37      	ldr	r3, [pc, #220]	; (801402c <MIOS32_USB_Init+0xec>)
@@ -17175,7 +17175,7 @@ s32 MIOS32_USB_Init(u32 mode)
 
 #ifndef MIOS32_DONT_USE_USB_HOST  
   /* Init Host Library */
-  USBH_Init(&USB_OTG_dev,
+  USBH_Init(&USB_OTG_FS_dev,
  8013f50:	4a37      	ldr	r2, [pc, #220]	; (8014030 <MIOS32_USB_Init+0xf0>)
  8013f52:	9300      	str	r3, [sp, #0]
 {
@@ -17188,7 +17188,7 @@ s32 MIOS32_USB_Init(u32 mode)
 
 #ifndef MIOS32_DONT_USE_USB_HOST  
   /* Init Host Library */
-  USBH_Init(&USB_OTG_dev,
+  USBH_Init(&USB_OTG_FS_dev,
  8013f56:	2101      	movs	r1, #1
  8013f58:	4620      	mov	r0, r4
  8013f5a:	4b36      	ldr	r3, [pc, #216]	; (8014034 <MIOS32_USB_Init+0xf4>)
@@ -17210,85 +17210,85 @@ s32 MIOS32_USB_Init(u32 mode)
     // don't run complete driver init sequence to ensure that the connection doesn't get lost!
 
     // phys interface re-initialisation (just to ensure)
-    USB_OTG_BSP_Init(&USB_OTG_dev);
+    USB_OTG_BSP_Init(&USB_OTG_FS_dev);
  8013f6c:	4620      	mov	r0, r4
  8013f6e:	f7ff fea9 	bl	8013cc4 <USB_OTG_BSP_Init>
 
     // USBD_Init sets these pointer in the handle
-    USB_OTG_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
+    USB_OTG_FS_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
  8013f72:	4931      	ldr	r1, [pc, #196]	; (8014038 <MIOS32_USB_Init+0xf8>)
-    USB_OTG_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
+    USB_OTG_FS_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
  8013f74:	4a31      	ldr	r2, [pc, #196]	; (801403c <MIOS32_USB_Init+0xfc>)
-    USB_OTG_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
+    USB_OTG_FS_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
  8013f76:	4b32      	ldr	r3, [pc, #200]	; (8014040 <MIOS32_USB_Init+0x100>)
 
     // phys interface re-initialisation (just to ensure)
-    USB_OTG_BSP_Init(&USB_OTG_dev);
+    USB_OTG_BSP_Init(&USB_OTG_FS_dev);
 
     // USBD_Init sets these pointer in the handle
-    USB_OTG_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
+    USB_OTG_FS_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
  8013f78:	f8c4 15e4 	str.w	r1, [r4, #1508]	; 0x5e4
-    USB_OTG_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
-    USB_OTG_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
+    USB_OTG_FS_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
+    USB_OTG_FS_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
 
     // some additional handle init stuff which doesn't hurt
-    USB_OTG_SelectCore(&USB_OTG_dev, USB_OTG_FS_CORE_ID);
+    USB_OTG_SelectCore(&USB_OTG_FS_dev, USB_OTG_FS_CORE_ID);
  8013f7c:	4620      	mov	r0, r4
  8013f7e:	2101      	movs	r1, #1
     // phys interface re-initialisation (just to ensure)
-    USB_OTG_BSP_Init(&USB_OTG_dev);
+    USB_OTG_BSP_Init(&USB_OTG_FS_dev);
 
     // USBD_Init sets these pointer in the handle
-    USB_OTG_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
-    USB_OTG_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
+    USB_OTG_FS_dev.dev.class_cb = (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb;
+    USB_OTG_FS_dev.dev.usr_cb = (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks;
  8013f80:	f8c4 25e8 	str.w	r2, [r4, #1512]	; 0x5e8
-    USB_OTG_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
+    USB_OTG_FS_dev.dev.usr_device = (USBD_DEVICE *)&USR_desc;
  8013f84:	f8c4 35ec 	str.w	r3, [r4, #1516]	; 0x5ec
 
     // some additional handle init stuff which doesn't hurt
-    USB_OTG_SelectCore(&USB_OTG_dev, USB_OTG_FS_CORE_ID);
+    USB_OTG_SelectCore(&USB_OTG_FS_dev, USB_OTG_FS_CORE_ID);
  8013f88:	f003 f926 	bl	80171d8 <USB_OTG_SelectCore>
 
     // enable interrupts
-    USB_OTG_EnableGlobalInt(&USB_OTG_dev);
+    USB_OTG_EnableGlobalInt(&USB_OTG_FS_dev);
  8013f8c:	4620      	mov	r0, r4
  8013f8e:	f003 f9e9 	bl	8017364 <USB_OTG_EnableGlobalInt>
-    USB_OTG_EnableDevInt(&USB_OTG_dev);
+    USB_OTG_EnableDevInt(&USB_OTG_FS_dev);
  8013f92:	4620      	mov	r0, r4
  8013f94:	f003 fc5c 	bl	8017850 <USB_OTG_EnableDevInt>
-    USB_OTG_BSP_EnableInterrupt(&USB_OTG_dev);
+    USB_OTG_BSP_EnableInterrupt(&USB_OTG_FS_dev);
  8013f98:	4620      	mov	r0, r4
  8013f9a:	f7ff ff0f 	bl	8013dbc <USB_OTG_BSP_EnableInterrupt>
 #endif
 
     // select configuration
-    USB_OTG_dev.dev.device_config = 1;
-    USB_OTG_dev.dev.device_status = USB_OTG_CONFIGURED;
+    USB_OTG_FS_dev.dev.device_config = 1;
+    USB_OTG_FS_dev.dev.device_status = USB_OTG_CONFIGURED;
  8013f9e:	2003      	movs	r0, #3
-    USB_OTG_EnableDevInt(&USB_OTG_dev);
-    USB_OTG_BSP_EnableInterrupt(&USB_OTG_dev);
+    USB_OTG_EnableDevInt(&USB_OTG_FS_dev);
+    USB_OTG_BSP_EnableInterrupt(&USB_OTG_FS_dev);
 #endif
 
     // select configuration
-    USB_OTG_dev.dev.device_config = 1;
+    USB_OTG_FS_dev.dev.device_config = 1;
  8013fa0:	2101      	movs	r1, #1
-    USB_OTG_dev.dev.device_status = USB_OTG_CONFIGURED;
+    USB_OTG_FS_dev.dev.device_status = USB_OTG_CONFIGURED;
  8013fa2:	f884 0112 	strb.w	r0, [r4, #274]	; 0x112
 
     // init endpoints
-    MIOS32_USB_CLASS_Init(&USB_OTG_dev, 1);
+    MIOS32_USB_CLASS_Init(&USB_OTG_FS_dev, 1);
  8013fa6:	4620      	mov	r0, r4
-    USB_OTG_EnableDevInt(&USB_OTG_dev);
-    USB_OTG_BSP_EnableInterrupt(&USB_OTG_dev);
+    USB_OTG_EnableDevInt(&USB_OTG_FS_dev);
+    USB_OTG_BSP_EnableInterrupt(&USB_OTG_FS_dev);
 #endif
 
     // select configuration
-    USB_OTG_dev.dev.device_config = 1;
+    USB_OTG_FS_dev.dev.device_config = 1;
  8013fa8:	f884 1110 	strb.w	r1, [r4, #272]	; 0x110
-    USB_OTG_dev.dev.device_status = USB_OTG_CONFIGURED;
+    USB_OTG_FS_dev.dev.device_status = USB_OTG_CONFIGURED;
 
     // init endpoints
-    MIOS32_USB_CLASS_Init(&USB_OTG_dev, 1);
+    MIOS32_USB_CLASS_Init(&USB_OTG_FS_dev, 1);
  8013fac:	f7ff fe1e 	bl	8013bec <MIOS32_USB_CLASS_Init>
 
     // assume that device is (still) configured
@@ -17296,7 +17296,7 @@ s32 MIOS32_USB_Init(u32 mode)
  8013fb0:	f7ff fd90 	bl	8013ad4 <USBD_USR_DeviceConfigured>
  8013fb4:	e011      	b.n	8013fda <MIOS32_USB_Init+0x9a>
     // init USB device and driver
-    USBD_Init(&USB_OTG_dev,
+    USBD_Init(&USB_OTG_FS_dev,
 	      USB_OTG_FS_CORE_ID,
 	      (USBD_DEVICE *)&USR_desc,
 	      (USBD_Class_cb_TypeDef *)&MIOS32_USB_CLASS_cb,
@@ -17307,7 +17307,7 @@ s32 MIOS32_USB_Init(u32 mode)
     USBD_USR_DeviceConfigured();
   } else {
     // init USB device and driver
-    USBD_Init(&USB_OTG_dev,
+    USBD_Init(&USB_OTG_FS_dev,
  8013fb8:	4a21      	ldr	r2, [pc, #132]	; (8014040 <MIOS32_USB_Init+0x100>)
  8013fba:	4b1f      	ldr	r3, [pc, #124]	; (8014038 <MIOS32_USB_Init+0xf8>)
  8013fbc:	9000      	str	r0, [sp, #0]
@@ -17319,7 +17319,7 @@ s32 MIOS32_USB_Init(u32 mode)
 	      (USBD_Usr_cb_TypeDef *)&USBD_USR_Callbacks);
 
     // disconnect device
-    DCD_DevDisconnect(&USB_OTG_dev);
+    DCD_DevDisconnect(&USB_OTG_FS_dev);
  8013fc6:	4818      	ldr	r0, [pc, #96]	; (8014028 <MIOS32_USB_Init+0xe8>)
  8013fc8:	f003 ffcb 	bl	8017f62 <DCD_DevDisconnect>
 * @param  usec : Value of delay required in micro sec
@@ -17335,7 +17335,7 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
     USB_OTG_BSP_mDelay(50);
 
     // connect device
-    DCD_DevConnect(&USB_OTG_dev);
+    DCD_DevConnect(&USB_OTG_FS_dev);
  8013fd4:	4814      	ldr	r0, [pc, #80]	; (8014028 <MIOS32_USB_Init+0xe8>)
  8013fd6:	f003 ffc3 	bl	8017f60 <DCD_DevConnect>
   }
@@ -17349,16 +17349,16 @@ void USB_OTG_BSP_uDelay (const uint32_t usec)
  8013fe2:	690a      	ldr	r2, [r1, #16]
  8013fe4:	0553      	lsls	r3, r2, #21
  8013fe6:	d502      	bpl.n	8013fee <MIOS32_USB_Init+0xae>
-    USB_OTG_SetCurrentMode(&USB_OTG_dev, DEVICE_MODE);
+    USB_OTG_SetCurrentMode(&USB_OTG_FS_dev, DEVICE_MODE);
  8013fe8:	480f      	ldr	r0, [pc, #60]	; (8014028 <MIOS32_USB_Init+0xe8>)
  8013fea:	2100      	movs	r1, #0
  8013fec:	e005      	b.n	8013ffa <MIOS32_USB_Init+0xba>
   } else {
-    USB_OTG_DriveVbus(&USB_OTG_dev, 1);
+    USB_OTG_DriveVbus(&USB_OTG_FS_dev, 1);
  8013fee:	480e      	ldr	r0, [pc, #56]	; (8014028 <MIOS32_USB_Init+0xe8>)
  8013ff0:	2101      	movs	r1, #1
  8013ff2:	f003 fa57 	bl	80174a4 <USB_OTG_DriveVbus>
-    USB_OTG_SetCurrentMode(&USB_OTG_dev, HOST_MODE);
+    USB_OTG_SetCurrentMode(&USB_OTG_FS_dev, HOST_MODE);
  8013ff6:	480c      	ldr	r0, [pc, #48]	; (8014028 <MIOS32_USB_Init+0xe8>)
  8013ff8:	2101      	movs	r1, #1
  8013ffa:	f003 f9f9 	bl	80173f0 <USB_OTG_SetCurrentMode>
@@ -17874,7 +17874,7 @@ static void MIOS32_USB_MIDI_RxBufferHandler(void)
   s16 count;
 
   // before using the handle: ensure that device (and class) already configured
-  if( USB_OTG_dev.dev.class_cb == NULL ) {
+  if( USB_OTG_FS_dev.dev.class_cb == NULL ) {
  8014272:	4c28      	ldr	r4, [pc, #160]	; (8014314 <MIOS32_USB_MIDI_RxBufferHandler+0xa4>)
  8014274:	f8d4 35e4 	ldr.w	r3, [r4, #1508]	; 0x5e4
  8014278:	2b00      	cmp	r3, #0
@@ -17888,7 +17888,7 @@ static void MIOS32_USB_MIDI_RxBufferHandler(void)
 
   // check if we can receive new data and get packages to be received from OUT pipe
   u32 ep_num = MIOS32_USB_MIDI_DATA_OUT_EP & 0x7f;
-  USB_OTG_EP *ep = &USB_OTG_dev.dev.out_ep[ep_num];
+  USB_OTG_EP *ep = &USB_OTG_FS_dev.dev.out_ep[ep_num];
   if( USB_FS_MIDI_machine.rx_buffer_new_data && (count=ep->xfer_count>>2) ) {
  8014280:	4a25      	ldr	r2, [pc, #148]	; (8014318 <MIOS32_USB_MIDI_RxBufferHandler+0xa8>)
  8014282:	f892 010a 	ldrb.w	r0, [r2, #266]	; 0x10a
@@ -17975,7 +17975,7 @@ static void MIOS32_USB_MIDI_RxBufferHandler(void)
  80142f4:	4908      	ldr	r1, [pc, #32]	; (8014318 <MIOS32_USB_MIDI_RxBufferHandler+0xa8>)
 
       // configuration for next transfer
-      DCD_EP_PrepareRx(&USB_OTG_dev,
+      DCD_EP_PrepareRx(&USB_OTG_FS_dev,
  80142f6:	4807      	ldr	r0, [pc, #28]	; (8014314 <MIOS32_USB_MIDI_RxBufferHandler+0xa4>)
 	  ++USB_FS_MIDI_machine.rx_buffer_size;
 	}
@@ -17987,7 +17987,7 @@ static void MIOS32_USB_MIDI_RxBufferHandler(void)
  80142fa:	f881 210a 	strb.w	r2, [r1, #266]	; 0x10a
 
       // configuration for next transfer
-      DCD_EP_PrepareRx(&USB_OTG_dev,
+      DCD_EP_PrepareRx(&USB_OTG_FS_dev,
  80142fe:	2340      	movs	r3, #64	; 0x40
  8014300:	2102      	movs	r1, #2
  8014302:	4a06      	ldr	r2, [pc, #24]	; (801431c <MIOS32_USB_MIDI_RxBufferHandler+0xac>)
@@ -17999,7 +17999,7 @@ static void MIOS32_USB_MIDI_RxBufferHandler(void)
   MIOS32_IRQ_Enable();
 }
  8014308:	e8bd 4070 	ldmia.w	sp!, {r4, r5, r6, lr}
-		       (uint8_t*)(USB_rx_buffer),
+		       (uint8_t*)(USB_FS_rx_buffer),
 		       MIOS32_USB_MIDI_DATA_OUT_SIZE);
     }
   }
@@ -18018,7 +18018,7 @@ static void MIOS32_USB_MIDI_RxBufferHandler(void)
 static void MIOS32_USB_MIDI_TxBufferHandler(void)
 {
   // before using the handle: ensure that device (and class) already configured
-  if( USB_OTG_dev.dev.class_cb == NULL )
+  if( USB_OTG_FS_dev.dev.class_cb == NULL )
  8014320:	4b27      	ldr	r3, [pc, #156]	; (80143c0 <MIOS32_USB_MIDI_TxBufferHandler+0xa0>)
  8014322:	f8d3 05e4 	ldr.w	r0, [r3, #1508]	; 0x5e4
 //!
@@ -18029,7 +18029,7 @@ static void MIOS32_USB_MIDI_TxBufferHandler(void)
 {
  8014326:	b510      	push	{r4, lr}
   // before using the handle: ensure that device (and class) already configured
-  if( USB_OTG_dev.dev.class_cb == NULL )
+  if( USB_OTG_FS_dev.dev.class_cb == NULL )
  8014328:	2800      	cmp	r0, #0
  801432a:	d048      	beq.n	80143be <MIOS32_USB_MIDI_TxBufferHandler+0x9e>
   //   - last transfer finished
@@ -18124,7 +18124,7 @@ static void MIOS32_USB_MIDI_TxBufferHandler(void)
     	  USB_FS_MIDI_machine.tx_buffer_tail = 0;
     }
 
-    DCD_EP_Tx(&USB_OTG_dev, MIOS32_USB_MIDI_DATA_IN_EP, (uint8_t*)&USB_tx_buffer, count*4);
+    DCD_EP_Tx(&USB_OTG_FS_dev, MIOS32_USB_MIDI_DATA_IN_EP, (uint8_t*)&USB_tx_buffer, count*4);
  80143aa:	4805      	ldr	r0, [pc, #20]	; (80143c0 <MIOS32_USB_MIDI_TxBufferHandler+0xa0>)
  80143ac:	4a06      	ldr	r2, [pc, #24]	; (80143c8 <MIOS32_USB_MIDI_TxBufferHandler+0xa8>)
  80143ae:	2181      	movs	r1, #129	; 0x81
@@ -18137,7 +18137,7 @@ static void MIOS32_USB_MIDI_TxBufferHandler(void)
  80143b6:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
     }
 
-    DCD_EP_Tx(&USB_OTG_dev, MIOS32_USB_MIDI_DATA_IN_EP, (uint8_t*)&USB_tx_buffer, count*4);
+    DCD_EP_Tx(&USB_OTG_FS_dev, MIOS32_USB_MIDI_DATA_IN_EP, (uint8_t*)&USB_tx_buffer, count*4);
   }
 
   MIOS32_IRQ_Enable();
@@ -18906,13 +18906,13 @@ s32 MIOS32_USB_MIDI_PackageReceive(mios32_midi_package_t *package)
 s32 MIOS32_USB_MIDI_Periodic_mS(void)
 {
  8014718:	b508      	push	{r3, lr}
-  if( USB_OTG_IsHostMode(&USB_OTG_dev) ) {
+  if( USB_OTG_IsHostMode(&USB_OTG_FS_dev) ) {
  801471a:	480d      	ldr	r0, [pc, #52]	; (8014750 <MIOS32_USB_MIDI_Periodic_mS+0x38>)
  801471c:	f002 fe84 	bl	8017428 <USB_OTG_IsHostMode>
  8014720:	b140      	cbz	r0, 8014734 <MIOS32_USB_MIDI_Periodic_mS+0x1c>
 #ifndef MIOS32_DONT_USE_USB_HOST
     // process the USB host events for OTG_FS
-	if(USB_Host_Class != USBH_IS_HID)USBH_Process(&USB_OTG_dev, &USB_Host);
+	if(USB_FS_Host_Class != USBH_IS_HID)USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
  8014722:	4b0c      	ldr	r3, [pc, #48]	; (8014754 <MIOS32_USB_MIDI_Periodic_mS+0x3c>)
  8014724:	7818      	ldrb	r0, [r3, #0]
  8014726:	2802      	cmp	r0, #2

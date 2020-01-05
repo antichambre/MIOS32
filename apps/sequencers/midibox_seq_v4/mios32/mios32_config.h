@@ -35,7 +35,9 @@
 #define MIOS32_USB_MIDI_NUM_PORTS 4
 
 // port used for debugging via MIDI
-//#define MIOS32_MIDI_DEBUG_PORT USB0
+#define MIOS32_MIDI_DEBUG_PORT UART0
+
+#define MIOS32_MIDI_USBH_DEBUG
 
 // function used to output debug messages (must be printf compatible!)
 extern void APP_SendDebugMessage(char *format, ...);
@@ -147,7 +149,7 @@ extern void APP_SendDebugMessage(char *format, ...);
 
 
 // configure IIC_MIDI
-#define MIOS32_IIC_MIDI_NUM 4
+#define MIOS32_IIC_MIDI_NUM 0
 // all interfaces are "OUT only"
 #define MIOS32_IIC_MIDI0_ENABLED    1
 #define MIOS32_IIC_MIDI1_ENABLED    1

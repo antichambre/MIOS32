@@ -47,8 +47,8 @@ Common symbol       size              file
 mios32_srio_din_changed
                     0x10              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/common/mios32_srio.o
 SET_TEST_MODE       0x4               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_core.o
-USB_Host_Class      0x1               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
-USB_rx_buffer       0x40              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_FS_Host_Class      0x1               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_FS_rx_buffer       0x40              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 USBH_CfgDesc        0x200             project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_HOST_Library/Core/src/usbh_stdreq.o
 ucHeap              0x2800            project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/programming_models/traditional/main.o
 xQueueRegistry      0x50              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/FreeRTOS/Source/queue.o
@@ -70,13 +70,13 @@ mios32_lcd_cursor_map
 mios32_lcd_line     0x2               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/common/mios32_lcd.o
 mios32_srio_din_buffer
                     0x10              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/common/mios32_srio.o
-USB_OTG_dev         0xa94             project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_OTG_FS_dev         0xa94             project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 USB_HS_HID_Setup    0x8               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb_hid.o
 USB_HS_HID_Report   0x48              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb_hid.o
 USB_HS_HID_machine  0x54              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb_hid.o
 USB_OTG_HS_dev      0xa94             project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 USB_FS_HID_Setup    0x8               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb_hid.o
-USB_Host            0xa4              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
+USB_FS_Host            0xa4              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
 USB_FS_HID_Report   0x48              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb_hid.o
 USBD_StrDesc        0x64              project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/drivers/STM32F4xx/v1.1.0/STM32_USB_Device_Library/Core/src/usbd_req.o
 mios32_lcd_x        0x2               project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/common/mios32_lcd.o
@@ -4979,13 +4979,13 @@ END GROUP
                 0x00000000200035dc                mios32_lcd_x
  *fill*         0x00000000200035de        0x2 00
  COMMON         0x00000000200035e0     0x16b8 project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb.o
-                0x00000000200035e0                USB_Host_Class
-                0x00000000200035e4                USB_rx_buffer
+                0x00000000200035e0                USB_FS_Host_Class
+                0x00000000200035e4                USB_FS_rx_buffer
                 0x0000000020003624                USB_HS_Host
                 0x00000000200036c8                USB_HS_Host_Class
-                0x00000000200036cc                USB_OTG_dev
+                0x00000000200036cc                USB_OTG_FS_dev
                 0x0000000020004160                USB_OTG_HS_dev
-                0x0000000020004bf4                USB_Host
+                0x0000000020004bf4                USB_FS_Host
  COMMON         0x0000000020004c98      0x160 project_build//Volumes/DATA/Bruno/eclipse-workspace/mios32/trunk/mios32/STM32F4xx/mios32_usb_hid.o
                 0x0000000020004c98                USB_FS_HID_machine
                 0x0000000020004cec                USB_FS_HID_Desc

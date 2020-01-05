@@ -831,13 +831,13 @@
 200035d6 B mios32_lcd_cursor_map
 200035da B mios32_lcd_line
 200035dc B mios32_lcd_x
-200035e0 B USB_Host_Class
-200035e4 B USB_rx_buffer
+200035e0 B USB_FS_Host_Class
+200035e4 B USB_FS_rx_buffer
 20003624 B USB_HS_Host
 200036c8 B USB_HS_Host_Class
-200036cc B USB_OTG_dev
+200036cc B USB_OTG_FS_dev
 20004160 B USB_OTG_HS_dev
-20004bf4 B USB_Host
+20004bf4 B USB_FS_Host
 20004c98 B USB_FS_HID_machine
 20004cec B USB_FS_HID_Desc
 20004cf6 B USB_HS_HID_Desc

@@ -89,6 +89,7 @@ u8 app_din_testmode;
 static s32 NOTIFY_MIDI_Rx(mios32_midi_port_t port, u8 byte);
 static s32 NOTIFY_MIDI_Tx(mios32_midi_port_t port, mios32_midi_package_t package);
 static s32 NOTIFY_MIDI_TimeOut(mios32_midi_port_t port);
+static void APP_KBD_NotifyChange(mios32_kbd_state_t kbd_state, mios32_kbd_key_t kbd_key);
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -166,6 +167,9 @@ void APP_Init(void)
 
   // install timeout callback function
   MIOS32_MIDI_TimeOutCallback_Init(&NOTIFY_MIDI_TimeOut);
+  
+  // install HID Keyboard callback function
+  MIOS32_USB_HID_KeyboardCallback_Init(APP_KBD_NotifyChange);
 }
 
 
@@ -468,6 +472,19 @@ void APP_ENC_NotifyChange(u32 encoder, s32 incrementer)
 void APP_AIN_NotifyChange(u32 pin, u32 pin_value)
 {
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// This hook is called on HID Keyboard change
+/////////////////////////////////////////////////////////////////////////////
+void APP_KBD_NotifyChange(mios32_kbd_state_t kbd_state, mios32_kbd_key_t kbd_key)
+{
+  // notify CS
+  //ARP_CS_KBD_NotifyChange(kbd_state, kbd_key);
+//#if DEBUG_VERBOSE_LEVEL >= 2
+  DEBUG_MSG("APP_KBD_NotifyChange(Locks:%d, Modifiers:%d, Key:0x%02x[%c]%s)\n", kbd_state.locks, kbd_state.modifiers, kbd_key.code, kbd_key.character, kbd_key.value? "pushed":"released");
+//#endif
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // This task is called periodically each mS
