@@ -51,6 +51,7 @@ extern "C" {
 #define FILE_ERR_INVALID_SESSION_NAME -24 // FILE_LoadSessionName()
 #define FILE_ERR_UPDATE_FREE      -25 // FILE_UpdateFreeBytes()
 #define FILE_ERR_REMOVE           -26 // FILE_Remove() failed
+#define FILE_ERR_RENAME           -27 // FILE_Remove() failed
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -117,6 +118,7 @@ extern s32 FILE_Copy(char *src_file, char *dst_file);
 extern s32 FILE_MakeDir(char *path);
 
 extern s32 FILE_Remove(char *path);
+extern s32 FILE_Rename(char *old_path, char *new_path);
 
 extern s32 FILE_FileExists(char *filepath);
 extern s32 FILE_DirExists(char *path);

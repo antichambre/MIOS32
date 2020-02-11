@@ -33,7 +33,10 @@
 extern USB_OTG_CORE_HANDLE  USB_OTG_FS_dev;
 extern uint32_t USB_FS_rx_buffer[MIOS32_USB_MIDI_DATA_OUT_SIZE/4];
 static uint32_t USB_FS_tx_buffer[MIOS32_USB_MIDI_DATA_IN_SIZE/4];
-
+#ifndef MIOS32_DONT_USE_USB_HS_HOST
+__ALIGN_BEGIN uint32_t USB_HS_rx_buffer[MIOS32_USB_MIDI_DATA_OUT_SIZE/4] __ALIGN_END ;
+__ALIGN_BEGIN uint32_t USB_HS_tx_buffer[MIOS32_USB_MIDI_DATA_IN_SIZE/4] __ALIGN_END ;
+#endif
 
 #if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HS_HOST)
 
@@ -55,12 +58,13 @@ typedef enum {
   USBH_MIDI_IDLE,
   USBH_MIDI_RX,
   USBH_MIDI_TX,
-} USBH_FS_MIDI_transfer_state_t;
+} USBH_MIDI_transfer_state_t;
 
 #endif
 
 #ifndef MIOS32_DONT_USE_USB_HOST
 // imported from mios32_usb.c
+extern USB_OTG_CORE_HANDLE  USB_OTG_HS_dev;
 extern USBH_HOST USB_FS_Host;
 
 static u8  USBH_FS_hc_num_in;
@@ -71,9 +75,9 @@ static u8  USBH_FS_BulkInEpSize;
 static u8  USBH_FS_tx_count;
 static u16 USBH_FS_BulkOutEpSize;
 
-static USBH_FS_MIDI_transfer_state_t USBH_FS_MIDI_transfer_state;
+static USBH_MIDI_transfer_state_t USBH_FS_MIDI_transfer_state;
 
-static u16 USB_HOST_Process_Delay;
+//static u16 USB_HOST_Process_Delay;
 
 extern USBH_Class_Status USB_FS_Host_Class;
 #else
@@ -81,16 +85,24 @@ extern USBH_Class_Status USB_FS_Host_Class;
 #endif
 
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-//// imported from mios32_usb.c
-//extern USB_OTG_CORE_HANDLE  USB_OTG_HS_dev;
-//extern USBH_HOST USB_HS_Host;
-//extern USBH_Class_Status USB_HS_Host_Class;
-//
-//static uint32_t USB_HS_rx_buffer[MIOS32_USB_MIDI_DATA_OUT_SIZE/4];
-//static uint32_t USB_HS_tx_buffer[MIOS32_USB_MIDI_DATA_IN_SIZE/4];
-//static USB_MIDI_machine_t USB_HS_MIDI_machine;
-//
+// imported from mios32_usb.c
+extern USBH_HOST USB_HS_Host;
 
+static u8  USBH_HS_hc_num_in;
+static u8  USBH_HS_hc_num_out;
+static u8  USBH_HS_BulkOutEp;
+static u8  USBH_HS_BulkInEp;
+static u8  USBH_HS_BulkInEpSize;
+static u8  USBH_HS_tx_count;
+static u16 USBH_HS_BulkOutEpSize;
+
+static USBH_MIDI_transfer_state_t USBH_HS_MIDI_transfer_state;
+
+//static u16 USB_HOST_Process_Delay;
+
+extern USBH_Class_Status USB_HS_Host_Class;
+#else
+# warning "USB FS Host not supported"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////
@@ -123,12 +135,22 @@ static u8 FS_transfer_possible = 0;
 
 
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-//// Rx buffer for HS Core
-//static u32 HS_rx_buffer[MIOS32_USB_MIDI_RX_BUFFER_SIZE];
-//// Tx buffer for HS Core
-//static u32 HS_tx_buffer[MIOS32_USB_MIDI_TX_BUFFER_SIZE];
-//
-//static USBH_FS_MIDI_transfer_state_t  HS_transfer_state;
+// Rx buffer
+static u32 HS_rx_buffer[MIOS32_USB_MIDI_RX_BUFFER_SIZE];
+static volatile u16 HS_rx_buffer_tail;
+static volatile u16 HS_rx_buffer_head;
+static volatile u16 HS_rx_buffer_size;
+static volatile u8 HS_rx_buffer_new_data;
+
+// Tx buffer
+static u32 HS_tx_buffer[MIOS32_USB_MIDI_TX_BUFFER_SIZE];
+static volatile u16 HS_tx_buffer_tail;
+static volatile u16 HS_tx_buffer_head;
+static volatile u16 HS_tx_buffer_size;
+static volatile u8 HS_tx_buffer_busy;
+
+// transfer possible?
+static u8 HS_transfer_possible = 0;
 #endif
 
 
@@ -143,12 +165,7 @@ s32 MIOS32_USB_MIDI_Init(u32 mode)
   // currently only mode 0 supported
   if( mode != 0 )
     return -1; // unsupported mode
-//#ifndef MIOS32_DONT_USE_USB_HOST
-//  USB_FS_MIDI_machine.FS_transfer_possible = 0;
-//#endif
-//#ifndef MIOS32_DONT_USE_USB_HS_HOST
-//  USB_HS_MIDI_machine.FS_transfer_possible = 0;
-//#endif
+
   return 0; // no error
 }
 
@@ -183,23 +200,23 @@ s32 MIOS32_USB_MIDI_ChangeConnectionState(u8 dev, u8 connected)
     }
   }
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-  //  else{
-  //    // in all cases: re-initialize USB MIDI driver
-  //    // clear buffer counters and busy/wait signals again (e.g., so that no invalid data will be sent out)
-  //    USB_HS_MIDI_machine.FS_rx_buffer_tail = USB_HS_MIDI_machine.FS_rx_buffer_head = USB_HS_MIDI_machine.FS_rx_buffer_size = 0;
-  //    USB_HS_MIDI_machine.FS_rx_buffer_new_data = 0; // no data received yet
-  //    USB_HS_MIDI_machine.FS_tx_buffer_tail = USB_HS_MIDI_machine.FS_tx_buffer_head = USB_HS_MIDI_machine.FS_tx_buffer_size = 0;
-  //    if( connected ) {
-  //      USB_HS_MIDI_machine.FS_transfer_possible = 1;
-  //      USB_HS_MIDI_machine.FS_tx_buffer_busy = 0; // buffer not busy anymore
-  //      HS_transfer_state = USBH_MIDI_IDLE;
-  //
-  //    } else {
-  //      // cable disconnected: disable transfers
-  //      USB_HS_MIDI_machine.FS_transfer_possible = 0;
-  //      USB_HS_MIDI_machine.FS_tx_buffer_busy = 1; // buffer busy
-  //    }
-  //  }
+  else{
+    // in all cases: re-initialize USB MIDI driver
+    // clear buffer counters and busy/wait signals again (e.g., so that no invalid data will be sent out)
+    HS_rx_buffer_tail = HS_rx_buffer_head = HS_rx_buffer_size = 0;
+    HS_rx_buffer_new_data = 0; // no data received yet
+    HS_tx_buffer_tail = HS_tx_buffer_head = HS_tx_buffer_size = 0;
+    
+    if( connected ) {
+      HS_transfer_possible = 1;
+      HS_tx_buffer_busy = 0; // buffer not busy anymore
+      USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+    } else {
+      // cable disconnected: disable transfers
+      HS_transfer_possible = 0;
+      HS_tx_buffer_busy = 1; // buffer busy
+    }
+  }
 #endif
   return 0; // no error
 }
@@ -227,12 +244,12 @@ s32 MIOS32_USB_MIDI_CheckAvailable(u8 cable)
       return FS_transfer_possible ? 1 : 0;
     }
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-//  }else if(USB_OTG_IsDeviceMode(&USB_OTG_HS_dev)){
-//    // toDo: Get available port number from descriptor
-//    return HS_transfer_possible ? 1 : 0;
+  }else if(USB_OTG_IsHostMode(&USB_OTG_HS_dev)){
+    // toDo: Get available port number from descriptor
+    return HS_transfer_possible ? 1 : 0;
 #endif
   }
-  return 0; // never reached
+  return 0;
   
 }
 
@@ -249,32 +266,63 @@ s32 MIOS32_USB_MIDI_CheckAvailable(u8 cable)
 s32 MIOS32_USB_MIDI_PackageSend_NonBlocking(mios32_midi_package_t package)
 {
   // device available?
+#ifndef MIOS32_DONT_USE_USB_HS_HOST
+  if( !FS_transfer_possible && !HS_transfer_possible )
+#else
   if( !FS_transfer_possible )
+#endif
     return -1;
-
-  // buffer full?
-  if( FS_tx_buffer_size >= (MIOS32_USB_MIDI_TX_BUFFER_SIZE-1) ) {
-    // call USB handler, so that we are able to get the buffer free again on next execution
-    // (this call simplifies polling loops!)
-    MIOS32_USB_MIDI_TxBufferHandler();
-
-    // device still available?
-    // (ensures that polling loop terminates if cable has been disconnected)
-    if( !FS_transfer_possible )
-      return -1;
-
-    // notify that buffer was full (request retry)
-    return -2;
+    
+  if(package.cable<8){
+    // buffer full?
+    if( FS_tx_buffer_size >= (MIOS32_USB_MIDI_TX_BUFFER_SIZE-1) ) {
+      if( USB_OTG_IsDeviceMode(&USB_OTG_FS_dev) ) {
+        // call USB handler, so that we are able to get the buffer free again on next execution
+        // (this call simplifies polling loops!)
+        // Note: Only in Device mode!
+        MIOS32_USB_MIDI_TxBufferHandler();
+      }
+      // device still available?
+      // (ensures that polling loop terminates if cable has been disconnected)
+      if( !FS_transfer_possible )
+        return -1;
+      
+      // notify that buffer was full (request retry)
+      return -2;
+    }
+    
+    // put package into buffer - this operation should be atomic!
+    MIOS32_IRQ_Disable();
+    FS_tx_buffer[FS_tx_buffer_head++] = package.ALL;
+    if( FS_tx_buffer_head >= MIOS32_USB_MIDI_TX_BUFFER_SIZE )
+      FS_tx_buffer_head = 0;
+    ++FS_tx_buffer_size;
+    MIOS32_IRQ_Enable();
   }
-
-  // put package into buffer - this operation should be atomic!
-  MIOS32_IRQ_Disable();
-  FS_tx_buffer[FS_tx_buffer_head++] = package.ALL;
-  if( FS_tx_buffer_head >= MIOS32_USB_MIDI_TX_BUFFER_SIZE )
-    FS_tx_buffer_head = 0;
-  ++FS_tx_buffer_size;
-  MIOS32_IRQ_Enable();
-  
+#ifndef MIOS32_DONT_USE_USB_HS_HOST
+  else{
+    // buffer full?
+    if( HS_tx_buffer_size >= (MIOS32_USB_MIDI_TX_BUFFER_SIZE-1) ) {
+      // device still available?
+      // (ensures that polling loop terminates if cable has been disconnected)
+      if( !HS_transfer_possible )
+        return -1;
+      
+      // notify that buffer was full (request retry)
+      return -2;
+    }
+    
+    // put package into buffer - this operation should be atomic!
+    MIOS32_IRQ_Disable();
+    // cable number correction
+    package.cable -=8;
+    HS_tx_buffer[HS_tx_buffer_head++] = package.ALL;
+    if( HS_tx_buffer_head >= MIOS32_USB_MIDI_TX_BUFFER_SIZE )
+      HS_tx_buffer_head = 0;
+    ++HS_tx_buffer_size;
+    MIOS32_IRQ_Enable();
+  }
+#endif
   return 0;
 }
 
@@ -335,16 +383,16 @@ s32 MIOS32_USB_MIDI_PackageReceive(mios32_midi_package_t *package)
     return FS_rx_buffer_size;
     
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-//    // package received from OTG_HS?
-//  }else if( USB_HS_MIDI_machine.FS_rx_buffer_size ){
-//    // get package - this operation should be atomic!
-//    MIOS32_IRQ_Disable();
-//    package->ALL = HS_rx_buffer[USB_HS_MIDI_machine.FS_rx_buffer_tail];
-//    if( ++USB_HS_MIDI_machine.FS_rx_buffer_tail >= MIOS32_USB_MIDI_RX_BUFFER_SIZE )
-//      USB_HS_MIDI_machine.FS_rx_buffer_tail = 0;
-//    --USB_HS_MIDI_machine.FS_rx_buffer_size;
-//    MIOS32_IRQ_Enable();
-//    return USB_HS_MIDI_machine.FS_rx_buffer_size;
+    // package received from OTG_HS?
+  }else if( HS_rx_buffer_size ){
+    // get package - this operation should be atomic!
+    MIOS32_IRQ_Disable();
+    package->ALL = HS_rx_buffer[HS_rx_buffer_tail];
+    if( ++HS_rx_buffer_tail >= MIOS32_USB_MIDI_RX_BUFFER_SIZE )
+      HS_rx_buffer_tail = 0;
+    --HS_rx_buffer_size;
+    MIOS32_IRQ_Enable();
+    return HS_rx_buffer_size;
 #endif
   }else return -1;
 }
@@ -367,13 +415,8 @@ s32 MIOS32_USB_MIDI_Periodic_mS(void)
 {
   if( USB_OTG_IsHostMode(&USB_OTG_FS_dev) ) {
 #ifndef MIOS32_DONT_USE_USB_HOST
-    // delay
-    if(USB_HOST_Process_Delay == 0){
-      USB_HOST_Process_Delay = 15;
-      // process the USB host events for OTG_FS
-      if(USB_FS_Host_Class == USBH_IS_MIDI)USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
-    }else USB_HOST_Process_Delay--;
-    
+    // process the USB host events for OTG_FS
+    if(USB_FS_Host_Class == USBH_IS_MIDI)USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
 #endif
   }else{
     // check for received packages
@@ -383,10 +426,10 @@ s32 MIOS32_USB_MIDI_Periodic_mS(void)
     MIOS32_USB_MIDI_TxBufferHandler();
   }
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-  //  if( USB_OTG_IsHostMode(&USB_OTG_HS_dev) ) {
-  //    // process the USB host events for OTG_HS
-  //    if(USB_HS_Host_Class == USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-  //  }
+  if( USB_OTG_IsHostMode(&USB_OTG_HS_dev) ) {
+    // process the USB host events for OTG_HS
+    if(USB_HS_Host_Class == USBH_IS_MIDI)USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
+  }
 #endif
   
   return 0;
@@ -539,7 +582,6 @@ static USBH_Status USBH_InterfaceInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
   
   if(pdev->cfg.coreID == USB_OTG_FS_CORE_ID){
 #ifndef MIOS32_DONT_USE_USB_HOST
-    
     MIOS32_USB_MIDI_ChangeConnectionState(0, 0);
     
     int i;
@@ -587,7 +629,7 @@ static USBH_Status USBH_InterfaceInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
       }
     }
     
-    if( MIOS32_USB_MIDI_CheckAvailable(0) ) {
+    if( !MIOS32_USB_MIDI_CheckAvailable(0) ) {
       pphost->usr_cb->DeviceNotSupported();
     }
     
@@ -597,7 +639,58 @@ static USBH_Status USBH_InterfaceInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 #endif
   }else{
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-    // toDo:
+    MIOS32_USB_MIDI_ChangeConnectionState(1, 0);
+    
+    int i;
+    for(i=0; i<pphost->device_prop.Cfg_Desc.bNumInterfaces && i < USBH_MAX_NUM_INTERFACES; ++i) {
+      
+      if( (pphost->device_prop.Itf_Desc[i].bInterfaceClass == 1) &&
+         (pphost->device_prop.Itf_Desc[i].bInterfaceSubClass == 3) ) {
+        
+        if( pphost->device_prop.Ep_Desc[i][0].bEndpointAddress & 0x80 ) {
+          USBH_HS_BulkInEp = (pphost->device_prop.Ep_Desc[i][0].bEndpointAddress);
+          USBH_HS_BulkInEpSize  = pphost->device_prop.Ep_Desc[i][0].wMaxPacketSize;
+        } else {
+          USBH_HS_BulkOutEp = (pphost->device_prop.Ep_Desc[i][0].bEndpointAddress);
+          USBH_HS_BulkOutEpSize  = pphost->device_prop.Ep_Desc[i] [0].wMaxPacketSize;
+        }
+        
+        if( pphost->device_prop.Ep_Desc[i][1].bEndpointAddress & 0x80 ) {
+          USBH_HS_BulkInEp = (pphost->device_prop.Ep_Desc[i][1].bEndpointAddress);
+          USBH_HS_BulkInEpSize  = pphost->device_prop.Ep_Desc[i][1].wMaxPacketSize;
+        } else {
+          USBH_HS_BulkOutEp = (pphost->device_prop.Ep_Desc[i][1].bEndpointAddress);
+          USBH_HS_BulkOutEpSize  = pphost->device_prop.Ep_Desc[i][1].wMaxPacketSize;
+        }
+        
+        USBH_HS_hc_num_out = USBH_Alloc_Channel(pdev, USBH_HS_BulkOutEp);
+        USBH_HS_hc_num_in = USBH_Alloc_Channel(pdev, USBH_HS_BulkInEp);
+        
+        /* Open the new channels */
+        USBH_Open_Channel(pdev,
+                          USBH_HS_hc_num_out,
+                          pphost->device_prop.address,
+                          pphost->device_prop.speed,
+                          EP_TYPE_BULK,
+                          USBH_HS_BulkOutEpSize);
+        
+        USBH_Open_Channel(pdev,
+                          USBH_HS_hc_num_in,
+                          pphost->device_prop.address,
+                          pphost->device_prop.speed,
+                          EP_TYPE_BULK,
+                          USBH_HS_BulkInEpSize);
+        
+        MIOS32_USB_MIDI_ChangeConnectionState(1, 1);
+        break;
+      }
+    }
+    
+    if( !MIOS32_USB_MIDI_CheckAvailable(1) ) {
+      pphost->usr_cb->DeviceNotSupported();
+    }
+    
+    return USBH_OK;
 #else
     return USBH_NOT_SUPPORTED; //
 #endif
@@ -633,7 +726,18 @@ static void USBH_InterfaceDeInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 #endif
   }else{
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-    // toDo:
+    if( USBH_HS_hc_num_out ) {
+      USB_OTG_HC_Halt(pdev, USBH_HS_hc_num_out);
+      USBH_Free_Channel  (pdev, USBH_HS_hc_num_out);
+      USBH_HS_hc_num_out = 0;     /* Reset the Channel as Free */
+    }
+    
+    if( USBH_HS_hc_num_in ) {
+      USB_OTG_HC_Halt(pdev, USBH_HS_hc_num_in);
+      USBH_Free_Channel  (pdev, USBH_HS_hc_num_in);
+      USBH_HS_hc_num_in = 0;     /* Reset the Channel as Free */
+    }
+    MIOS32_USB_MIDI_ChangeConnectionState(1, 0);
 #else
     return; //
 #endif
@@ -687,7 +791,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
             }
           } else if( URB_State == URB_NOTREADY ) {
             // send again
-            USBH_BulkSendData(&USB_OTG_FS_dev, (u8 *)USB_FS_tx_buffer, USBH_FS_tx_count, USBH_FS_hc_num_out);
+            USBH_BulkSendData(pdev, (u8 *)USB_FS_tx_buffer, USBH_FS_tx_count, USBH_FS_hc_num_out);
           } else if( URB_State == URB_ERROR ) {
             USBH_FS_MIDI_transfer_state = USBH_MIDI_IDLE;
           }
@@ -697,7 +801,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
             // data received from receive
             //u32 count = HCD_GetXferCnt(pdev, USBH_FS_hc_num_in) / 4;
             // Note: HCD_GetXferCnt returns a counter which isn't zeroed immediately on a USBH_BulkReceiveData() call
-            u32 count = USB_OTG_FS_dev.host.hc[USBH_FS_hc_num_in].xfer_count / 4;
+            u32 count = pdev->host.hc[USBH_FS_hc_num_in].xfer_count / 4;
             
             // push data into FIFO
             if( !count ) {
@@ -756,14 +860,14 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
             }
             
             USBH_FS_tx_count = count * 4;
-            USBH_BulkSendData(&USB_OTG_FS_dev, (u8 *)USB_FS_tx_buffer, USBH_FS_tx_count, USBH_FS_hc_num_out);
+            USBH_BulkSendData(pdev, (u8 *)USB_FS_tx_buffer, USBH_FS_tx_count, USBH_FS_hc_num_out);
             
             USBH_FS_MIDI_transfer_state = USBH_MIDI_TX;
             
             MIOS32_IRQ_Enable();
           } else {
             // request data from device
-            USBH_BulkReceiveData(&USB_OTG_FS_dev, (u8 *)USB_FS_rx_buffer, USBH_FS_BulkInEpSize, USBH_FS_hc_num_in);
+            USBH_BulkReceiveData(pdev, (u8 *)USB_FS_rx_buffer, USBH_FS_BulkInEpSize, USBH_FS_hc_num_in);
             USBH_FS_MIDI_transfer_state = USBH_MIDI_RX;
           }
         }
@@ -776,7 +880,112 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
 #endif
   }else{
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-    // toDo:
+    if( HS_transfer_possible ) {
+      USBH_HOST *pphost = phost;
+      
+      if( HCD_IsDeviceConnected(pdev) ) {
+        
+        u8 force_rx_req = 0;
+        
+        if( USBH_HS_MIDI_transfer_state == USBH_MIDI_TX ) {
+          URB_STATE URB_State = HCD_GetURB_State(pdev, USBH_HS_hc_num_out);
+          
+          if( URB_State == URB_IDLE ) {
+            // wait...
+          } else if( URB_State == URB_DONE ) {
+            USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+          } else if( URB_State == URB_STALL ) {
+            // Issue Clear Feature on OUT endpoint
+            if( USBH_ClrFeature(pdev, pphost, USBH_HS_BulkOutEp, USBH_HS_hc_num_out) == USBH_OK ) {
+              USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+            }
+          } else if( URB_State == URB_NOTREADY ) {
+            // send again
+            USBH_BulkSendData(pdev, (u8 *)USB_HS_tx_buffer, USBH_HS_tx_count, USBH_HS_hc_num_out);
+          } else if( URB_State == URB_ERROR ) {
+            USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+          }
+        } else if( USBH_HS_MIDI_transfer_state == USBH_MIDI_RX ) {
+          URB_STATE URB_State = HCD_GetURB_State(pdev, USBH_HS_hc_num_in);
+          if( URB_State == URB_IDLE || URB_State == URB_DONE ) {
+            // data received from receive
+            //u32 count = HCD_GetXferCnt(pdev, USBH_FS_hc_num_in) / 4;
+            // Note: HCD_GetXferCnt returns a counter which isn't zeroed immediately on a USBH_BulkReceiveData() call
+            u32 count = pdev->host.hc[USBH_HS_hc_num_in].xfer_count / 4;
+            
+            // push data into FIFO
+            if( !count ) {
+              USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+            } else if( count < (MIOS32_USB_MIDI_RX_BUFFER_SIZE-HS_rx_buffer_size) ) {
+              u32 *buf_addr = (u32 *)USB_HS_rx_buffer;
+              
+              // copy received packages into receive buffer
+              // this operation should be atomic
+              MIOS32_IRQ_Disable();
+              do {
+                mios32_midi_package_t package;
+                if((package.ALL = *buf_addr++)!=0x00000000){
+                  // cable number correction
+                  package.cable +=8;
+                  if( MIOS32_MIDI_SendPackageToRxCallback(USB0 + package.cable, package) == 0 ) {
+                    HS_rx_buffer[HS_rx_buffer_head] = package.ALL;
+                    
+                    if( ++HS_rx_buffer_head >= MIOS32_USB_MIDI_RX_BUFFER_SIZE )
+                      HS_rx_buffer_head = 0;
+                    ++HS_rx_buffer_size;
+                  }
+                }
+              } while( --count > 0 );
+              MIOS32_IRQ_Enable();
+              
+              USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+              force_rx_req = 1;
+            }
+          } else if( URB_State == URB_STALL ) {
+            // Issue Clear Feature on IN endpoint
+            if( USBH_ClrFeature(pdev, pphost, USBH_HS_BulkInEp, USBH_HS_hc_num_in) == USBH_OK ) {
+              USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+            }
+          } else if( URB_State == URB_ERROR || URB_State == URB_NOTREADY ) {
+            USBH_HS_MIDI_transfer_state = USBH_MIDI_IDLE;
+          }
+        }
+        
+        
+        if( USBH_HS_MIDI_transfer_state == USBH_MIDI_IDLE ) {
+          if( !force_rx_req && HS_tx_buffer_size && HS_transfer_possible ) {
+            // atomic operation to avoid conflict with other interrupts
+            MIOS32_IRQ_Disable();
+            
+            s16 count = (HS_tx_buffer_size > (USBH_HS_BulkOutEpSize/4)) ? (USBH_HS_BulkOutEpSize/4) : HS_tx_buffer_size;
+            
+            // send to IN pipe
+            HS_tx_buffer_size -= count;
+            
+            u32 *buf_addr = (u32 *)USB_HS_tx_buffer;
+            int i;
+            for(i=0; i<count; ++i) {
+              *(buf_addr++) = HS_tx_buffer[HS_tx_buffer_tail];
+              if( ++HS_tx_buffer_tail >= MIOS32_USB_MIDI_TX_BUFFER_SIZE )
+                HS_tx_buffer_tail = 0;
+            }
+            
+            USBH_HS_tx_count = count * 4;
+            USBH_BulkSendData(pdev, (u8 *)USB_HS_tx_buffer, USBH_HS_tx_count, USBH_HS_hc_num_out);
+            
+            USBH_HS_MIDI_transfer_state = USBH_MIDI_TX;
+            
+            MIOS32_IRQ_Enable();
+          } else {
+            // request data from device
+            USBH_BulkReceiveData(pdev, (u8 *)USB_HS_rx_buffer, USBH_HS_BulkInEpSize, USBH_HS_hc_num_in);
+            USBH_HS_MIDI_transfer_state = USBH_MIDI_RX;
+          }
+        }
+      }
+    }
+    
+    return USBH_OK;
 #else
     return USBH_NOT_SUPPORTED; //
 #endif

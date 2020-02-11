@@ -920,7 +920,33 @@ s32 FILE_Remove(char *path)
     return FILE_ERR_REMOVE;
 #endif
 
-  return 0; // directory created
+  return 0; // file or directory removed
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//! Renames a file or directory
+/////////////////////////////////////////////////////////////////////////////
+s32 FILE_Rename(char *old_path, char *new_path)
+{
+  // exit if volume not available
+  if( !volume_available ) {
+#if DEBUG_VERBOSE_LEVEL >= 2
+    DEBUG_MSG("[FILE_Rename] ERROR: volume doesn't exist!\n");
+#endif
+    return FILE_ERR_NO_VOLUME;
+  }
+
+#ifdef MIOS32_FAMILY_EMULATION
+  // toDo:
+  //if( (file_dfs_errno=unlink(old_path, new_path)) != FR_OK )
+    return FILE_ERR_RENAME;
+#else
+  if( (file_dfs_errno=f_rename(old_path, new_path)) != FR_OK )
+    return FILE_ERR_RENAME;
+#endif
+
+  return 0; // file or directory renamed
 }
 
 
@@ -1032,57 +1058,57 @@ s32 FILE_GetFiles(char *path, char *ext_filter, char *file_list, u8 num_of_items
   s32 status = 0;
   DIR di;
   FILINFO de;
-
+  
   if( !volume_available ) {
 #if DEBUG_VERBOSE_LEVEL >= 2
     DEBUG_MSG("[FILE_GetFiles] ERROR: volume doesn't exist!\n");
 #endif
     return FILE_ERR_NO_VOLUME;
   }
-
+  
   if( f_opendir(&di, path) != FR_OK ) {
 #if DEBUG_VERBOSE_LEVEL >= 2
     DEBUG_MSG("[FILE_GetFiles] ERROR: opening %s directory - please create it!\n", path);
 #endif
     status = FILE_ERR_NO_DIR;
   }
-
+  
   int num_files = 0;
   while( status == 0 && f_readdir(&di, &de) == FR_OK && de.fname[0] != 0 ) {
     if( de.fname[0] && de.fname[0] != '.' &&
-	!(de.fattrib & AM_DIR) && !(de.fattrib & AM_HID) ) {
-
+       !(de.fattrib & AM_DIR) && !(de.fattrib & AM_HID) ) {
+      
       char *p = (char *)&de.fname[0];
       int i;
       for(i=0; i<9; ++i, p++) {
-	if( *p == '.' )
-	  break;
+        if( *p == '.' )
+          break;
       }
-
+      
       if( ext_filter && *p++ != '.' )
-	continue;
-
+        continue;
+      
       if( ext_filter && strncasecmp(p, ext_filter, 3) != 0 )
-	continue;
-
+        continue;
+      
       ++num_files;
-
+      
 #if DEBUG_VERBOSE_LEVEL >= 2
       DEBUG_MSG("--> %s\n", de.fname);
 #endif
       if( num_files > file_offset && num_files <= (file_offset+num_of_items) ) {
-	int item_pos = 9 * (num_files-1-file_offset);
-	char *p = (char *)&file_list[item_pos];
-
-	for(i=0; i<8; ++i) {
-	  char c = de.fname[i];
-	  if( !c || c == '.' )
-	    break;
-	  *p++ = c;
-	}
-
-	for(;i<9; ++i)
-	  *p++ = ' ';
+        int item_pos = 9 * (num_files-1-file_offset);
+        char *p = (char *)&file_list[item_pos];
+        
+        for(i=0; i<8; ++i) {
+          char c = de.fname[i];
+          if( !c || c == '.' )
+            break;
+          *p++ = c;
+        }
+        
+        for(;i<9; ++i)
+          *p++ = ' ';
       }
     }
   }
@@ -1223,6 +1249,8 @@ s32 FILE_FindPreviousDir(char *path, char *dirname, char *prev_dirname)
   prev_dirname[0] = 0; // set terminator (empty string)
   return 0; // file not found
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////
 //! Returns a file next to the given filename with the given extension

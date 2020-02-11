@@ -18,29 +18,38 @@
 // Global definitions
 /////////////////////////////////////////////////////////////////////////////
 
-// size of IN/OUT pipe
-#ifndef MIOS32_USB_HID_DATA_IN_SIZE
-#define MIOS32_USB_HID_DATA_IN_SIZE            64
-#endif
-#ifndef MIOS32_USB_HID_DATA_OUT_SIZE
-#define MIOS32_USB_Hid_DATA_OUT_SIZE           64
-#endif
-
-#ifndef MIOS32_USB_HID_INT_IN_SIZE
-#define MIOS32_USB_HID_INT_IN_SIZE             64
+// size of buffer
+#ifndef MIOS32_USB_HID_DATA_SIZE
+#define MIOS32_USB_HID_DATA_SIZE   8
 #endif
 
 // HID Process Delay
-#ifndef MIOS32_USB_HID_PROCESS_DELAY
-#define MIOS32_USB_HID_PROCESS_DELAY           5
+#ifndef MIOS32_USB_HID_MIN_POLL
+//#define MIOS32_USB_HID_MIN_POLL    5
 #endif
 
-typedef struct
-{
-  u8   x;
-  u8   y;
-  u8   z;               /* Not Supported */
-  u8   button;
+
+typedef union{
+  struct {
+    u8 connected:1;
+    u8 buttons:7;
+    u16 axis;   // do not use
+    u16 wheel;   // do not use
+  };
+  struct
+  {
+    u8   reserved:1;
+    u8   left:1;
+    u8   right:1;
+    u8   middle:1;
+    u8   back:1;
+    u8   forward:1;
+    u8   dummy:2;
+    s8   x;
+    s8   y;
+    s8   z;
+    s8   tilt;
+  };
 }
 mios32_mouse_data_t;
 

@@ -1084,13 +1084,6 @@ s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap)
       // calculate pointer to bitmap line
       u8 *memory_ptr = bitmap.memory + line * bitmap.line_offset;
       
-      // set graphical cursor after second line has reached
-      //    if( line > 0 ) {
-      //      mios32_lcd_x = initial_x;
-      //      mios32_lcd_y += 1;
-      //      APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
-      //    }
-      
       // transfer bitmap
       int x, y;
       for(y=0; y<8; ++y){
@@ -1117,9 +1110,6 @@ s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap)
       APP_LCD_GCursorSet(mios32_lcd_x, mios32_lcd_y);
     }
   }else return -1;  // not supported
-  
-  
-  
   
   return 0; // no error
 }

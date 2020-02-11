@@ -36,12 +36,6 @@
 
 #include <string.h>
 
-#ifndef DEBUG_MSG
-#define DEBUG_MSG MIOS32_MIDI_SendDebugMessage
-#endif
-
-#define DEBUG_HID_VERBOSE_LEVEL 2
-
 #define  LE32(addr)             (((u32)(*((u8 *)(addr))))\
                                 + (((u32)(*(((u8 *)(addr)) + 1))) << 8)\
                                 + (((u32)(*(((u8 *)(addr)) + 2))) << 16)\
@@ -52,10 +46,10 @@
                                 + (((s32)(*(((u8 *)(addr)) + 2))) << 16)\
                                 + (((s32)(*(((u8 *)(addr)) + 3))) << 24))
 
-#define USB_HID_BOOT_CODE                                  0x01
-#define USB_HID_KEYBRD_BOOT_CODE                           0x01
-#define USB_HID_MOUSE_BOOT_CODE                            0x02
-#define USB_HID_GAMPAD_BOOT_CODE                           0x05
+#define USB_HID_BOOT_CODE            0x01
+#define USB_HID_KEYBRD_BOOT_CODE     0x01
+#define USB_HID_MOUSE_BOOT_CODE      0x02
+#define USB_HID_GAMPAD_BOOT_CODE     0x05
 
 #define USB_HID_REQ_GET_REPORT       0x01
 #define USB_HID_GET_IDLE             0x02
@@ -64,18 +58,18 @@
 #define USB_HID_SET_IDLE             0x0A
 #define USB_HID_SET_PROTOCOL         0x0B
 
-#define HID_MIN_POLL          10
+#define HID_MIN_POLL                 10
 
-#define  KBD_LEFT_CTRL                                  0x01
-#define  KBD_LEFT_SHIFT                                 0x02
-#define  KBD_LEFT_ALT                                   0x04
-#define  KBD_LEFT_GUI                                   0x08
-#define  KBD_RIGHT_CTRL                                 0x10
-#define  KBD_RIGHT_SHIFT                                0x20
-#define  KBD_RIGHT_ALT                                  0x40
-#define  KBD_RIGHT_GUI                                  0x80
+#define KBD_LEFT_CTRL                0x01
+#define KBD_LEFT_SHIFT               0x02
+#define KBD_LEFT_ALT                 0x04
+#define KBD_LEFT_GUI                 0x08
+#define KBD_RIGHT_CTRL               0x10
+#define KBD_RIGHT_SHIFT              0x20
+#define KBD_RIGHT_ALT                0x40
+#define KBD_RIGHT_GUI                0x80
 
-#define  KBR_MAX_NBR_PRESSED                            6
+#define KBR_MAX_NBR_PRESSED          6
 
 #ifndef MIOS32_USB_HID_QWERTY_KEYBOARD
 #define MIOS32_USB_HID_AZERTY_KEYBOARD
@@ -84,105 +78,94 @@
 /////////////////////////////////////////////////////////////////////////////
 // Local constants
 /////////////////////////////////////////////////////////////////////////////
-static const uint8_t USB_HID_MouseStatus[]    = "> Mouse connected\n";
-static const uint8_t USB_HID_KeybrdStatus[]   = "> Keyboard connected\n";
-static const uint8_t USB_HID_GampadStatus[]   = "> GamePad connected\n";
+static const uint8_t USB_HID_MouseStatus[]    = "[USBH_HID]Mouse connected\n";
+static const uint8_t USB_HID_KeybrdStatus[]   = "[USBH_HID]Keyboard connected\n";
 
 static  const  uint8_t  HID_KEYBRD_Codes[] = {
-  0,     0,    0,    0,   31,   50,   48,   33,
-  19,   34,   35,   36,   24,   37,   38,   39,       /* 0x00 - 0x0F */
-  52,    51,   25,   26,   17,   20,   32,   21,
-  23,   49,   18,   47,   22,   46,    2,    3,       /* 0x10 - 0x1F */
-  4,    5,    6,    7,    8,    9,   10,   11,
-  43,  110,   15,   16,   61,   12,   13,   27,       /* 0x20 - 0x2F */
-  28,   29,   42,   40,   41,    1,   53,   54,
-  55,   30,  112,  113,  114,  115,  116,  117,       /* 0x30 - 0x3F */
+    0,    0,    0,    0,   31,   50,   48,   33,
+   19,   34,   35,   36,   24,   37,   38,   39,       /* 0x00 - 0x0F */
+   52,   51,   25,   26,   17,   20,   32,   21,
+   23,   49,   18,   47,   22,   46,    2,    3,       /* 0x10 - 0x1F */
+    4,    5,    6,    7,    8,    9,   10,   11,
+   43,  110,   15,   16,   61,   12,   13,   27,       /* 0x20 - 0x2F */
+   28,   29,   42,   40,   41,    1,   53,   54,
+   55,   30,  112,  113,  114,  115,  116,  117,       /* 0x30 - 0x3F */
   118,  119,  120,  121,  122,  123,  124,  125,
   126,   75,   80,   85,   76,   81,   86,   89,       /* 0x40 - 0x4F */
-  79,   84,   83,   90,   95,  100,  105,  106,
+   79,   84,   83,   90,   95,  100,  105,  106,
   108,   93,   98,  103,   92,   97,  102,   91,       /* 0x50 - 0x5F */
-  96,  101,   99,  104,   45,  129,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0x60 - 0x6F */
-  0,    0,    0,    0,    0,    0,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0x70 - 0x7F */
-  0,    0,    0,    0,    0,  107,    0,   56,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0x80 - 0x8F */
-  0,    0,    0,    0,    0,    0,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0x90 - 0x9F */
-  0,    0,    0,    0,    0,    0,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0xA0 - 0xAF */
-  0,    0,    0,    0,    0,    0,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0xB0 - 0xBF */
-  0,    0,    0,    0,    0,    0,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0xC0 - 0xCF */
-  0,    0,    0,    0,    0,    0,    0,    0,
-  0,    0,    0,    0,    0,    0,    0,    0,       /* 0xD0 - 0xDF */
-  58,   44,   60,  127,   64,   57,   62,  128        /* 0xE0 - 0xE7 */
+   96,  101,   99,  104,   45,  129,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0x60 - 0x6F */
+    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0x70 - 0x7F */
+    0,    0,    0,    0,    0,  107,    0,   56,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0x80 - 0x8F */
+    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0x90 - 0x9F */
+    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0xA0 - 0xAF */
+    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0xB0 - 0xBF */
+    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0xC0 - 0xCF */
+    0,    0,    0,    0,    0,    0,    0,    0,
+    0,    0,    0,    0,    0,    0,    0,    0,       /* 0xD0 - 0xDF */
+   58,   44,   60,  127,   64,   57,   62,  128        /* 0xE0 - 0xE7 */
 };
 
 #ifdef QWERTY_KEYBOARD
 static  const  char  HID_KEYBRD_Key[] = {
-  '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',
-  '7',  '8',  '9',  '0',  '-',  '=',  '\0', '\r',
-  '\t',  'q',  'w',  'e',  'r',  't',  'y',  'u',
-  'i',  'o',  'p',  '[',  ']',  '\\',
-  '\0',  'a',  's',  'd',  'f',  'g',  'h',  'j',
-  'k',  'l',  ';',  '\'', '\0', '\n',
-  '\0',  '\0', 'z',  'x',  'c',  'v',  'b',  'n',
-  'm',  ',',  '.',  '/',  '\0', '\0',
-  '\0',  '\0', '\0', ' ',  '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0',  '\0', '\0', '\0', '\0', '\r', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0',  '\0', '7',  '4',  '1',
-  '\0',  '/',  '8',  '5',  '2',
-  '0',   '*',  '9',  '6',  '3',
-  '.',   '-',  '+',  '\0', '\n', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0',  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0'
-};
-
-static  const  char  HID_KEYBRD_ShiftKey[] = {
-  '\0', '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',
-  '_',  '+',  '\0', '\0', '\0', 'Q',  'W',  'E',  'R',  'T',  'Y',  'U',
-  'I',  'O',  'P',  '{',  '}',  '|',  '\0', 'A',  'S',  'D',  'F',  'G',
-  'H',  'J',  'K',  'L',  ':',  '"',  '\0', '\n', '\0', '\0', 'Z',  'X',
-  'C',  'V',  'B',  'N',  'M',  '<',  '>',  '?',  '\0', '\0',  '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0',    '\0', '\0', '\0', '\0', '\0',
+  '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0',
+   '-',  '=', '\0', '\r', '\t',  'q',  'w',  'e',  'r',  't',  'y',  'u',
+   'i',  'o',  'p',  '[',  ']', '\\', '\0',  'a',  's',  'd',  'f',  'g',
+   'h',  'j',  'k',  'l',  ';', '\'', '\0', '\n', '\0', '\0',  'z',  'x',
+   'c',  'v',  'b',  'n',  'm',  ',',  '.',  '/', '\0', '\0', '\0', '\0',
+  '\0',  ' ', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\r', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0',  '7',  '4',  '1', '\0',  '/',
+   '8',  '5',  '2',  '0',  '*',  '9',  '6',  '3',  '.',  '-',  '+', '\0',
+  '\n', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
   '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
 };
-
+static  const  char  HID_KEYBRD_ShiftKey[] = {
+  '\0',  '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',
+   '_',  '+', '\0', '\0', '\0', 'Q',   'W',  'E',  'R',  'T',  'Y',  'U',
+   'I',  'O',  'P',  '{',  '}',  '|', '\0',  'A',  'S',  'D',  'F',  'G',
+   'H',  'J',  'K',  'L',  ':',  '"', '\0', '\n', '\0', '\0',  'Z',  'X',
+   'C',  'V',  'B',  'N',  'M',  '<',  '>',  '?', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+};
 #else
-
 static  const  char  HID_KEYBRD_Key[] = {
   '\0',  '`',  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  '0',
-  '-',  '=',  '\0', '\r', '\t',  'a',  'z',  'e',  'r',  't',  'y',  'u',
-  'i',  'o',  'p',  '[',  ']', '\\', '\0',  'q',  's',  'd',  'f',  'g',
-  'h',  'j',  'k',  'l',  'm',  '\0', '\0', '\n', '\0',  '\0', 'w',  'x',
-  'c',  'v',  'b',  'n',  ',',  ';',  ':',  '!',  '\0', '\0', '\0',  '\0',
-  '\0', ' ',  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0',  '\0', '\0', '\0', '\0', '\r', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0',  '\0', '7',  '4',  '1','\0',  '/',
-  '8',  '5',  '2', '0',   '*',  '9',  '6',  '3', '.',   '-',  '+',  '\0',
-  '\n', '\0', '\0', '\0', '\0', '\0', '\0','\0',  '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+   '-',  '=', '\0', '\r', '\t',  'a',  'z',  'e',  'r',  't',  'y',  'u',
+   'i',  'o',  'p',  '[',  ']', '\\', '\0',  'q',  's',  'd',  'f',  'g',
+   'h',  'j',  'k',  'l',  'm', '\0', '\0', '\n', '\0', '\0',  'w',  'x',
+   'c',  'v',  'b',  'n',  ',',  ';',  ':',  '!', '\0', '\0', '\0', '\0',
+  '\0',  ' ', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\r', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0',  '7',  '4',  '1', '\0',  '/',
+   '8',  '5',  '2',  '0',  '*',  '9',  '6',  '3',  '.',  '-',  '+', '\0',
+  '\n', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
 };
-
 static  const  char  HID_KEYBRD_ShiftKey[] = {
-  '\0', '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',  '_',
-  '+',  '\0', '\0', '\0', 'A',  'Z',  'E',  'R',  'T',  'Y',  'U',  'I',  'O',
-  'P',  '{',  '}',  '*', '\0', 'Q',  'S',  'D',  'F',  'G',  'H',  'J',  'K',
-  'L',  'M',  '%',  '\0', '\n', '\0', '\0', 'W',  'X',  'C',  'V',  'B',  'N',
-  '?',  '.',  '/',  '\0',  '\0', '\0','\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+  '\0',  '~',  '!',  '@',  '#',  '$',  '%',  '^',  '&',  '*',  '(',  ')',
+   '_',  '+', '\0', '\0', '\0',  'A',  'Z',  'E',  'R',  'T',  'Y',  'U',
+   'I',  'O',  'P',  '{',  '}',  '*', '\0',  'Q',  'S',  'D',  'F',  'G',
+   'H',  'J',  'K',  'L',  'M',  '%', '\0', '\n', '\0', '\0',  'W',  'X',
+   'C',  'V',  'B',  'N',  '?',  '.',  '/', '\0',  '\0', '\0','\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
+  '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
 };
 #endif
 
@@ -210,17 +193,8 @@ typedef enum
   HID_REQ_SET_IDLE,
   HID_REQ_SET_PROTOCOL,
   HID_REQ_SET_REPORT,
-
 }
 HID_CtlState;
-
-typedef enum
-{
-  HID_REPORT_ITEM_In      = 0,
-  HID_REPORT_ITEM_Out     = 1,
-  HID_REPORT_ITEM_Feature = 2,
-}
-HID_ReportItemTypes_t;
 
 typedef struct HID_cb
 {
@@ -229,36 +203,12 @@ typedef struct HID_cb
 
 } USB_HID_cb_t;
 
-typedef  struct  _HID_Report
-{
-    uint8_t   ReportID;
-    uint8_t   ReportType;
-    uint16_t  UsagePage;
-    uint32_t  Usage[2];
-    uint32_t  NbrUsage;
-    uint32_t  UsageMin;
-    uint32_t  UsageMax;
-    int32_t   LogMin;
-    int32_t   LogMax;
-    int32_t   PhyMin;
-    int32_t   PhyMax;
-    int32_t   UnitExp;
-    uint32_t  Unit;
-    uint32_t  ReportSize;
-    uint32_t  ReportCnt;
-    uint32_t  Flag;
-    uint32_t  PhyUsage;
-    uint32_t  AppUsage;
-    uint32_t  LogUsage;
-}
-USB_HID_Report_t;
-
 /* Structure for HID process */
 typedef struct _HID_Process
 {
-  uint8_t			        transfer_possible;
-  volatile uint8_t 	   start_toggle;
-  uint8_t              buff[64];
+  uint32_t             buff[MIOS32_USB_HID_DATA_SIZE/4];
+  uint8_t              transfer_possible;
+  volatile uint8_t     start_toggle;
   uint8_t              hc_num_in;
   uint8_t              hc_num_out;
   HID_State            state;
@@ -274,8 +224,6 @@ typedef struct _HID_Process
 USB_HID_machine_t;
 
 
-
-
 /////////////////////////////////////////////////////////////////////////////
 // Variables
 /////////////////////////////////////////////////////////////////////////////
@@ -284,10 +232,7 @@ USB_HID_machine_t;
 // imported from mios32_usb.c
 extern USB_OTG_CORE_HANDLE  USB_OTG_FS_dev;
 extern USBH_HOST USB_FS_Host;
-extern USBH_Class_Status USB_FS_Host_Class;
 __ALIGN_BEGIN USB_HID_machine_t  	USB_FS_HID_machine __ALIGN_END ;
-//__ALIGN_BEGIN USB_HID_Report_t   	USB_FS_HID_Report __ALIGN_END ;
-//__ALIGN_BEGIN USB_Setup_TypeDef  	USB_FS_HID_Setup __ALIGN_END ;
 __ALIGN_BEGIN USBH_HIDDesc_TypeDef  USB_FS_HID_Desc __ALIGN_END ;
 #endif
 
@@ -296,13 +241,9 @@ __ALIGN_BEGIN USBH_HIDDesc_TypeDef  USB_FS_HID_Desc __ALIGN_END ;
 // imported from mios32_usb.c
 extern USB_OTG_CORE_HANDLE  USB_OTG_HS_dev;
 extern USBH_HOST USB_HS_Host;
-extern USBH_Class_Status USB_HS_Host_Class;
-
 __ALIGN_BEGIN USB_HID_machine_t  	USB_HS_HID_machine __ALIGN_END ;
-//__ALIGN_BEGIN USB_HID_Report_t   	USB_HS_HID_Report __ALIGN_END ;
-//__ALIGN_BEGIN USB_Setup_TypeDef  	USB_HS_HID_Setup __ALIGN_END ;
 __ALIGN_BEGIN USBH_HIDDesc_TypeDef  USB_HS_HID_Desc __ALIGN_END ;
-
+__ALIGN_BEGIN uint32_t  report_buf __ALIGN_END ;
 #endif
 
 
@@ -361,9 +302,17 @@ static void (*keyboard_callback_func)(mios32_kbd_state_t kbd_state, mios32_kbd_k
  */
 void MIOS32_USB_HID_Mouse_Init(USB_OTG_CORE_HANDLE *pdev , void  *phost)
 {
-#if DEBUG_HID_VERBOSE_LEVEL >= 2
+  Mouse_Data.buttons= 0;
+  Mouse_Data.x      = 0;
+  Mouse_Data.y      = 0;
+  Mouse_Data.z      = 0;
+  Mouse_Data.tilt   = 0;
+  
+  Mouse_Data.connected =1;
+  if(mouse_callback_func != NULL)mouse_callback_func(Mouse_Data);
+#ifdef MIOS32_MIDI_USBH_DEBUG
   DEBUG_MSG((void*)USB_HID_MouseStatus);
-  DEBUG_MSG("\n\n\n\n\n\n\n\n");
+  DEBUG_MSG("[USBH_HID]\n\n\n\n\n\n\n\n");
 #endif
 }
 
@@ -375,48 +324,53 @@ void MIOS32_USB_HID_Mouse_Init(USB_OTG_CORE_HANDLE *pdev , void  *phost)
  */
 void MIOS32_USB_HID_Mouse_Decode(USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *data)
 {
-	Mouse_Data.button = data[0];
-
-	Mouse_Data.x      = data[1];
-	Mouse_Data.y      = data[2];
-	uint8_t idx = 1;
-	static uint8_t b_state[3] = { 0, 0 , 0};
-
-	if ((Mouse_Data.x != 0) && (Mouse_Data.y != 0))
-	{
-		//HID_MOUSE_UpdatePosition(data->x , data->y);
-#if DEBUG_HID_VERBOSE_LEVEL >= 1
-    DEBUG_MSG("Mouse position, x:%d, y:%d \n", (s8)Mouse_Data.x, (s8)Mouse_Data.y);
+  // store current buttons state
+  u8 buttons = Mouse_Data.buttons;
+  // set new buttons state
+  Mouse_Data.buttons = data[0];
+  
+  Mouse_Data.x      = (s8)data[1];
+  Mouse_Data.y      = (s8)data[2];
+  Mouse_Data.z      = (s8)data[3];
+  Mouse_Data.tilt   = (s8)data[4];
+  
+  u8 cb_flag = 0;
+  
+  // axis
+  if ((Mouse_Data.x != 0) || (Mouse_Data.y != 0))
+  {
+    cb_flag++;
+#ifdef MIOS32_MIDI_USBH_DEBUG
+    DEBUG_MSG("[USBH_HID]Mouse position, x:%d, y:%d\n", Mouse_Data.x, Mouse_Data.y, Mouse_Data.z, Mouse_Data.tilt) ;
 #endif
-	
-	}
-
-	for ( idx = 0 ; idx < 3 ; idx ++)
-	{
-
-		if(Mouse_Data.button & 1 << idx)
-		{
-			if(b_state[idx] == 0)
-			{
-				//HID_MOUSE_ButtonPressed (idx);
-#if DEBUG_HID_VERBOSE_LEVEL >= 1
-        DEBUG_MSG("Mouse button %d pressed \n", idx);
+  }
+  // wheel
+  if ((Mouse_Data.z != 0) || (Mouse_Data.tilt != 0))
+  {
+    cb_flag++;
+#ifdef MIOS32_MIDI_USBH_DEBUG
+    DEBUG_MSG("[USBH_HID]Mouse wheel, z:%d, tilt:%d\n", Mouse_Data.z, Mouse_Data.tilt) ;
 #endif
-				b_state[idx] = 1;
-			}
-		}
-		else
-		{
-			if(b_state[idx] == 1)
-			{
-				//HID_MOUSE_ButtonReleased (idx);
-#if DEBUG_HID_VERBOSE_LEVEL >= 1
-        DEBUG_MSG("Mouse button %d pressed \n", idx);
+  }
+  // buttons
+  if(buttons!=Mouse_Data.buttons)cb_flag++;
+#ifdef MIOS32_MIDI_USBH_DEBUG
+  uint8_t idx;
+  for ( idx = 0 ; idx < 3 ; idx ++)
+  {
+    
+    if(Mouse_Data.buttons & (1 << idx) && (buttons & (1 << idx))==0)
+    {
+      DEBUG_MSG("[USBH_HID]Mouse button %d pressed \n", idx);
+    }else if((Mouse_Data.buttons & (1 << idx))==0 && buttons & (1 << idx))
+    {
+      DEBUG_MSG("[USBH_HID]Mouse button %d released \n", idx);
+    }
+  }
 #endif
-				b_state[idx] = 0;
-			}
-		}
-	}
+  /* call user process handle */
+  if(cb_flag)if(mouse_callback_func != NULL)mouse_callback_func(Mouse_Data);
+  
 }
 
 /**
@@ -427,29 +381,30 @@ void MIOS32_USB_HID_Mouse_Decode(USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8
  */
 void MIOS32_USB_HID_Keyboard_Init (USB_OTG_CORE_HANDLE *pdev , void  *phost)
 {
+  int i;
   Keyboard_State.ALL=0;
   Keyboard_State.connected=1;
   // send report
-  USBH_HOST *pphost = phost;
-  u8 locks = (u8)Keyboard_State.locks;
-  int i;
-  for (i=0; i<32; i++)USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, 0x07);
+  //  USBH_HOST *pphost = phost;
+  //  u8 locks = 0x07;
+  //  USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &locks);
   for (i=0; i<KBR_MAX_NBR_PRESSED; i++) {
-    keys_last[KBR_MAX_NBR_PRESSED]= 0;
+    keys_last[i]= 0;
   }
-  Keyboard_LastLocks=locks;
-  USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &locks);
+  //  locks = (u8)Keyboard_State.locks;
+  Keyboard_LastLocks=(u8)Keyboard_State.locks;;
+  //  USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &locks);
   /* call user process handle */
   mios32_kbd_key_t key;
   key.code = 0;
   key.value = 0;
   if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key);
- 
-#if DEBUG_HID_VERBOSE_LEVEL >= 1
+  
+#ifdef MIOS32_MIDI_USBH_DEBUG
   DEBUG_MSG((void*)USB_HID_KeybrdStatus);
   
-  DEBUG_MSG("> Use Keyboard to tape characters: \n\n");
-  DEBUG_MSG("\n\n\n\n\n\n");
+  DEBUG_MSG("[USBH_HID]Use Keyboard to tape characters: \n\n");
+  DEBUG_MSG("[USBH_HID]\n\n\n\n\n\n");
 #endif
 
 }
@@ -464,33 +419,33 @@ void MIOS32_USB_HID_Keyboard_Init (USB_OTG_CORE_HANDLE *pdev , void  *phost)
 void MIOS32_USB_HID_Keyboard_Decode (USB_OTG_CORE_HANDLE *pdev , void  *phost, uint8_t *pbuf)
 {
   int i;
-	u8 keys_new[KBR_MAX_NBR_PRESSED];
+  u8 keys_new[KBR_MAX_NBR_PRESSED];
   
-	uint8_t   error;
- 
+  uint8_t   error;
+  
   USBH_Status status = USBH_OK;
   USBH_HOST *pphost = phost;
- 
-#if DEBUG_HID_VERBOSE_LEVEL >= 2
-    DEBUG_MSG("pbuf: %02x %02x %02x %02x %02x %02x %02x %02x", pbuf[0], pbuf[1], pbuf[2], pbuf[3], pbuf[4], pbuf[5], pbuf[6], pbuf[7]);
+  
+#ifdef MIOS32_MIDI_USBH_DEBUG
+  DEBUG_MSG("[USBH_HID]pbuf: %02x %02x %02x %02x %02x %02x %02x %02x", pbuf[0], pbuf[1], pbuf[2], pbuf[3], pbuf[4], pbuf[5], pbuf[6], pbuf[7]);
 #endif
-
-	/* Store new modifiers */
+  
+  /* Store new modifiers */
   Keyboard_State.modifiers = pbuf[0];
-
-	/* Check for errors */
+  
+  /* Check for errors */
   error = 0;
-	for (i = 2; i < 2 + KBR_MAX_NBR_PRESSED; i++) {
-		if ((pbuf[i] == 0x01) ||
-				(pbuf[i] == 0x02) ||
-				(pbuf[i] == 0x03)) {
-			error = 1;
-		}
-	}
-	if (error == 1) {
-		return;
-	}
- 
+  for (i = 2; i < 2 + KBR_MAX_NBR_PRESSED; i++) {
+    if ((pbuf[i] == 0x01) ||
+        (pbuf[i] == 0x02) ||
+        (pbuf[i] == 0x03)) {
+      error = 1;
+    }
+  }
+  if (error == 1) {
+    return;
+  }
+  
   // structure for changes storage
   mios32_kbd_key_t key_changes[6];
   u8 key_changes_count = 0;
@@ -518,10 +473,11 @@ void MIOS32_USB_HID_Keyboard_Decode (USB_OTG_CORE_HANDLE *pdev , void  *phost, u
       }
     }else break;
   }
-  
-#if DEBUG_HID_VERBOSE_LEVEL >= 2
-  DEBUG_MSG("keys_last: %02x %02x %02x %02x %02x %02x", keys_last[0], keys_last[1], keys_last[2], keys_last[3], keys_last[4], keys_last[5]);
-  DEBUG_MSG("keys_new : %02x %02x %02x %02x %02x %02x", keys_new[0], keys_new[1], keys_new[2], keys_new[3], keys_new[4], keys_new[5]);
+#if 0
+#ifdef MIOS32_MIDI_USBH_DEBUG
+  DEBUG_MSG("[USBH_HID]keys_last: %02x %02x %02x %02x %02x %02x", keys_last[0], keys_last[1], keys_last[2], keys_last[3], keys_last[4], keys_last[5]);
+  DEBUG_MSG("[USBH_HID]keys_new : %02x %02x %02x %02x %02x %02x", keys_new[0], keys_new[1], keys_new[2], keys_new[3], keys_new[4], keys_new[5]);
+#endif
 #endif
   
   for (i=0; i<key_changes_count; i++) {
@@ -559,14 +515,14 @@ void MIOS32_USB_HID_Keyboard_Decode (USB_OTG_CORE_HANDLE *pdev , void  *phost, u
     u8 locks = (u8)Keyboard_State.locks;
     status = USBH_Set_Report(pdev, pphost, 0x02, 0x00, 0x01, &locks);
     if(status==0)Keyboard_LastLocks = Keyboard_State.locks;
-#if DEBUG_HID_VERBOSE_LEVEL >= 2
-    DEBUG_MSG("USBH_Set_Report stat:%d", (u8)(status));
+#ifdef MIOS32_MIDI_USBH_DEBUG
+    DEBUG_MSG("[USBH_HID]Set_Report stat:%d", (u8)(status));
 #endif
   }
   
   // store new keys
   memcpy(&keys_last, &keys_new, 6);
-
+  
 }
 
 
@@ -581,12 +537,9 @@ void MIOS32_USB_HID_Keyboard_Decode (USB_OTG_CORE_HANDLE *pdev , void  *phost, u
 /////////////////////////////////////////////////////////////////////////////
 s32 MIOS32_USB_HID_Init(u32 mode)
 {
-DEBUG_MSG("MIOS32_USB_HID_Init PASSED");
 #ifndef MIOS32_DONT_USE_USB_HOST
 	USB_FS_HID_machine.start_toggle = 0;
 #endif
-
-
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
 	USB_HS_HID_machine.start_toggle = 0;
 #endif
@@ -602,7 +555,6 @@ DEBUG_MSG("MIOS32_USB_HID_Init PASSED");
 /////////////////////////////////////////////////////////////////////////////
 s32 MIOS32_USB_HID_ChangeConnectionState(u8 dev, u8 connected)
 {
-  if(dev>1)return -1;
 #ifndef MIOS32_DONT_USE_USB_HOST
   if(dev == 0){
 	  if( connected ) {
@@ -618,11 +570,21 @@ s32 MIOS32_USB_HID_ChangeConnectionState(u8 dev, u8 connected)
         key.value = 0;
         if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key);
       }
+      if(Mouse_Data.connected){
+        Mouse_Data.connected = 0;
+        /* call user process handle */
+        Mouse_Data.buttons= 0;
+        Mouse_Data.x      = 0;
+        Mouse_Data.y      = 0;
+        Mouse_Data.z      = 0;
+        Mouse_Data.tilt   = 0;
+        if(mouse_callback_func != NULL)mouse_callback_func(Mouse_Data);
+      }
 	  }
   }
 #endif
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-  if(dev == 1){
+  else if(dev == 1){
 	  if( connected ) {
 		  USB_HS_HID_machine.transfer_possible = 1;
 	  } else {
@@ -635,6 +597,16 @@ s32 MIOS32_USB_HID_ChangeConnectionState(u8 dev, u8 connected)
         key.code = 0;
         key.value = 0;
         if(keyboard_callback_func != NULL)keyboard_callback_func(Keyboard_State, key);
+      }
+      if(Mouse_Data.connected){
+        Mouse_Data.connected = 0;
+        /* call user process handle */
+        Mouse_Data.buttons= 0;
+        Mouse_Data.x      = 0;
+        Mouse_Data.y      = 0;
+        Mouse_Data.z      = 0;
+        Mouse_Data.tilt   = 0;
+        if(mouse_callback_func != NULL)mouse_callback_func(Mouse_Data);
       }
 	  }
   }
@@ -658,7 +630,7 @@ s32 MIOS32_USB_HID_CheckAvailable(u8 dev)
   }
 #endif
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
-  if(dev == 1){
+  else if(dev == 1){
 	  return USB_HS_HID_machine.transfer_possible ? 1 : 0;
   }
 #endif
@@ -1194,7 +1166,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev , void   *phost)
   case HID_GET_DATA:
 
     USBH_InterruptReceiveData(pdev,
-        machine->buff,
+        (u8*)machine->buff,
         machine->length,
         machine->hc_num_in);
     machine->start_toggle = 1;
@@ -1213,7 +1185,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev , void   *phost)
       if(machine->start_toggle == 1) /* handle data once */
       {
         machine->start_toggle = 0;
-        machine->cb->Decode(pdev, phost, machine->buff);
+        machine->cb->Decode(pdev, phost, (u8*)machine->buff);
       }
     }
     else if(HCD_GetURB_State(pdev, machine->hc_num_in) == URB_STALL) /* IN Endpoint Stalled */

@@ -283,7 +283,9 @@ static void TASK_Hooks(void *pvParameters)
 
 #if !defined(MIOS32_DONT_USE_USB_HOST) || !defined(MIOS32_DONT_USE_USB_HS_HOST)
     // process USB Host, only others than USB MIDI
+#ifndef MIOS32_DONT_PROCESS_USB_HOST
     MIOS32_USB_HOST_Process();
+#endif
 #endif
 
 #if !defined(MIOS32_DONT_USE_DIN) && !defined(MIOS32_DONT_USE_SRIO)
