@@ -75,9 +75,6 @@ mios32_midi_port_t USB_HOST_prev_debug_port;
 #pragma message "USB HS Host supported"
 __ALIGN_BEGIN USBH_HOST USB_FS_Host __ALIGN_END;
 USBH_Class_Status USB_FS_Host_Class;
-#ifndef MIOS32_DONT_USE_USB_HID
-static s8 USB_HOST_Process_Delay;
-#endif
 #endif
 
 #ifndef MIOS32_DONT_USE_USB_HS_HOST
@@ -98,7 +95,7 @@ __ALIGN_BEGIN USB_OTG_CORE_HANDLE  USB_OTG_HS_dev __ALIGN_END ;
 __ALIGN_BEGIN USBH_HOST  USB_HS_Host __ALIGN_END ;
 
 USBH_Class_Status USB_HS_Host_Class;
-static u16 USB_HS_HOST_Process_Delay;
+
 #endif
 
 
@@ -1824,7 +1821,7 @@ static const USBD_Class_cb_TypeDef MIOS32_USB_CLASS_cb =
   NULL,
   MIOS32_USB_CLASS_GetCfgDesc,
   NULL,
-  MIOS32_USB_CLASS_GetUsrStrDesc,
+  MIOS32_USB_CLASS_GetUsrStrDesc
 };
 
 
@@ -1845,7 +1842,6 @@ static const USBD_Class_cb_TypeDef MIOS32_USB_CLASS_cb =
  */
 static USBH_Status USBH_InterfaceInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 {
-DEBUG_MSG("Host interface Init-passed");
 	USBH_Status status=USBH_NOT_SUPPORTED;
 	USBH_HOST *pphost = phost;
 	USBH_Class_Status* class_status;
@@ -1861,13 +1857,10 @@ DEBUG_MSG("Host interface Init-passed");
 #else
 		return status; //
 #endif
-	}
-	DEBUG_MSG("Host interface Init: %s", pdev->cfg.coreID? "FS" : "HS" );
+	}else return status; // not reached
 	int i;
 	for(i=0; i<pphost->device_prop.Cfg_Desc.bNumInterfaces && i < USBH_MAX_NUM_INTERFACES; ++i) {
 
-		//MIOS32_MIDI_SendDebugMessage("InterfaceInit %d %d %d", i, pphost->device_prop.Itf_Desc[i].bInterfaceClass, pphost->device_prop.Itf_Desc[i].bInterfaceSubClass);
-		DEBUG_MSG("InterfaceInit %d %d %d", i, pphost->device_prop.Itf_Desc[i].bInterfaceClass, pphost->device_prop.Itf_Desc[i].bInterfaceSubClass);
 
 		// Here we install the class and call Init depending on descriptor
 		if( (pphost->device_prop.Itf_Desc[i].bInterfaceClass == 1) &&
@@ -1917,7 +1910,7 @@ static void USBH_InterfaceDeInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
 #else
 		return; //
 #endif
-	}
+	}else return;
 	switch(*class_status){
 	case USBH_IS_MIDI:
 		MIOS32_MIDI_USBH_Callbacks.DeInit(pdev, phost);
@@ -1933,7 +1926,6 @@ static void USBH_InterfaceDeInit(USB_OTG_CORE_HANDLE *pdev, void *phost)
     *class_status = USBH_NO_CLASS; // no change
 		break;
 	}
-	DEBUG_MSG("Host(%s) interface deinit.", pdev->cfg.coreID? "FS" : "HS" );
 }
 
 /**
@@ -1959,7 +1951,7 @@ static USBH_Status USBH_ClassRequest(USB_OTG_CORE_HANDLE *pdev, void *phost)
 #else
 		return status; //
 #endif
-	}
+	}else return status;
 	switch(*class_status){
 	case USBH_IS_MIDI:
 		status = MIOS32_MIDI_USBH_Callbacks.Requests(pdev, phost);
@@ -1998,7 +1990,7 @@ static USBH_Status USBH_Handle(USB_OTG_CORE_HANDLE *pdev, void *phost)
 #else
 		return status; //
 #endif
-	}
+	}else return status;
 	switch(*class_status){
 	case USBH_IS_MIDI:
 		status = MIOS32_MIDI_USBH_Callbacks.Machine(pdev, phost);
@@ -2207,16 +2199,10 @@ s32 MIOS32_USB_HOST_Process(void){
     switch (USB_FS_Host_Class) {
 #if !defined(MIOS32_DONT_USE_USB_HID)
       case USBH_IS_HID:
-//        // polling delay
-//        if(USB_HOST_Process_Delay <= 0){
-//          USB_HOST_Process_Delay = MIOS32_USB_HID_PROCESS_DELAY;
-          // process the USB host events for OTG_FS
           USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
-//        }else USB_HOST_Process_Delay--;
         break;
 #endif
       case USBH_NO_CLASS:
-        // process the USB host events for OTG_FS
         USBH_Process(&USB_OTG_FS_dev, &USB_FS_Host);
         break;
       case USBH_IS_MIDI:
@@ -2230,12 +2216,7 @@ s32 MIOS32_USB_HOST_Process(void){
   switch (USB_HS_Host_Class) {
 #if !defined(MIOS32_DONT_USE_USB_HID)
     case USBH_IS_HID:
-//      // polling delay
-//      if(USB_HS_HOST_Process_Delay <= 0){
-//        USB_HS_HOST_Process_Delay = MIOS32_USB_HID_PROCESS_DELAY;
-        // process the USB host events for OTG_HS
         USBH_Process(&USB_OTG_HS_dev, &USB_HS_Host);
-//      }else USB_HS_HOST_Process_Delay--;
       break;
 #endif
     case USBH_NO_CLASS:

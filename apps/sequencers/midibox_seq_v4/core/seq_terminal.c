@@ -311,60 +311,60 @@ s32 SEQ_TERMINAL_ParseLine(char *input, void *_output_function)
       // "memory <from-address> <to-address> dumps any memory region (not protected against bus errors - potential hard fault!)
       char *arg;
       if( (arg = strtok_r(NULL, separators, &brkt)) ) {
-	int begin_addr = get_dec(arg);
-	int end_addr = -1;
-
-	if( (arg = strtok_r(NULL, separators, &brkt)) ) {
-	  end_addr = get_dec(arg);
-	}
-
-	if( begin_addr == -1 || end_addr == -1 ) {
-	  out("SYNTAX: memory <begin-addr> <end-addr>");
-	} else if( begin_addr > end_addr ) {
-	  out("ERROR: end address has to be greater equal the start address");
-	} else {
-	  u32 size = end_addr - begin_addr;
-	  if( size > 0x10000 ) {
-	    out("ERROR: it isn't recommended to dump more than 64k at once!");
-	  } else {
-	    u8 *ptr = (u8 *)begin_addr;
-	    MIOS32_MIDI_SendDebugHexDump(ptr, size);
-	  }
-	}
+        int begin_addr = get_dec(arg);
+        int end_addr = -1;
+        
+        if( (arg = strtok_r(NULL, separators, &brkt)) ) {
+          end_addr = get_dec(arg);
+        }
+        
+        if( begin_addr == -1 || end_addr == -1 ) {
+          out("SYNTAX: memory <begin-addr> <end-addr>");
+        } else if( begin_addr > end_addr ) {
+          out("ERROR: end address has to be greater equal the start address");
+        } else {
+          u32 size = end_addr - begin_addr;
+          if( size > 0x10000 ) {
+            out("ERROR: it isn't recommended to dump more than 64k at once!");
+          } else {
+            u8 *ptr = (u8 *)begin_addr;
+            MIOS32_MIDI_SendDebugHexDump(ptr, size);
+          }
+        }
       }	else {
-	SEQ_TERMINAL_PrintMemoryInfo(out);
+        SEQ_TERMINAL_PrintMemoryInfo(out);
       }
     } else if( strcmp(parameter, "sdcard") == 0 ) {
       SEQ_TERMINAL_PrintSdCardInfo(out);
     } else if( strcmp(parameter, "sdcard_format") == 0 ) {
       if( !brkt || strcasecmp(brkt, "yes, I'm sure") != 0 ) {
-	out("ATTENTION: this command will format your SD Card!!!");
-	out("           ALL DATA WILL BE DELETED FOREVER!!!");
-	out("           Check the current content with the 'sdcard' command");
-	out("           Create a backup on your computer if necessary!");
-	out("To start formatting, please enter: sdcard_format yes, I'm sure");
-	if( brkt ) {
-	  out("('%s' wasn't the right \"password\")", brkt);
-	}
+        out("ATTENTION: this command will format your SD Card!!!");
+        out("           ALL DATA WILL BE DELETED FOREVER!!!");
+        out("           Check the current content with the 'sdcard' command");
+        out("           Create a backup on your computer if necessary!");
+        out("To start formatting, please enter: sdcard_format yes, I'm sure");
+        if( brkt ) {
+          out("('%s' wasn't the right \"password\")", brkt);
+        }
       } else {
 #if !defined(MIOS32_FAMILY_EMULATION)
-	MUTEX_SDCARD_TAKE;
-	out("Formatting SD Card...");
-	FRESULT res;
-	if( (res=f_mkfs(0,0,0)) != FR_OK ) {
-	  out("Formatting failed with error code: %d!", res);
-	} else {
-	  out("...with success!");
+        MUTEX_SDCARD_TAKE;
+        out("Formatting SD Card...");
+        FRESULT res;
+        if( (res=f_mkfs(0,0,0)) != FR_OK ) {
+          out("Formatting failed with error code: %d!", res);
+        } else {
+          out("...with success!");
 #ifdef MBSEQV4L    
-	  out("Please upload your MBSEQ_HW.V4L file with the MIOS Filebrowser now!");
+          out("Please upload your MBSEQ_HW.V4L file with the MIOS Filebrowser now!");
 #else
-	  out("Please upload your MBSEQ_HW.V4 file with the MIOS Filebrowser now!");
+          out("Please upload your MBSEQ_HW.V4 file with the MIOS Filebrowser now!");
 #endif
-	  out("Thereafter enter 'reset' to restart the application.");
-	}
-	MUTEX_SDCARD_GIVE;
+          out("Thereafter enter 'reset' to restart the application.");
+        }
+        MUTEX_SDCARD_GIVE;
 #else
-	out("Not in emulation...!");
+        out("Not in emulation...!");
 #endif
       }
     } else if( strcmp(parameter, "global") == 0 ) {
