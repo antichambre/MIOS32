@@ -68,9 +68,7 @@
 #define MIOS32_USB_ENDP5_TXADDR        0x1c0
 
 // function used to output Host debug messages
-#ifndef MIOS32_MIDI_USBH_DEBUG
 //#define MIOS32_MIDI_USBH_DEBUG
-#endif
 #ifdef MIOS32_MIDI_USBH_DEBUG
 #ifndef MIOS32_MIDI_USBH_DEBUG_PORT
 // debug port is UART0
