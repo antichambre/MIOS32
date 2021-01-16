@@ -78,6 +78,8 @@ extern s32 APP_LCD_GCursorSet(u16 x, u16 y);
 
 extern s32 APP_LCD_FontInit(u8 *font, app_lcd_color_depth_t colour_depth);    // new
 extern s32 APP_LCD_SpecialCharInit(u8 num, u8 table[8]);
+extern s32 APP_LCD_CharKernGet(char c);
+extern s32 APP_LCD_StringKernGet(const char *str);
 extern s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, char c);   // new
 extern s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *str);   // new
 extern s32 APP_LCD_PrintFormattedString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *format, ...);   //new

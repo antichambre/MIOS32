@@ -13,6 +13,7 @@ THUMB_SOURCE += \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_tiny.c \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_tiny_wide.c \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_tiny_inv.c \
+  $(MIOS32_PATH)/modules/glcd_font/glcd_font_bitlow.c \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_knob_icons.c \
 	$(MIOS32_PATH)/modules/glcd_font/glcd_font_meter_icons_h.c \
   $(MIOS32_PATH)/modules/glcd_font/glcd_font_meter_icons_v.c\

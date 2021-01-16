@@ -133,10 +133,8 @@ s32 APP_LCD_Init(u32 mode)
   //APP_LCD_Data(0x07);
   APP_LCD_Cmd(0x36);    //Set Scanning Direction
   APP_LCD_Data(0xC0);
-  //APP_LCD_Cmd(0xEC);  //Set pumping clock frequency
-  //APP_LCD_Data(0x0B);
   APP_LCD_Cmd(0xF2);    //Enable Gamma bit
-  APP_LCD_Data(0x01);
+  APP_LCD_Data(0x00);
   
   APP_LCD_Cmd(0xE0);
   APP_LCD_Data(0x3F);   //p1     xx VP63[5:0]
@@ -339,6 +337,52 @@ s32 APP_LCD_SpecialCharInit(u8 num, u8 table[8])
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// return a character kerning length
+// IN: the character
+// OUT: kerning length
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_CharKernGet(char c)
+{
+  s32 len=0;
+  if(font_bmp.line_offset == 0){
+    // kerning(char offset)
+    if(font_bmp.colour_depth == Is1BIT) {
+      u8 height = (font_bmp.height/8) + ((font_bmp.height%8) ? 1 : 0);
+      u8 *byte = font_bmp.memory + ((u8)(c/16)*height*font_bmp.width*16) + (font_bmp.width*(c%16));
+      len++;
+      int i, j;
+      for(i=1; i< font_bmp.width; i++){
+        u32 char_slice = 0;
+        for(j=0; j< height; j++)char_slice |= ( (*(byte+i+(j*font_bmp.width*16))) << (j*8) );
+        //DEBUG_MSG("%c slice:%d -> %x", c, i, char_slice);
+        if(char_slice==0){
+          len +=i;
+          break;
+        }
+      }
+        //DEBUG_MSG("%c %d", c, len);
+    }
+  }else{
+    // no kerning(legacy)
+    len=font_bmp.width;
+  }
+
+  return len; // not supported
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// return a character kerning length
+// IN: the character
+// OUT: kerning length
+/////////////////////////////////////////////////////////////////////////////
+s32 APP_LCD_StringKernGet(const char *str)
+{
+  s32 len=0;
+  while( *str != '\0' )len +=(s32)APP_LCD_CharKernGet(*str++);
+  return len; // not supported
+}
+
+/////////////////////////////////////////////////////////////////////////////
 //! Prints a single character in bitmap(1 or 4Bit depends on bitmap)
 //! \param[in] destination bitmap, x/y position, fusion mod, character to be print
 //! \return < 0 on errors
@@ -351,7 +395,10 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
   // legacy 1bit to 1bit
   if((bitmap.colour_depth == font_bmp.colour_depth) && (font_bmp.colour_depth == Is1BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
-    char_bmp.memory += (char_bmp.height>>3) * char_bmp.line_offset * (size_t)c;
+    u8 height = (char_bmp.height/8) + ((char_bmp.height%8) ? 1 : 0);
+    char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
+    char_bmp.memory += ((u8)(c/16)*char_bmp.line_offset*height) + (font_bmp.width*(c%16));
+    char_bmp.width=(u16)APP_LCD_CharKernGet(c);
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // toDo ili special depth 5:6:5
@@ -364,7 +411,10 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
     // legacy 1bit to '16bit' depth
   }else if((bitmap.colour_depth == Is16BIT) && (font_bmp.colour_depth == Is1BIT)) {
     mios32_lcd_bitmap_t char_bmp = font_bmp;
-    char_bmp.memory += (char_bmp.height>>3) * char_bmp.line_offset * (size_t)c;
+    u8 height = (char_bmp.height/8) + ((char_bmp.height%8) ? 1 : 0);
+    char_bmp.line_offset = char_bmp.width*16;   // font table in ASCII format(16 char by line)
+    char_bmp.memory += ((u8)(c/16)*char_bmp.line_offset*height) + (font_bmp.width*(c%16));
+    char_bmp.width=(u16)APP_LCD_CharKernGet(c);
     APP_LCD_BitmapFusion(char_bmp, luma, bitmap, x, y, fusion);
     
     // '16bit' to legacy 1bit depth
@@ -381,21 +431,31 @@ s32 APP_LCD_PrintChar(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_
 //! \param[in] destination bitmap, x/y position, fusion mod,
 //! str pointer to string.
 //! \param[in]
-//! \return < 0 on errors
+//! \return < 0 on errors, or string length in pixels
 /////////////////////////////////////////////////////////////////////////////
 s32 APP_LCD_PrintString(mios32_lcd_bitmap_t bitmap, float luma, s16 x, s16 y, app_lcd_fusion_t fusion, u8 alignment, const char *str)
 {
   s32 status = 0;
-  u16 offset =0;
-  u8 len=strlen(str);
-  //while( *str++ != '\0' )len++;
-  if(alignment==APP_LCD_STRING_ALIGN_CENTER)x -= font_bmp.width*len/2;
-  if(alignment==APP_LCD_STRING_ALIGN_RIGHT)x -= font_bmp.width*len;
-  while( *str != '\0' ){
-    status |= APP_LCD_PrintChar(bitmap, luma, x+(font_bmp.width*offset), y, fusion, *str++);
-    offset++;
+  u16 offset = 0;
+  
+  // calc start point depending on alignment
+  const char *s = str;
+  u16 len=0;
+  // kerning(char offset)
+  while( *s != '\0' ){
+    len += (u16)APP_LCD_CharKernGet(*s);
+    s++;
   }
-  return status;
+  if(alignment==APP_LCD_STRING_ALIGN_CENTER)x -= len/2;
+  if(alignment==APP_LCD_STRING_ALIGN_RIGHT)x -= len;
+  // start spelling
+  offset = 0;
+  while( *str != '\0' ){
+    status |= APP_LCD_PrintChar(bitmap, luma, x+offset, y, fusion, *str);
+    offset +=(u16)APP_LCD_CharKernGet(*str);
+    str++;
+  }
+  return (status<0)?status:(s32)offset;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -834,7 +894,7 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd
   if( (top_pos_x >= bmp.width) || (top_pos_y >= bmp.height) || ((top_pos_x+top_bmp.width) < 0) || ((top_pos_y+top_bmp.height) < 0))
     return -2;  // bitmap is outside screen
   
-  /* native 4bit depth */
+  /* native 16bits ili depth */
   if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is16BIT)) {
     u16 x, y;
     // loop pos y (with crop)
@@ -881,7 +941,7 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd
       }
     }
     
-    /* legacy 1bit to 4bit depth */
+    /* legacy 1bit to 16bits ili depth */
   }else if((top_bmp.colour_depth == Is1BIT) && (bmp.colour_depth == Is16BIT)) {
     u16 x, y;
     // prepare colour on both nibbles
@@ -933,12 +993,14 @@ s32 APP_LCD_BitmapFusion(mios32_lcd_bitmap_t top_bmp, float top_luma, mios32_lcd
     /* legacy 1bit to 1bit, no depth here we copy the pixels, notes: the position doesn't care  */
   }else if((top_bmp.colour_depth == bmp.colour_depth) && (bmp.colour_depth == Is1BIT) ) {
     int i, j;
+    u8 height = top_bmp.height/8 + ((top_bmp.height%8) ? 1 : 0);
     u8 *byte = top_bmp.memory;
-    for(j=0; j< (top_bmp.height/8 + ((top_bmp.height%8) ? 1 : 0)); j++)
+    for(i=0; i< top_bmp.width; i++){
       // forward to legacy 1bit process
-      for(i=0; i< top_bmp.width; i++)
-        APP_LCD_BitmapByteSet(bmp, top_pos_x+i, top_pos_y+(j*8), *(byte+i+(j*top_bmp.line_offset)));
-    
+      for(j=0; j< height; j++){
+        if(!byte)APP_LCD_BitmapByteSet(bmp, top_pos_x+i, top_pos_y+(j*8), *(byte+i+(j*top_bmp.line_offset)));
+      }
+    }
     
     /* 4bit to legacy 1bit depth */
   }else if((top_bmp.colour_depth == Is16BIT) && (bmp.colour_depth == Is1BIT)) {
