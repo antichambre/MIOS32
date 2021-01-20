@@ -195,9 +195,7 @@ s32 APP_LCD_Data(u8 data)
   if( cs >= 8 )
     return -1; // invalid CS line
 #endif
-  
-  u8 cs=0;
-  
+
   // chip select and DC
 #if APP_LCD_USE_J10_FOR_CS
   MIOS32_BOARD_J10_Set(~(1 << cs));
@@ -1045,8 +1043,7 @@ s32 APP_LCD_BitmapHBoundaryPrint(mios32_lcd_bitmap_t bitmap, u16 b_x, u16 b_widt
     // all GLCDs support the same bitmap scrambling
     int line;
     int y_lines = (bitmap.height >> 3);
-    
-    u16 initial_x = mios32_lcd_x;
+
     u16 initial_y = mios32_lcd_y;
     for(line=0; line<y_lines; ++line) {
       
@@ -1138,8 +1135,7 @@ s32 APP_LCD_BitmapPrint(mios32_lcd_bitmap_t bitmap)
     // all GLCDs support the same bitmap scrambling
     int line;
     int y_lines = (bitmap.height >> 3);
-    
-    u16 initial_x = mios32_lcd_x;
+
     u16 initial_y = mios32_lcd_y;
     for(line=0; line<y_lines; ++line) {
       

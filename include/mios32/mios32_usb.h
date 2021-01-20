@@ -106,6 +106,6 @@ extern s32 MIOS32_USB_HOST_Process(void);
 extern void (*pEpInt_IN[7])(void);
 extern void (*pEpInt_OUT[7])(void);
 // toDo: to remove and add PHY preporcessor condition in usbd_req.c
-extern  uint8_t USBD_DeviceQualifierDesc[0x0A];
+//extern  uint8_t USBD_DeviceQualifierDesc[0x0A];
 
 #endif /* _MIOS32_USB_H */

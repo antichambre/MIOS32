@@ -1569,7 +1569,7 @@ static s32 FILE_CreateTarHeader(char *filename, char *src_path, u8 is_dir, u32 f
 # error "We've a problem here!"
 #endif
 
-  memset(header, 0, sizeof(header));
+  memset(header, 0, sizeof(tar_posix_header));
 
   strncpy(header->name, &filename[1], strlen(filename)-5); // remove initial / and .tar
   header->name[strlen(filename)-5] = 0;

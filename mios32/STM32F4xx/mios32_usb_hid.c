@@ -78,8 +78,10 @@
 /////////////////////////////////////////////////////////////////////////////
 // Local constants
 /////////////////////////////////////////////////////////////////////////////
+#ifdef MIOS32_MIDI_USBH_DEBUG
 static const uint8_t USB_HID_MouseStatus[]    = "[USBH_HID]Mouse connected\n";
 static const uint8_t USB_HID_KeybrdStatus[]   = "[USBH_HID]Keyboard connected\n";
+#endif
 
 static  const  uint8_t  HID_KEYBRD_Codes[] = {
     0,    0,    0,    0,   31,   50,   48,   33,
