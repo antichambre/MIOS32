@@ -1,7 +1,6 @@
 rm -f project.hex
 Creating object file for app.c
 Creating object file for main.c
-Creating object file for strtol.c
 Creating object file for tasks.c
 Creating object file for list.c
 Creating object file for queue.c
@@ -57,6 +56,7 @@ Creating object file for glcd_font_small.c
 Creating object file for glcd_font_tiny.c
 Creating object file for glcd_font_tiny_wide.c
 Creating object file for glcd_font_tiny_inv.c
+Creating object file for glcd_font_bitlow.c
 Creating object file for glcd_font_knob_icons.c
 Creating object file for glcd_font_meter_icons_h.c
 Creating object file for glcd_font_meter_icons_v.c
@@ -73,8 +73,8 @@ LCD:       universal
 -------------------------------------------------------------------------------
 arm-none-eabi-size project_build/project.elf
    text	   data	    bss	    dec	    hex	filename
-  70026	     32	  13112	  83170	  144e2	project_build/project.elf
+  69676	    128	  13112	  82916	  143e4	project_build/project.elf
 10000000 B __ram_start
 10000a38 B __ram_end
 2007c000 D __ram_start_ahb
-2007e920 B __ram_end_ahb
+2007e980 B __ram_end_ahb
